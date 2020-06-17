@@ -1,0 +1,9 @@
+ALTER TABLE events 
+ADD COLUMN drawtime1 DATETIME NULL,
+ADD COLUMN drawtime2 DATETIME NULL;
+
+ALTER TABLE session_slots 
+ADD COLUMN booking_type INT NULL;
+
+ALTER TABLE draw_requests
+ADD COLUMN locator VARCHAR(255) NULL;

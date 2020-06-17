@@ -1,0 +1,127 @@
+
+02/06/2020 08:24:23 pm - Deleted
+02/06/2020 08:24:48 pm - include;N/A;1;0;<br>Invitado No activo;
+02/06/2020 08:24:56 pm - include;N/A;1;0;<br>Invitado No activo;
+02/06/2020 08:25:01 pm - include;LUCA ARANEO;1;1;;
+02/06/2020 08:25:03 pm - Deleted
+02/06/2020 08:25:07 pm - include;N/A;1;0;<br>Invitado No activo;
+02/06/2020 08:25:42 pm - include;N/A;1;0;<br>Invitado No activo;
+02/06/2020 08:34:01 pm - group;;;
+02/06/2020 08:34:11 pm - include;N/A;1;0;<br>Invitado No activo;
+02/06/2020 08:34:50 pm - group;;;
+02/06/2020 08:38:00 pm - include;LUCA ARANEO;1;1;;
+02/06/2020 08:38:09 pm - include;N/A;1;0;<br>Invitado No activo;
+02/06/2020 08:49:24 pm - include;GRENDYS GARCIA;1;1;;
+02/06/2020 08:49:32 pm - Deleted
+02/06/2020 08:51:33 pm - Deleted
+02/06/2020 09:16:49 pm - group;;;
+02/06/2020 09:17:11 pm - include;GRENDYS GARCIA;1;1;;
+04/06/2020 02:42:14 am - include;GRENDYS GARCIA;1;1;;
+04/06/2020 02:42:17 am - Deleted
+04/06/2020 10:51:32 pm - group;;;
+04/06/2020 10:55:30 pm - include;N/A;1;0;<br>Invitado No activo;
+04/06/2020 10:55:32 pm - include;N/A;1;0;<br>Invitado No activo;
+08/06/2020 12:09:17 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 12:09:46 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 12:10:07 am - Deleted
+08/06/2020 12:10:13 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 12:10:29 am - Deleted
+08/06/2020 12:17:04 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 12:20:09 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 12:20:34 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 12:24:14 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 12:24:21 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 01:30:32 am - Deleted
+08/06/2020 01:30:33 am - Deleted
+08/06/2020 01:30:36 am - include;Luca Araneo;0;1;;
+08/06/2020 01:30:47 am - include;JULIO CESAR VILLARREAL ABREU;0;0;<br>Acción 0693-0693 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 01:30:54 am - group;;<br>Acción 0693-0693 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 01:31:04 am - group;;<br>Acción 0610-0610 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 01:31:13 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 01:31:28 am - Deleted
+08/06/2020 01:31:29 am - Deleted
+08/06/2020 01:38:19 am - include;Luca Araneo;0;1;;
+08/06/2020 01:38:28 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 01:39:12 am - favorites;;;
+08/06/2020 01:47:45 am - Deleted
+08/06/2020 01:47:47 am - Deleted
+08/06/2020 01:47:53 am - include;Luca Araneo;0;1;;
+08/06/2020 01:51:52 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 02:03:52 am - Deleted
+08/06/2020 02:05:03 am - include;Luca Araneo;0;1;;
+08/06/2020 02:07:19 am - Deleted
+08/06/2020 02:07:20 am - Deleted
+08/06/2020 02:07:24 am - include;Luca Araneo;0;1;;
+08/06/2020 02:14:33 am - Deleted
+08/06/2020 02:27:19 am - include;Luca Araneo;0;1;;
+08/06/2020 02:27:26 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 06:17:14 am - Deleted
+08/06/2020 06:17:20 am - include;GRENDYS GARCIA;1;1;;
+08/06/2020 12:46:52 pm - group;12422099*Luca Araneo#9963065*CARLOS  EDUARDO CATO CONTRERAS#;;
+08/06/2020 12:49:53 pm - group;;<br>Acción 0610-0610 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:50:10 pm - include;N/A;1;0;<br>Invitado No activo;
+08/06/2020 12:50:26 pm - group;;<br>Acción 0930-0930 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:50:38 pm - group;;<br>Acción 0176-0176 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:51:07 pm - group;;<br>Acción 0693-0693 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:51:20 pm - group;;<br>Acción 0553-0553 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:51:59 pm - group;;<br>Acción 0176-0176 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:53:36 pm - group;;<br>Acción 0176-0176 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:53:51 pm - group;;<br>Acción 0610-0610 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:54:03 pm - group;;;
+08/06/2020 12:54:06 pm - group;;;
+08/06/2020 12:54:18 pm - group;;<br>Acción 0084-0084 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:54:31 pm - group;;<br>Acción 0553-0553 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:54:41 pm - group;;;
+08/06/2020 12:54:44 pm - group;;;
+08/06/2020 12:55:03 pm - group;;<br>Acción 0724-0724 presenta deuda  - Dirijase al Club para mayor informacion;
+08/06/2020 12:55:24 pm - group;;<br>Acción 0930-0930 presenta deuda  - Dirijase al Club para mayor informacion;
+09/06/2020 10:34:05 am - Deleted
+09/06/2020 10:34:22 am - include;ANTONIO ENRIQUE CABRERA URDANETA;0;0;<br>Acción 0743-0743 presenta deuda  - Dirijase al Club para mayor informacion;
+09/06/2020 10:35:44 am - include;YORLEM MARTINEZ;1;1;;
+09/06/2020 10:35:59 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 10:36:11 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 10:36:15 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 10:36:16 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 10:36:37 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 10:36:40 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 10:48:02 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 10:48:27 am - include;CARLOS GUILLERMO MAYORCA LUGO;0;0;<br>Acción 0416-0416 presenta deuda  - Dirijase al Club para mayor informacion;
+09/06/2020 10:48:42 am - group;;<br>Acción 0416-0416 presenta deuda  - Dirijase al Club para mayor informacion;
+09/06/2020 10:48:44 am - group;;<br>Acción 0416-0416 presenta deuda  - Dirijase al Club para mayor informacion;
+09/06/2020 10:49:02 am - include;CARLOS  EDUARDO CATO CONTRERAS;0;1;;
+09/06/2020 10:49:19 am - include;YORLEM MARTINEZ;1;1;;
+09/06/2020 11:00:40 am - include;DOWNING ANGULO;1;1;;
+09/06/2020 11:00:49 am - include;SANDRA GOMEZ;1;1;;
+09/06/2020 11:14:19 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:14:27 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:14:28 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:14:30 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:14:31 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:14:39 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:14:40 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:14:41 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:14:42 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:14:42 am - include;N/A;1;0;<br>Invitado No activo;
+09/06/2020 11:15:18 am - include;TAEOH KIM;0;0;<br>Acción 1535-1535 presenta deuda  - Dirijase al Club para mayor informacion;
+09/06/2020 11:15:39 am - include;ANTONIO ENRIQUE CABRERA URDANETA;0;1;;
+09/06/2020 11:16:12 am - include;NELSON DE ABREU;1;1;;
+11/06/2020 02:24:15 pm - include;N/A;1;0;<br>Invitado No activo;
+11/06/2020 02:24:20 pm - group;12422099*Luca Araneo#9963065*CARLOS  EDUARDO CATO CONTRERAS#;;
+11/06/2020 02:26:34 pm - favorites;;;
+11/06/2020 02:26:39 pm - include;N/A;1;0;<br>Invitado No activo;
+11/06/2020 02:26:47 pm - include;TAEOH KIM;0;0;<br>Acción 1535-1535 presenta deuda  - Dirijase al Club para mayor informacion;
+12/06/2020 05:24:02 pm - include;N/A;1;0;<br>Invitado No activo;
+12/06/2020 05:24:06 pm - group;;<br>Acción 0616-0616 presenta deuda  - Dirijase al Club para mayor informacion;
+12/06/2020 05:24:26 pm - group;;<br>Acción 0610-0610 presenta deuda  - Dirijase al Club para mayor informacion;
+12/06/2020 05:24:27 pm - group;;<br>Acción 0610-0610 presenta deuda  - Dirijase al Club para mayor informacion;
+12/06/2020 05:24:50 pm - group;;<br>Acción 0084-0084 presenta deuda  - Dirijase al Club para mayor informacion;
+13/06/2020 05:44:49 pm - include;N/A;1;0;<br>Invitado No activo;
+13/06/2020 05:45:01 pm - group;12422099*Luca Araneo#9963065*CARLOS  EDUARDO CATO CONTRERAS#;;
+13/06/2020 05:45:08 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;1;;
+15/06/2020 09:20:20 am - include;ANA ARANEO;1;1;;
+15/06/2020 09:53:29 am - include;GRENDYS GARCIA;1;1;;
+15/06/2020 09:55:41 am - include;ANA ARANEO;1;1;;
+15/06/2020 10:17:12 am - include;GRENDYS GARCIA;1;1;;
+15/06/2020 10:17:17 am - include;ANA ARANEO;1;1;;
+15/06/2020 10:27:25 am - include;GRENDYS GARCIA;1;1;;
+15/06/2020 10:27:30 am - include;ANA ARANEO;1;1;;
