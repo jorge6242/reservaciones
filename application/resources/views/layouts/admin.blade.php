@@ -204,7 +204,7 @@ LA -->
                     </a>
                 </li>
 
-                <li class="{{ Request::is('customer/bookings') || Request::is('customer/booking/*') || Request::is('update-booking/*')  ? 'active' : '' }}">
+                <li class="{{ Request::is('draws') ? 'active' : '' }}">
                     <a href="{{ route('adminDraws') }}" class="waves-effect waves-button">
                         <span class="menu-icon icon-calendar"></span>
                         <p>{{ __('backend.draws') }}</p>
@@ -250,7 +250,7 @@ LA -->
                         <p>{{ __('backend.categories') }}</p>
                     </a>
                 </li>
-				
+
                 <li class="droplink {{ Request::is('packages') || Request::is('packages/*') ? 'active open' : '' }}">
                     <a class="waves-effect waves-button">
                         <span class="menu-icon icon-list"></span>
@@ -260,7 +260,16 @@ LA -->
                     <ul class="sub-menu" style="display: none;">
                         <li class="{{ Request::is('packages') || Request::is('packages/*/edit') ? 'active' : '' }}"><a href="{{ route('packages.index') }}">{{ __('backend.all_packages') }}</a></li>
                         <li class="{{ Request::is('packages/create') ? 'active' : '' }}"><a href="{{ route('packages.create') }}">{{ __('backend.add_new_package') }}</a></li>
+                        <li class="{{ Request::is('addons-parameters') ? 'active' : '' }}" ><a href="{{ route('addons-parameters.index') }}">{{ __('backend.parameters') }}</a></li>
+                        <li class="{{ Request::is('packages-types') ? 'active' : '' }}"><a href="{{ route('packages-types.index') }}">{{ __('backend.types') }}</a></li>
                     </ul>
+                </li>
+
+                 <li class="{{ Request::is('court') || Request::is('court/*') ? 'active' : '' }}">
+                    <a href="{{ route('court.index') }}" class="waves-effect waves-button">
+                        <span class="fa fa-list-ol"></span>
+                        <p>{{ __('backend.court') }}</p>
+                    </a>
                 </li>
 				
                 <li class="droplink {{ Request::is('addons') || Request::is('addons/*') ? 'active open' : '' }}">

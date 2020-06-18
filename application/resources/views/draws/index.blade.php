@@ -1,4 +1,4 @@
-@extends('layouts.customer', ['title' => __('backend.draws')])
+@extends('layouts.admin', ['title' => __('backend.draws')])
 
 @section('content')
     <div class="page-title">

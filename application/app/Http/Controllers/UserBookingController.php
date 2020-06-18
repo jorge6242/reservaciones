@@ -50,7 +50,6 @@ class UserBookingController extends Controller
     public function loadBooking()
     {
         $random_pass_string = str_random(10);
-        dd($random_pass_string);
         $categories = Category::all();
         return view('welcome', compact('random_pass_string', 'categories'));
     }

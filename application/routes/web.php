@@ -69,10 +69,14 @@ Route::group(['middleware'=>'admin'], function(){
     Route::resource('/categories', 'AdminCategoriesController');
 	Route::resource('/groups', 'AdminGroupsController');
     Route::resource('/events', 'AdminEventsController');
+    Route::resource('/court', 'AdminCourtController');
+    Route::resource('/packages-types', 'AdminPackagesTypesController');
     Route::resource('/guests', 'AdminGuestsController');
     Route::resource('/blacklist', 'AdminBlacklistController');
     Route::resource('/packages', 'AdminPackagesController');
     Route::resource('/addons', 'AdminAddonsController');
+    Route::resource('/addons-parameters', 'AdminAddonParameterController');
+    Route::get('/addons-parameters-generate', 'AdminAddonParameterController@generateAddonParameters')->name('generateAddonParameters');
     Route::resource('/settings', 'AdminSettingsController');
     Route::resource('/booking-times', 'AdminBookingTimesController');
     Route::resource('/booking-times-package', 'AdminBookingTimesPackageController');
