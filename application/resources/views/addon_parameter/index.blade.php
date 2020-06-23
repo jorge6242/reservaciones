@@ -60,6 +60,8 @@
                                     <th>{{ __('backend.booking_max') }}</th>
                                     <th>{{ __('backend.player_min') }}</th>
                                     <th>{{ __('backend.player_max') }}</th>
+                                    <th>{{ __('backend.guest_min') }}</th>
+                                    <th>{{ __('backend.guest_max') }}</th>
                                     <th>{{ __('backend.updated') }}</th>
                                     <th>{{ __('backend.actions') }}</th>
                                 </tr>
@@ -72,6 +74,8 @@
                                     <th>{{ __('backend.booking_max') }}</th>
                                     <th>{{ __('backend.player_min') }}</th>
                                     <th>{{ __('backend.player_max') }}</th>
+                                    <th>{{ __('backend.guest_min') }}</th>
+                                    <th>{{ __('backend.guest_max') }}</th>
                                     <th>{{ __('backend.updated') }}</th>
                                     <th>{{ __('backend.actions') }}</th>
                                 </tr>
@@ -84,7 +88,9 @@
                                             <td>{{ $element->booking_min }}</td>
                                             <td>{{ $element->booking_max }}</td>
                                             <td>{{ $element->player_min }}</td>
-                                            <td>{{ $element->player_min }}</td>
+                                            <td>{{ $element->player_max }}</td>
+                                            <td>{{ $element->guest_min }}</td>
+                                            <td>{{ $element->guest_max }}</td>
                                             <td>{{ $element->updated_at->diffForHumans() }}</td>
                                             <td><a class="btn btn-primary" data-toggle="modal" data-target="#update_{{ $element->id }}">{{ __('backend.edit') }}</a></td>
                                         </tr>
@@ -118,7 +124,7 @@
                                                                 </div>
 
                                                                 <div class="col-md-2 form-group">
-                                                                    Participante
+                                                                    Usuario
                                                                 </div>
                                                                 <div class="col-md-10 form-group">
                                                                     <div class="row">

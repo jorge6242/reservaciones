@@ -794,12 +794,12 @@ class UserBookingController extends Controller
     {
         //select all players of session
         $user = Auth::user();
-        $exist = SessionPlayer::where('doc_id', $user->doc_id)->where('package_id', Session::get('package_id'))->where('player_type', 0)->first();
+        $exist = SessionPlayer::where('doc_id', $user->doc_id)->where('player_type', -1)->first();
 
         if(!$exist) {
             SessionPlayer::create([
                 'doc_id' => $user->doc_id,
-                'player_type' => 0,
+                'player_type' => -1,
                 'session_email' => $user->email,
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
@@ -808,7 +808,7 @@ class UserBookingController extends Controller
                 'package_id' => Session::get('package_id'),
             ]);
         }
-        $session_players = DB::table('session_players')->where('session_email','=',Auth::user()->email)->where('player_type','!=',0)->get();
+        $session_players = DB::table('session_players')->where('session_email','=',Auth::user()->email)->where('player_type','!=',-1)->get();
          //load step Player
 		return view('select-booking-players', compact('session_players'));
     }
@@ -1365,7 +1365,7 @@ class UserBookingController extends Controller
         $arrayParticipants = array();
         $user->isUser = true;
         array_push($arrayParticipants, $user);
-        $participants = SessionPlayer::where('session_email', $user->email)->where('player_type','!=', 0)->where('package_id', $package_id)->get();
+        $participants = SessionPlayer::where('session_email', $user->email)->where('player_type','!=', -1)->get();
         foreach ($participants as $key => $value) {
             $participants[$key]->isUser = false;
             array_push($arrayParticipants, $value);

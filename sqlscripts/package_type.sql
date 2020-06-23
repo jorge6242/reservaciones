@@ -1,0 +1,1 @@
+ALTER TABLE packages_types ADD status INT NULL;

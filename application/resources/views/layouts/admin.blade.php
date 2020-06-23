@@ -260,7 +260,7 @@ LA -->
                     <ul class="sub-menu" style="display: none;">
                         <li class="{{ Request::is('packages') || Request::is('packages/*/edit') ? 'active' : '' }}"><a href="{{ route('packages.index') }}">{{ __('backend.all_packages') }}</a></li>
                         <li class="{{ Request::is('packages/create') ? 'active' : '' }}"><a href="{{ route('packages.create') }}">{{ __('backend.add_new_package') }}</a></li>
-                        <li class="{{ Request::is('addons-parameters') ? 'active' : '' }}" ><a href="{{ route('addons-parameters.index') }}">{{ __('backend.parameters') }}</a></li>
+                        <li class="{{ Request::is('addons-parameters_by_addon') ? 'active' : '' }}" ><a href="{{ route('addons-parameters.index') }}">{{ __('backend.parameters_by_addon') }}</a></li>
                         <li class="{{ Request::is('packages-types') ? 'active' : '' }}"><a href="{{ route('packages-types.index') }}">{{ __('backend.types') }}</a></li>
                     </ul>
                 </li>

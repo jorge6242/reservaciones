@@ -31,6 +31,7 @@
 									<th>{{ __('backend.name') }}</th>
 									<th>{{ __('backend.package') }}</th>
 									<th>{{ __('backend.is_active') }}</th>
+									<th>{{ __('backend.package_time') }} ({{ __('backend.minutes') }})</th>
 									<th>{{ __('backend.actions') }}</th>
                                 </tr>
                                 </thead>
@@ -40,6 +41,7 @@
 									<th>{{ __('backend.name') }}</th>
                                     <th>{{ __('backend.package') }}</th>
 									<th>{{ __('backend.is_active') }}</th>
+                                    <th>{{ __('backend.package_time') }} ({{ __('backend.minutes') }})</th>
 									<th>{{ __('backend.actions') }}</th>
                                 </tr>
                                 </tfoot>
@@ -50,12 +52,13 @@
                                             <td>{{ $element->title }}</td>
                                             <td>{{ $element->package ? $element->package()->first()->title: '' }}</td>
                                             <td>
-                                                @if($element->is_active)
+                                                @if($element->status == 1)
                                                     <span class="label label-success" style="font-size:12px;">{{ __('backend.active') }}</span>
                                                 @else
                                                     <span class="label label-danger" style="font-size:12px;">{{ __('backend.blocked') }}</span>
                                                 @endif
                                             </td>
+                                            <td>{{ $element->length }}</td>
                                             <td>
                                                 <a href="{{ route('packages-types.edit', $element->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                                 <a class="btn btn-danger btn-xs" data-toggle="modal" data-target="#{{ $element->id }}"><i class="fa fa-trash-o"></i></a>

@@ -46,7 +46,7 @@
                                 
                                 
                                 <div class="col-md-1 form-group"> {{ __('backend.title') }}  </div>
-                                <div class="col-md-11 form-group{{$errors->has('title') ? ' has-error' : ''}}">
+                                <div class="col-md-5 form-group{{$errors->has('title') ? ' has-error' : ''}}">
                                     <input type="text" class="form-control" name="title" value="{{$court->title}}">
                                     @if ($errors->has('title'))
                                         <span class="help-block">
@@ -56,7 +56,7 @@
                                 </div>
 
                                 <div class="col-md-1 form-group"> {{ __('backend.package') }} </div>
-                            <div class="col-md-11 form-group{{$errors->has('package_id') ? ' has-error' : ''}}">
+                            <div class="col-md-5 form-group{{$errors->has('package_id') ? ' has-error' : ''}}">
                                 <select class="form-control" name="package_id">
                                     <option value="">Seleccione</option>
                                     @foreach($packages as $element)
@@ -70,14 +70,28 @@
                                 @endif
                             </div>
 
-                            <div class="col-md-1 form-group"> {{ __('backend.length') }}  </div>
-                            <div class="col-md-11 form-group{{$errors->has('length') ? ' has-error' : ''}}">
-                                <input type="number" class="form-control" name="length" value="{{$court->length}}">
-                                @if ($errors->has('length'))
-                                    <span class="help-block">
-                                        <strong class="text-danger">{{ $errors->first('length') }}</strong>
-                                    </span>
-                                @endif
+                            <div class="col-md-12 form-group">
+                            
+                                <div class="col-md-1 form-group" style="margin-left: -15px;"> {{ __('backend.package_time') }}  </div>
+                                <div class="col-md-3 form-group{{$errors->has('length') ? ' has-error' : ''}}">
+                                    <input type="number" class="form-control" name="length" value="{{$court->length}}">
+                                    @if ($errors->has('length'))
+                                        <span class="help-block">
+                                            <strong class="text-danger">{{ $errors->first('length') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="col-md-3 form-group" >{{ __('backend.minutes') }}</div>
+
+                            </div>
+
+                            <div class="col-md-1 form-group"> {{ __('backend.status') }}  </div>
+                            <div class="col-md-11 form-group">
+                                <select class="form-control" name="status" >
+                                    <option value="" >Seleccione</option>
+                                    <option value="0" {{ $court->status == 0 ? 'selected' : '' }}>{{ __('backend.disabled') }}</option>
+                                    <option value="1" {{ $court->status == 1 ? 'selected' : '' }}>{{ __('backend.active') }}</option>
+                                </select>
                             </div>
 
 
@@ -106,7 +120,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2 form-group"> Participante </div>
+                            <div class="col-md-2 form-group"> {{ __('backend.user') }} </div>
                             <div class="col-md-10 form-group">
                                 <div class="row">
                                     <div class="col-md-1 form-group">Min</div>
@@ -131,7 +145,7 @@
                             </div>
 
 
-                            <div class="col-md-2 form-group"> Invitado </div>
+                            <div class="col-md-2 form-group"> {{ __('backend.guest') }} </div>
                             <div class="col-md-10 form-group">
                                 <div class="row">
                                     <div class="col-md-1 form-group">Min</div>

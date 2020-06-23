@@ -17,6 +17,7 @@ class PackagesType extends Model
         'guest_min',
         'guest_max',
         'package_id',
+        'status',
     ];
 
     public function package()
