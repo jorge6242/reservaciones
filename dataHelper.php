@@ -54,6 +54,7 @@
 	
 		$session_email = $_GET['email'];
 		$command = $_GET['command'];
+		$package_id = $_GET['package_id'];
 		
 		//echo $command;
 		//exit();
@@ -864,7 +865,7 @@ else if ($command == "include") // include player
 		if ($has_errors == 0)		
 		{
 			//insert row into session players
-			$query = "INSERT INTO session_players (doc_id, player_type, session_email, created_at, updated_at, first_name, last_name, email, phone_number) VALUES ('" . $doc_id . "'," . $player_type . ",'" . $session_email . "',GETDATE(), GETDATE(),'" . $first_name . "','" . $last_name . "','" . $email . "','" . $phone_number . "')"; 
+			$query = "INSERT INTO session_players (doc_id, player_type, session_email, created_at, updated_at, first_name, last_name, email, phone_number, package_id) VALUES ('" . $doc_id . "'," . $player_type . ",'" . $session_email . "',GETDATE(), GETDATE(),'" . $first_name . "','" . $last_name . "','" . $email . "','" . $phone_number . "','" . $package_id . "')"; 
 			$qry_result = sqlsrv_query($connection,$query ) or die( print_r( sqlsrv_errors(), true));
 		}
 		
@@ -934,7 +935,7 @@ else if ($command == "include") // include player
 			if ($has_errors == 0)
 			{
 				//insert row into session players
-				$query = "INSERT INTO session_players (doc_id, player_type, session_email, created_at, updated_at, first_name, last_name, email, phone_number) VALUES ('" . $doc_id . "'," . $player_type . ",'" . $session_email . "',GETDATE(), GETDATE(),'" . $first_name . "','" . $last_name . "','" . $email . "','" . $phone_number . "')";	
+				$query = "INSERT INTO session_players (doc_id, player_type, session_email, created_at, updated_at, first_name, last_name, email, phone_number, package_id) VALUES ('" . $doc_id . "'," . $player_type . ",'" . $session_email . "',GETDATE(), GETDATE(),'" . $first_name . "','" . $last_name . "','" . $email . "','" . $phone_number . "', '" . $package_id . "')";	
 				$qry_result = sqlsrv_query($connection,$query ) or die( print_r( sqlsrv_errors(), true));
 			}													
 			
