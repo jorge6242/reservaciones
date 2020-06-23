@@ -30,7 +30,7 @@ class AdminSettingsController extends Controller
      */
     public function index()
     {
-        $settings = Settings::find(1);
+        $settings = Settings::query()->first();
         return view('settings.index', compact('settings'));
     }
 
@@ -156,11 +156,11 @@ class AdminSettingsController extends Controller
             ]);
 
             //put new role names
-            Role::find(1)->update([
+            Role::where('name','Administrador')->update([
                 'name' => __('backend.administrator')
             ]);
 
-            Role::find(2)->update([
+            Role::where('name','Cliente')->update([
                 'name' => __('backend.customer')
             ]);
         }

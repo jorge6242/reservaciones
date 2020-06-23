@@ -259,7 +259,6 @@
                 const BASE_URL = $('meta[name="index"]').attr('content');
                 var booking_type_id = $(this).attr('booking-type-id');
                 $('#booking_type_error').addClass('d-none');
-                console.log('booking_type_id ', booking_type_id);
                 $('#booking_type_id').remove();
                 $('#booking_step_1-1').append('<input type="hidden" attr-1 name="booking_type_id" id="booking_type_id" value="'+booking_type_id+'">');
 
@@ -271,7 +270,6 @@
 
                 {{-- $('.btn_package_select').text('{{ __("app.booking_package_btn_select") }}').removeClass('btn-danger').addClass('btn-primary');
                 $(this).text('{{ __("app.booking_package_btn_selected") }}').removeClass('btn-primary').addClass('btn-danger'); --}}
-                console.log('flag');
                 $.ajax({
                             type: 'POST',
                             url: BASE_URL + '/setStep2',
@@ -287,13 +285,11 @@
             $('#booking_step_1-1').submit(function(e){
                 const booking_type  = $('input[name=booking_type_id]').val();
                 let check = true;
-                console.log('booking_type ', booking_type);
                 if(!booking_type) {
                     $('#booking_type_error').removeClass('d-none');
                     $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
                     check = false;
                 }
-                console.log('check ', check);
                 if(check) {
                    e.submit(); 
                 }
@@ -303,7 +299,6 @@
     function onSelectDraw() {
         const URL_CONCAT = $('meta[name="index"]').attr('content');
             const id = document.getElementById("select-draw").value;
-                console.log('id ', id);
                 $('#hour-list').empty();
                  $('#draw_booking_slot').val('');
                 $.ajax({
@@ -365,7 +360,6 @@
                     $('#slots_loader').removeClass('d-none');
                 },
                 success: function(response) {
-                    console.log('response ', response);
                     $('#draw-list').html(response);
                 },
                 complete: function () {
@@ -378,7 +372,6 @@
         var bookingType = document.getElementById("data-booking-type").value;
         $('.package_title').removeClass('active');
 		$('.type_title').removeClass('active');
-        console.log('bookingType ', bookingType);
         if(bookingType == 1) {
             $('.package_title.package-event').addClass('active');
             $('.type_title.package-event').addClass('active');
@@ -394,7 +387,6 @@
     getDraws();
 
     $( "a.btn-slot" ).on( "mouseenter", function() {
-         console.log('ddd');
         } 
     );
 
@@ -455,7 +447,6 @@
             type: 'GET',
             url: `${URL_CONCAT}/check-user-draw`,
                 success: function(response) {
-                    console.log('response ', response);
                     resolve(response.check);
                     return false;
                 },

@@ -14,7 +14,8 @@ class SessionSlot extends Model
         'expiration_date',
         'created_at',
         'updated_at',
-        'booking_type'
+        'booking_type',
+        'package_id'
     ];
 
 

@@ -11,6 +11,19 @@
   border-radius: 5px;
 }
 
+.booking-collapse-button {
+    border: 3px solid #007bff;
+    padding: .375rem .75rem;
+    font-size: .9rem;
+    line-height: 1.6;
+    border-radius: .25rem;
+    color: #007bff;
+}
+
+.booking-collapse-button:hover {
+    text-decoration: none;
+}
+
 </style>
 
 <?php
@@ -379,8 +392,7 @@
                         <div class="progress mx-lg-5">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
                         </div>
-                        <br><br>
-                        <h5>{{ __('app.personal_details') }}</h5>
+                        
                         <br>
                         @if($errors->has('email'))
                             <div class="alert alert-danger">
@@ -467,57 +479,67 @@
                     </div>
 
                 @else
+						<div class="col-md-12 form-group"> 
+                                <div class="row">
+                                    <div class="col-md-12 form-group"> 
+                                        <a class="booking-collapse-button" data-toggle="collapse" href="#participantsCollapse" role="button" aria-expanded="false" aria-controls="participantsCollapse">
+                                            {{ __('app.personal_details') }}
+                                        <i class="fa fa-angle-down" style="margin-left: 5px"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-12 collapse" id="participantsCollapse"> 
+                                        <div class="row" id="extra-service-participants">
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" value="{{ Auth::user()->first_name }}" readonly disabled=""
-                                       autocomplete="off" class="form-control form-control-lg"
-                                       name="first_name" id="first_name" placeholder="{{ __('app.first_name') }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" autocomplete="off" value="{{ Auth::user()->last_name }}"
-                                       readonly disabled="" class="form-control form-control-lg"
-                                       name="last_name" id="last_name" placeholder="{{ __('app.last_name') }}">
-                            </div>
-                        </div>
-                    </div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<input type="text" value="{{ Auth::user()->first_name }}" readonly disabled=""
+													autocomplete="off" class="form-control form-control-lg"
+													name="first_name" id="first_name" placeholder="{{ __('app.first_name') }}">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<input type="text" autocomplete="off" value="{{ Auth::user()->last_name }}"
+														readonly disabled="" class="form-control form-control-lg"
+														name="last_name" id="last_name" placeholder="{{ __('app.last_name') }}">
+											</div>
+										</div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" autocomplete="off" value="{{ Auth::user()->phone_number }}"
-                                       readonly disabled="" class="form-control form-control-lg"
-                                       name="phone_numberNOTVALID" id="phone_numberNOTVALID" placeholder="{{ __('app.phone_number') }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="email" autocomplete="off" value="{{ Auth::user()->email }}"
-                                       readonly disabled="" class="form-control form-control-lg"
-                                       name="email" id="email" placeholder="{{ __('app.email') }}">
-                            </div>
-                        </div>
-                    </div>
-						
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" autocomplete="off" value="{{ Auth::user()->doc_id }}"
-                                       readonly disabled="" class="form-control form-control-lg"
-                                       name="doc_id" id="doc_id" placeholder="{{ __('app.doc_id') }}">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <input type="text" autocomplete="off" value="{{ Auth::user()->group_id }}"
-                                       readonly disabled="" class="form-control form-control-lg"
-                                       name="group_id" id="group_id" placeholder="{{ __('app.group_id') }}">
-                            </div>
-                        </div>
-                    </div>					
+										<div class="col-md-6">
+											<div class="form-group">
+												<input type="text" autocomplete="off" value="{{ Auth::user()->phone_number }}"
+													readonly disabled="" class="form-control form-control-lg"
+													name="phone_numberNOTVALID" id="phone_numberNOTVALID" placeholder="{{ __('app.phone_number') }}">
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group">
+												<input type="email" autocomplete="off" value="{{ Auth::user()->email }}"
+													readonly disabled="" class="form-control form-control-lg"
+													name="email" id="email" placeholder="{{ __('app.email') }}">
+											</div>
+										</div>
+
+										<div class="col-md-6">
+											<div class="form-group">
+												<input type="text" autocomplete="off" value="{{ Auth::user()->doc_id }}"
+														readonly disabled="" class="form-control form-control-lg"
+														name="doc_id" id="doc_id" placeholder="{{ __('app.doc_id') }}">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<input type="text" autocomplete="off" value="{{ Auth::user()->group_id }}"
+														readonly disabled="" class="form-control form-control-lg"
+														name="group_id" id="group_id" placeholder="{{ __('app.group_id') }}">
+											</div>
+										</div>
+
+										</div>
+                                    </div>
+                                </div>
+                            </div>			
 
                 @endif
 

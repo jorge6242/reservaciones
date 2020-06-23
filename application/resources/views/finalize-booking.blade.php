@@ -1,5 +1,22 @@
 @extends('layouts.app', ['title' => __('app.final_step_title')])
 
+<style>
+
+.booking-collapse-button {
+    border: 3px solid #007bff;
+    padding: .375rem .75rem;
+    font-size: .9rem;
+    line-height: 1.6;
+    border-radius: .25rem;
+    color: #007bff;
+}
+
+.booking-collapse-button:hover {
+    text-decoration: none;
+}
+
+</style>
+
 @section('content')
 
     <div class="jumbotron promo">
@@ -68,7 +85,7 @@
                     <br>
                     <h4>{{ __('app.booking_details') }}</h4>
                     <h5>{{ $category }} - {{ $package->title }} - <span class="text-danger">
-                           
+                          
 <!--
 						   @if(config('settings.currency_symbol_position')==__('backend.right'))
 
@@ -90,45 +107,6 @@
 							LA -->
 							
                         </span></h5>
-                    @foreach($session_addons as $session_addon)
-
-                        <h6><i class="fas fa-chevron-right text-info"></i>&nbsp;&nbsp;{{ \App\Addon::find($session_addon->addon_id)->title }} -
-                            <span class="text-danger">
-
-<!--
-                                @if(config('settings.currency_symbol_position')==__('backend.right'))
-
-                                    {!! number_format( (float) \App\Addon::find($session_addon->addon_id)->price,
-                                        config('settings.decimal_points'),
-                                        config('settings.decimal_separator') ,
-                                        config('settings.thousand_separator') ). '&nbsp;' .
-                                        config('settings.currency_symbol') !!}
-
-                                @else
-
-                                    {!! config('settings.currency_symbol').
-                                        number_format( (float) \App\Addon::find($session_addon->addon_id)->price,
-                                        config('settings.decimal_points'),
-                                        config('settings.decimal_separator') ,
-                                        config('settings.thousand_separator') ) !!}
-
-                                @endif
-LA -->
-                            </span> &nbsp;&nbsp;
-
-                            <a class="btn btn-danger btn-sm" onclick="event.preventDefault();
-                                    document.getElementById({{ $session_addon->id }}).submit();"><i class="far fa-trash-alt"></i></a>
-                        </h6>
-
-                        <form method="post" action="{{ route('session_addons.destroy', $session_addon->id) }}" id="{{ $session_addon->id }}">
-                            {{csrf_field()}}
-                            {{ method_field('DELETE') }}
-                        </form>
-
-                    @endforeach
-                    <br>
-
-
 					
 					<!--
                     @if(config('settings.enable_gst'))
@@ -221,6 +199,42 @@ LA -->
 					
 
                 </div>
+                <div class="col-md-12 form-group" style="margin-top: 20px">
+                         
+                         <div class="row">
+                            <div class="col-md-6 form-group"> 
+                                <div class="row">
+                                    <div class="col-md-12 form-group"> 
+                                        <a class="booking-collapse-button" data-toggle="collapse" href="#participantsCollapse" role="button" aria-expanded="false" aria-controls="participantsCollapse">
+                                            Participantes
+                                        <i class="fa fa-angle-down" style="margin-left: 5px"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-12 collapse" id="participantsCollapse"> 
+                                        <div class="row" id="extra-service-participants"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group"> 
+                                <div class="row">
+                                    <div class="col-md-12 form-group"> 
+                                        <a class="booking-collapse-button" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                            Resumen Servicios Adicionales
+                                        <i class="fa fa-angle-down" style="margin-left: 5px"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-12 collapse" id="collapseExample"> 
+                                        <div class="row" id="total-addons"></div>                                        
+                                    </div>
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                            
+                </div>
+                         
+                         </div>
                 <div class="col-md-6">
                     @if(config('settings.google_maps_api_key')!=NULL && Session::get('address')!="")
                         <iframe
@@ -232,80 +246,7 @@ LA -->
                     @endif
                 </div>
             </div>
-
-				<div class="row">
-						<div class="col-md-1">
-							<i class="fa fa-star"></i>
-						</div>
-						<div class="col-md-8">
-							{{Auth::user()->doc_id}} - {{Auth::user()->first_name}} {{Auth::user()->last_name}}
-						</div>
-
-						<div class="col-md-2"></div>
-				</div>
-				
-			<?php 
-			$session_players = DB::table('session_players')->where('session_email','=', Auth::user()->email)->get();
-			?>
-			
-			@if(count($session_players))
-				@foreach($session_players as $player)
-				<div id="PlayerRow{{ $player->doc_id  }}" >
-				<div class="row">
-					<div class="col-md-1">
-
-						<div class="text-left player_type">
-						@if($player->player_type==1)
-							 <i class="fa fa-user"></i>
-						@else		
-							  <i class="fa fa-user-plus"></i>
-						@endif							
-						</div>
-								
-							<script>
-							/*
-							ItemValue = '{{ $player->doc_id  }}';
-							item = document.getElementById('player<?php	echo $i;?>');
-							item.value = ItemValue;
-							*/
-							</script>
-					</div>					
-				
-					<div class="col-md-8">
-
-						<div class="text-left player_doc_id">{{ $player->doc_id  }} - {{ $player->first_name  }}	{{ $player->last_name  }}  </div>
-								
-							<script>
-							/*
-							ItemValue = '{{ $player->doc_id  }}';
-							item = document.getElementById('player<?php	echo $i;?>');
-							item.value = ItemValue;
-							*/
-							</script>
-					</div>
-					
-
-					<!--
-					<form name='myForm{{$player->doc_id}}' method="post" action="outputHelper.php"> 
-					<div class="col-md-2">
-						<div class="text-left player_delete" >
-						
-							<input type='button' 
-							onclick='ajaxFunctionDelete({{$player->doc_id}})' value='Eliminar' />
 							
-						</div>
-					</div>
-					</form>
-					-->
-				</div>
-				</div>
-				@endforeach
-
-			@else
-			@endif
-
-
-
             <div class="row">
                 @if(config('settings.stripe_enabled'))
                     <div class="col-md-6">
@@ -435,8 +376,8 @@ LA -->
             });
         </script>
     @endif
-	
-	<script>
+
+    	<script>
 		ProgressCountdown(<?php echo $countdown;?>, 'pageBeginCountdown', 'pageBeginCountdownText').then(value => window.location.href = `logoutBooking`);
 
 
@@ -457,5 +398,95 @@ LA -->
 		  });
 		}
 	</script>
+	
+    <script>
+
+    function getTotalAddons() {
+            const URL_CONCAT = $('meta[name="index"]').attr('content');
+            $.ajax({
+            type: 'GET',
+            url: `${URL_CONCAT}/total-session-addons`,
+                beforeSend: function() {
+                    $('#total-addons').empty();
+                },
+                success: function(response) {
+                   let html = '';
+                   const data = response.addons;
+                    data.forEach(element => {
+                        html += `<div class="col-md-12">
+                                    <i class="fa fa-angle-right"></i> ${element.title} - <span>
+                                    <strong>${element.total}</strong></span>
+                                </div>`;
+                    });
+                    $('#total-addons').html(html);
+                },
+            });
+    }
+
+    function handleAddonDelete(id) {
+            const URL_CONCAT = $('meta[name="index"]').attr('content');
+            $.ajax({
+            type: 'GET',
+            url: `${URL_CONCAT}/remove-adddon-by-participant`,
+            data: { id: id },
+                success: function(response) {
+                    getParticipants(); 
+                },
+            });
+    }
+
+    function renderAddons(list) {
+            let html = '';
+            list.forEach(element => {
+                html += `<div class="col-md-12">
+                            <i class="fa fa-angle-right"></i> ${element.addon.title} - <span>
+                            <strong>${element.cant}</strong></span>
+                            <span class="btn btn-danger btn-sm" style="margin-left:5px" onclick="handleAddonDelete(${element.id})" ><i class="far fa-trash-alt"></i></span>
+                         </div>`;
+            });
+            return html;
+    }
+
+
+    function getParticipants(){
+            const URL_CONCAT = $('meta[name="index"]').attr('content');
+            const selectedPlayer = '{{ $selectedPlayer }}';
+            $.ajax({
+            type: 'GET',
+            url: `${URL_CONCAT}/extra-service-participants`,
+                beforeSend: function() {
+                    $('#extra-service-participants').empty();
+                },
+                success: function(response) {
+                     if(response.success) {
+                        let html = '';
+                        let addons = '';
+                        const data = response.data;
+                        data.forEach(element => {
+                            html += `<div class="col-md-12 form-group">
+                                <div class="row">
+                                    <div class="col-md-12" style="cursor: pointer"> 
+                                        <i class="${element.isUser ? 'fa fa-star' : 'fa fa-user'}"></i> ${element.doc_id} ${element.first_name} ${element.last_name} 
+                                    </div>
+                                    ${element.addons.length > 0 ?
+                                        `<div class="col-md-12"> 
+                                            <div class="row" style='margin-left: 1px'>${ renderAddons(element.addons) }</div>
+                                        </div>` 
+                                    : ''}
+                                </div>
+                            </div>`
+                        });
+                         $('#extra-service-participants').html(html);
+                     }
+                     
+                },
+            });
+        }
+
+        getParticipants();
+        getTotalAddons();
+
+
+</script>
 	
 @endsection

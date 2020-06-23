@@ -61,23 +61,23 @@ function ajaxFunctionInclude(PlayerSlot){
 	//document.getElementById("btnRefresh").disabled = true;
 
 	var errorPlayer = 0;
-
+	const package = '{{ Session::get('package_id') }}';
     if (PlayerSlot==1)
 	{
 		var player1 = document.getElementById('player1').value; 
 
 		if (player1.trim().toLowerCase()  == 'favorites')
 		{
-			var queryString = "?command=favorites&email=" +  "{{Auth::user()->email}}"  +  "&token=" + "<?php echo $calculated_token; ?>";  
+			var queryString = "?command=favorites&email=" +  "{{Auth::user()->email}}"  +  "&token=" + "<?php echo $calculated_token; ?>" + "&package_id="+package;  
 		}
 		else if (player1.trim().toLowerCase()  == 'partners')
 		{
-			var queryString = "?command=partners&email=" +  "{{Auth::user()->email}}"  +  "&token=" + "<?php echo $calculated_token; ?>";  
+			var queryString = "?command=partners&email=" +  "{{Auth::user()->email}}"  +  "&token=" + "<?php echo $calculated_token; ?>" + "&package_id="+package;  
 		}
 		else if (player1.indexOf('-') > -1)
 		{
 			//it is a group		
-				var queryString = "?command=group&group_id=" + player1	+ "&email=" +  "{{Auth::user()->email}}"  +  "&token=" + "<?php echo $calculated_token; ?>";  
+				var queryString = "?command=group&group_id=" + player1	+ "&email=" +  "{{Auth::user()->email}}"  +  "&token=" + "<?php echo $calculated_token; ?>" + "&package_id="+package;  
 		}
 		else
 		{
@@ -96,7 +96,8 @@ function ajaxFunctionInclude(PlayerSlot){
 			{
 				var queryString = "?command=include&doc_id=" + player1+ "&email=" +  "{{Auth::user()->email}}" 
 				+  "&booking_date=" + "{{ Session::get('event_date') }}" 
-				+  "&token=" + "<?php echo $calculated_token; ?>";  
+				+  "&token=" + "<?php echo $calculated_token; ?>"
+				 + "&package_id="+'{{ Session::get('package_id') }}';  
 				//PlayerSlot=1;
 			}
 		}
@@ -875,6 +876,28 @@ function ajaxFunctionSelect(doc_id){
 
 @endsection
 
+<script>
+//		ProgressCountdown(<?php echo $countdown;?>, 'pageBeginCountdown', 'pageBeginCountdownText').then(value => window.location.href = `logoutBooking`);
+
+
+//			function ProgressCountdown(timeleft, bar, text) {
+//			  return new Promise((resolve, reject) => {
+//				var countdownTimer = setInterval(() => {
+//				  timeleft--;
+
+//				  document.getElementById(bar).value = timeleft;
+//				  document.getElementById(text).textContent = timeleft;
+//				   document.getElementById('countdown').value = timeleft;
+
+//				  if (timeleft <= 0) {
+//					clearInterval(countdownTimer);
+//					resolve(true);
+//				  }
+//				}, 1000);
+//			  });
+//			}
+	</script>
+
 @section('scripts')
     <script>
         $('.addon_buttons').on('click', 'a.btn-addon', function() {
@@ -891,27 +914,4 @@ function ajaxFunctionSelect(doc_id){
 
         });
     </script>
-
-	<script>
-		ProgressCountdown(<?php echo $countdown;?>, 'pageBeginCountdown', 'pageBeginCountdownText').then(value => window.location.href = `logoutBooking`);
-
-
-		function ProgressCountdown(timeleft, bar, text) {
-		  return new Promise((resolve, reject) => {
-			var countdownTimer = setInterval(() => {
-			  timeleft--;
-
-			  document.getElementById(bar).value = timeleft;
-			  document.getElementById(text).textContent = timeleft;
-			   document.getElementById('countdown').value = timeleft;
-
-			  if (timeleft <= 0) {
-				clearInterval(countdownTimer);
-				resolve(true);
-			  }
-			}, 1000);
-		  });
-		}
-	</script>
-	
 @endsection

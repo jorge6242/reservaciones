@@ -86,6 +86,7 @@ return [
     'add_service_title' => '¿Desea agregar alguno de estos servicios adicionales?',
     'add_service_btn' => 'Agregar a la reserva',
     'remove_service_btn' => 'Eliminar de la reserva',
+    'update_service_btn' => 'Actualizar Reserva',
 
     'booking_summary' => 'Resumen de reserva',
     'booking_details' => 'Detalles de reserva',

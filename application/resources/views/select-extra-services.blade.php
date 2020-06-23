@@ -1,5 +1,65 @@
 @extends('layouts.app', ['title' => __('app.step_three_title')])
 
+<style>
+
+.extra-service-counter {
+    display: flex;
+    justify-content: space-around;
+}
+
+.extra-service-counter .counter {
+    padding: 3px 10px 3px 10px;
+    border-radius: 50px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 35px;
+}
+
+.extra-service-counter .input-counter input {
+    width: 10%;
+    text-decoration: none;
+    border-color: transparent;
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.extra-service-counter .counter.add {
+   color: blue;
+}
+
+.extra-service-counter .counter.remove {
+   color: red;
+}
+
+.extra-service-delete.show {
+    display: block; 
+}
+
+.extra-service-delete.hidde {
+    display: none; 
+}
+
+.extra-service-player-active {
+    color: blue;
+    font-weight: bold;
+}
+
+.owl-theme .owl-nav .owl-next {
+    margin-top: -45px !important;
+    border-radius: 56px !important;
+    background: #007bff !important;
+}
+
+.owl-theme .owl-nav .owl-prev {
+    margin-top: -45px !important;
+    border-radius: 56px !important;
+    background: #007bff !important;
+}
+
+</style>
+
 @section('content')
 
     <div class="jumbotron promo">
@@ -43,155 +103,79 @@
 
                 @if(count($addons))
 
-                    @if(count($session_addons))
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <br><br>
-                                <h5 class="text-center">{{ __('app.add_service_title') }}</h5>
-                                <br><br>
-                                <div class="owl-carousel owl-theme owl-loaded owl-drag" id="addons_carousel">
-                                    @foreach($addons as $addon)
-
-                                        @if((new App\Http\Controllers\UserBookingController)->checkIfAdded($addon->id,Auth::user()->email))
-
-                                            <div class="package_box">
-                                                <div class="responsive-image"><img class="responsive-image" alt="{{ $addon->title }}" src="{{ asset($addon->photo->file) }}"></div>
-                                                <div class="package_title">
-                                                    <div class="text-container">
-                                                        <h4 class="text-center package_title_large paddings">{{ $addon->title }}</h4>
-														
-														<!--
-                                                        <h4 class="text-center package_price">
-                                                            @if(config('settings.currency_symbol_position')==__('backend.right'))
-
-                                                                {!! number_format( (float) $addon->price,
-                                                                    config('settings.decimal_points'),
-                                                                    config('settings.decimal_separator') ,
-                                                                    config('settings.thousand_separator') ). '&nbsp;' .
-                                                                    config('settings.currency_symbol') !!}
-
-                                                            @else
-
-                                                                {!! config('settings.currency_symbol').
-                                                                    number_format( (float) $addon->price,
-                                                                    config('settings.decimal_points'),
-                                                                    config('settings.decimal_separator') ,
-                                                                    config('settings.thousand_separator') ) !!}
-
-                                                            @endif
-                                                        </h4>
-                                                        LA -->
-														<div class="text-center package_descrition">{!! $addon->description !!}</div>
-                                                        <div class="package_btn addon_buttons">
-                                                            <a class="btn btn-danger btn-lg btn-block btn-addon" data-addon-id="{{ $addon->id }}" data-method="remove" id="{{ $addon->id }}">{{ __('app.remove_service_btn') }}</a>
-                                                        </div>
-                                                        <br>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        @else
-
-                                            <div class="package_box">
-                                                <div class="responsive-image"><img class="responsive-image" alt="{{ $addon->title }}" src="{{ asset($addon->photo->file) }}"></div>
-                                                <div class="package_title">
-                                                    <div class="text-container">
-                                                        <h4 class="text-center package_title_large paddings">{{ $addon->title }}</h4>
-														<!--
-                                                        <h4 class="text-center package_price">
-                                                            @if(config('settings.currency_symbol_position')==__('backend.right'))
-
-                                                                {!! number_format( (float) $addon->price,
-                                                                    config('settings.decimal_points'),
-                                                                    config('settings.decimal_separator') ,
-                                                                    config('settings.thousand_separator') ). '&nbsp;' .
-                                                                    config('settings.currency_symbol') !!}
-
-                                                            @else
-
-                                                                {!! config('settings.currency_symbol').
-                                                                    number_format( (float) $addon->price,
-                                                                    config('settings.decimal_points'),
-                                                                    config('settings.decimal_separator') ,
-                                                                    config('settings.thousand_separator') ) !!}
-
-                                                            @endif
-                                                        </h4>
-                                                        LA -->
-														<div class="text-center package_descrition">{!! $addon->description !!}</div>
-                                                        <div class="package_btn addon_buttons">
-                                                            <a class="btn btn-primary btn-lg btn-block btn-addon" data-addon-id="{{ $addon->id }}" data-method="add" id="{{ $addon->id }}">{{ __('app.add_service_btn') }}</a>
-                                                        </div>
-                                                        <br>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        @endif
-
-                                    @endforeach
+                    <div class="row" style="margin-top: 30px">
+                        <div class="col-md-12">
+                            <div class="col-md-12 form-group"><h5 class="text-center">{{ __('app.add_service_title') }}</h5></div>
+                                
+                                <div class="col-md-12 form-group"><strong><h5>Participantes<h5></strong></div>
+                                <div class="col-md-12 form-group">
+                                    <div class="row" id="extra-service-participants"></div>
                                 </div>
-                            </div>
-                        </div>
+                                <div class="alert alert-danger col-md-12 form-group d-none" id="addon_error"></div>
+                                @if($selectedPlayer)
+                                    <div class="col-md-12 form-group">
+                                        <div class="owl-carousel owl-theme owl-loaded owl-drag" id="addons_carousel">
+                                            @foreach($addons as $addon)
 
-                    @else
+                                                <div class="package_box">
+                                                        <div class="responsive-image"><img class="responsive-image" alt="{{ $addon->title }}" src="{{ asset($addon->photo->file) }}"></div>
+                                                        <div class="package_title">
+                                                            <div class="text-container">
+                                                                <h4 class="text-center package_title_large paddings">{{ $addon->title }}</h4>
+                                                                
+                                                                <!--
+                                                                <h4 class="text-center package_price">
+                                                                    @if(config('settings.currency_symbol_position')==__('backend.right'))
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <br><br>
-                                <h5 class="text-center">{{ __('app.add_service_title') }}</h5>
-                                <br><br>
-                                <div class="owl-carousel owl-theme owl-loaded owl-drag" id="addons_carousel">
-                                    @foreach($addons as $addon)
+                                                                        {!! number_format( (float) $addon->price,
+                                                                            config('settings.decimal_points'),
+                                                                            config('settings.decimal_separator') ,
+                                                                            config('settings.thousand_separator') ). '&nbsp;' .
+                                                                            config('settings.currency_symbol') !!}
 
-                                        <div class="package_box">
-                                            <div class="responsive-image"><img class="responsive-image" alt="{{ $addon->title }}" src="{{ asset($addon->photo->file) }}"></div>
-                                            <div class="package_title">
-                                                <div class="text-container">
-                                                    <h4 class="text-center package_title_large paddings">{{ $addon->title }}</h4>
-													
-													<!--
-                                                    <h4 class="text-center package_price">
-													
-                                                        @if(config('settings.currency_symbol_position')==__('backend.right'))
+                                                                    @else
 
-                                                            {!! number_format( (float) $addon->price,
-                                                                config('settings.decimal_points'),
-                                                                config('settings.decimal_separator') ,
-                                                                config('settings.thousand_separator') ). '&nbsp;' .
-                                                                config('settings.currency_symbol') !!}
+                                                                        {!! config('settings.currency_symbol').
+                                                                            number_format( (float) $addon->price,
+                                                                            config('settings.decimal_points'),
+                                                                            config('settings.decimal_separator') ,
+                                                                            config('settings.thousand_separator') ) !!}
 
-                                                        @else
-
-                                                            {!! config('settings.currency_symbol').
-                                                                number_format( (float) $addon->price,
-                                                                config('settings.decimal_points'),
-                                                                config('settings.decimal_separator') ,
-                                                                config('settings.thousand_separator') ) !!}
-
-                                                        @endif
-                                                    </h4>
-                                                    
-													LA -->
-													<div class="text-center package_descrition">{!! $addon->description !!}</div>
-                                                    <div class="package_btn addon_buttons">
-                                                        <a class="btn btn-primary btn-lg btn-block btn-addon" data-addon-id="{{ $addon->id }}" data-method="add" id="{{ $addon->id }}">{{ __('app.add_service_btn') }}</a>
+                                                                    @endif
+                                                                </h4>
+                                                                LA -->
+                                                                <div class="text-center package_descrition">{!! $addon->description !!}</div>
+                                                                <div style="text-align: center">
+                                                                    <div class="extra-service-counter">
+                                                                        <div class="counter remove" onclick="handleCounter('remove', {{ $addon->id }})" ><i class="fa fa-minus-circle" aria-hidden="true"></i></div>
+                                                                        <div class="input-counter" >
+                                                                            <input type="text" disabled id="current-addon-{{ $addon->id }}" value="{{ $addon->cant }}" >
+                                                                        </div>
+                                                                        <div class="counter add" onclick="handleCounter('add', {{ $addon->id }})"><i class="fa fa-plus-circle" aria-hidden="true"></i></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="package_btn custom_addon_buttons">
+                                                                    <a class="btn btn-primary btn-lg btn-block btn-addon current-addon-{{ $addon->id }} button-default" data-addon-id="{{ $addon->id }}" data-method="add" id="{{ $addon->id }}">{{ $addon->buttonText }}</a>
+                                                                    <a class="btn btn-danger btn-lg btn-block btn-addon current-addon-{{ $addon->id }} extra-service-delete {{ $addon->showDelete }}" data-addon-id="{{ $addon->id }}" data-method="remove" id="{{ $addon->id }}">{{ __("app.remove_service_btn") }}</a>
+                                                                </div>
+                                                                <br>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <br>
-                                                </div>
-                                            </div>
+
+                                            @endforeach
                                         </div>
-
-                                    @endforeach
+                                    </div>
+                                @else
+                                <div class="row">
+                                    <div class="col-md-12 form-group" ><strong>Seleccione participante</strong></div>
                                 </div>
+                                @endif
+
                             </div>
                         </div>
-
-                    @endif
 
                 @else
-
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <br><br><br>
@@ -205,7 +189,8 @@
                     </div>
 
                 @endif
-
+                <input type="hidden" id="selectedPlayer" value="{{ $selectedPlayer }}">
+                <input type="hidden" id="isUser" value="">
             </div>
         </div>
 
@@ -247,25 +232,144 @@
 @endsection
 
 @section('scripts')
-    <script>
-        $('.addon_buttons').on('click', 'a.btn-addon', function() {
-
-            var method = $(this).attr('data-method');
-
-            if(method === "add") {
-                $(this).removeClass('btn-primary').addClass('btn-danger').text('{{ __("app.remove_service_btn") }}');
-            }
-
-            else if(method === "remove") {
-                $(this).removeClass('btn-danger').addClass('btn-primary').text('{{ __("app.add_service_btn") }}');
-            }
-
-        });
-    </script>
-	
 	<script>
-		ProgressCountdown(<?php echo $countdown;?>, 'pageBeginCountdown', 'pageBeginCountdownText').then(value => window.location.href = `logoutBooking`);
 
+    function getParticipants(){
+            const URL_CONCAT = $('meta[name="index"]').attr('content');
+            const selectedPlayer = '{{ $selectedPlayer }}';
+            $.ajax({
+            type: 'GET',
+            url: `${URL_CONCAT}/extra-service-participants`,
+                success: function(response) {
+                     if(response.success) {
+                        let html = '';
+                        let addons = '';
+                        const data = response.data;
+                        data.forEach(element => {
+                            const selected = selectedPlayer == element.doc_id ? 'extra-service-player-active' : '';
+                            html += `<div class="col-md-12 form-group">
+                                <div class="row">
+                                    <div class="col-md-12 ${selected}" style="cursor: pointer" onclick=selectParticipant(${element.doc_id},${element.isUser})> 
+                                        <i class="${element.isUser ? 'fa fa-star' : 'fa fa-user'}"></i> ${element.doc_id} ${element.first_name} ${element.last_name} 
+                                    </div>
+                                    ${element.addons.length > 0 ?
+                                        `<div class="col-md-12"> 
+                                            <div class="row" style='margin-left: 1px'>${ renderAddons(element.addons) }</div>
+                                        </div>` 
+                                    : ''}
+                                </div>
+                            </div>`
+                        });
+                         $('#extra-service-participants').html(html);
+                     }
+                     
+                },
+            });
+        }
+    
+
+    $(document).ready(function(){
+
+        getParticipants();
+
+        $('.custom_addon_buttons').on('click', 'a.btn-addon', function() {
+            const URL_CONCAT = $('meta[name="index"]').attr('content');
+            var addon_id = $(this).attr('data-addon-id');
+            var addonCount = $(`#current-addon-${addon_id}`).val();
+            var method = $(this).attr('data-method');
+            const isUser = $('#isUser').val();
+            const doc_id = $('#selectedPlayer').val();
+            $('#addon_error').addClass('d-none').empty();
+            if(method === "add") {
+                    $.ajax({
+                        type: 'POST',
+                        url: URL_CONCAT + '/session_addons',
+                        data: {
+                            addon_id:addon_id, 
+                            session_email:$('input[name=session_email]').val(),
+                            doc_id: doc_id,
+                            cant: addonCount,
+                            isUser: isUser,
+                        },
+                        success: function(response) {
+                            if(response.success) {
+                                $(`.current-addon-${addon_id}.extra-service-delete`).removeClass('hidde').addClass('show');
+                                $(`.current-addon-${addon_id}.button-default`).text('{{ __("app.update_service_btn") }}');
+                                $('#extra-service-participants').empty();
+                                getParticipants();
+                            } else {
+                                $('#addon_error').removeClass('d-none').text(response.message);
+                            }
+
+                        }
+                    });
+            }
+
+            if(method === "remove") {
+                    $.ajax({
+                        type: 'POST',
+                        url: URL_CONCAT + '/remove_session_addon',
+                        data: {
+                            addon_id:addon_id, 
+                            session_email:$('input[name=session_email]').val(),
+                            doc_id: doc_id,
+                            cant: addonCount,
+                        },
+                        success: function() {
+                            $(`.current-addon-${addon_id}.extra-service-delete`).removeClass('show').addClass('hidde');
+                            $(`.current-addon-${addon_id}.button-default`).text('{{ __("app.add_service_btn") }}');
+                            $(`#current-addon-${addon_id}`).val(1);
+                            $('#extra-service-participants').empty();
+                            getParticipants();
+                        }
+                    });
+            }
+        });
+
+    });
+
+        function handleCounter(type, id) {
+            let currentCount = $(`#current-addon-${id}`).val();
+            currentCount = Number(currentCount);
+
+            if(type === "add") {
+                currentCount = ++currentCount;
+            }
+
+            if(type === "remove" && currentCount > 1) {
+                currentCount = --currentCount;
+            }
+            
+            $(`#current-addon-${id}`).val(currentCount);
+        }
+
+        function selectParticipant(participant ,isUser = false) {
+            $('#selectedPlayer').val(participant);
+            $('#isUser').val(isUser);
+            const BASE_URL = $('meta[name="index"]').attr('content');
+            $.ajax({
+                type: 'POST',
+                url: BASE_URL + '/extra-service-set-participant',
+                data: {
+                    doc_id: participant,
+                },
+                success: function() {
+                    window.location.href = '/select-extra-services';
+                }
+            });
+        }
+
+        function renderAddons(list) {
+            let html = '';
+            list.forEach(element => {
+                html += `<div class="col-md-12"><i class="fa fa-angle-right"></i> ${element.addon.title} - <span><strong>${element.cant}</strong></span></div>`;
+            });
+            return html;
+        }
+	</script>
+    <script>
+    
+    ProgressCountdown(<?php echo $countdown;?>, 'pageBeginCountdown', 'pageBeginCountdownText').then(value => window.location.href = `logoutBooking`);
 
 		function ProgressCountdown(timeleft, bar, text) {
 		  return new Promise((resolve, reject) => {
@@ -283,6 +387,7 @@
 			}, 1000);
 		  });
 		}
-	</script>
+
+    </script>
 	
 @endsection

@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\BookingPlayers;
 use App\Addon;
+use App\DrawAddon;
+use App\SessionAddon;
 use App\Booking;
+use App\AddonBooking;
 use App\DrawRequest;
 use App\DrawPlayer;
 use App\Invoice;
 use App\SessionSlot;
+use App\Settings;
 use App\Mail\AdminBookingNotice;
 use App\Mail\BookingInvoice;
 use App\Mail\BookingReceived;
@@ -90,29 +94,39 @@ class OfflinePaymentController extends Controller
 	}
 	
 	public function createPlayers($booking, $bookingType) {
-		        //attach all selected players to booking_players
-				$session_players = DB::table('session_players')->where('session_email','=', Auth::user()->email)->get();
-				foreach ($session_players as $session_player)
-				{
-					//Player::find($session_player->doc_id)->bookings()->attach($booking);
-					
-					$token = md5($session_player->doc_id.$date.rand(microtime()));	
-					$session_player->token = $token;
+				//attach all selected players to booking_players
+				$package_id = Session::get('package_id');
+				$sessionPlayers = DB::table('session_players')->where('session_email','=', Auth::user()->email)->get();
+				foreach ($sessionPlayers as $value)  {		
+					$token = md5($value->doc_id.$date.rand(microtime()));	
+					$value->token = $token;
 					
 					if($bookingType == 1) {
-						BookingPlayers::create([
+						$bookingPlayer = BookingPlayers::create([
 							'booking_id' => $booking,
-							'doc_id' => $session_player->doc_id,
-							'player_type' => $session_player->player_type,
+							'doc_id' => $value->doc_id,
+							'player_type' => $value->player_type,
 							'confirmed' => 0,
 							'token' => $token,
 							'created_at' => time(),
 							'updated_at' => time(),
 						]);
+
+						$sessionAddons = SessionAddon::where('doc_id', $value->doc_id)->where('package_id', $package_id)->get();
+						if(count($sessionAddons)) {
+							foreach ($sessionAddons as $key => $value) {
+								AddonBooking::create([
+									'booking_id' => $booking,
+									'addon_id' => $value->addon_id,
+									'booking_players_id' => $bookingPlayer->id,
+									'cant' => $value->cant,
+								]);
+							}
+						}						
 					}
 					
 					if($bookingType == 2) {
-						DrawPlayer::create([
+						$drawPlayer = DrawPlayer::create([
 							'draw_id' => Session::get('draw_id'),
 							'draw_request_id' => $booking,
 							'doc_id' => $session_player->doc_id,
@@ -122,10 +136,19 @@ class OfflinePaymentController extends Controller
 							'created_at' => time(),
 							'updated_at' => time(),
 						]);
+						$sessionAddons = SessionAddon::where('doc_id', $session_player->doc_id)->where('package_id', $package_id)->get();
+						if(count($sessionAddons)) {
+							foreach ($sessionAddons as $key => $value) {
+								DrawAddon::create([
+									'addon_id' => $value->addon_id,
+									'draw_request_id' => $booking,
+									'draw_players_id' => $drawPlayer->id,
+									'cant' => $value->cant,
+								]);
+							}
+						}
 					}
 				}
-		
-				//delete all session players
 	}
 
     /**
@@ -141,11 +164,10 @@ class OfflinePaymentController extends Controller
 
 		date_default_timezone_set(env('LOCAL_TIMEZONE','America/Caracas'));
 		//date_default_timezone_set('Asia/Kolkata');
-		
+		$setting = Settings::query()->first();
 		$today = date("Y-m-d");
-		$StartTime = config('settings.bookingUser_startTime');
-		$EndTime = config('settings.bookingUser_endTime');
-
+		$StartTime = $setting->bookingUser_startTime;
+		$EndTime = $setting->bookingUser_endTime;
 		$datetime1 = $today . ' ' . $StartTime;
 		$datetime2 = $today . ' ' . $EndTime;
 
@@ -232,16 +254,16 @@ class OfflinePaymentController extends Controller
 
         //check if GST is enabled and add it to total invoice
 
-        if(config('settings.enable_gst'))
+        if($setting->enable_gst)
         {
-            $gst_amount = ( config('settings.gst_percentage') / 100 ) * $total;
+            $gst_amount = ( $setting->gst_percentage / 100 ) * $total;
             $gst_amount = round($gst_amount,2);
             $total_with_gst = $total + $gst_amount;
         }
 
         //decide if to charge with GST or without GST
 
-        if(config('settings.enable_gst'))
+        if($setting->enable_gst)
         {
             $amount_to_charge = $total_with_gst;
         }
@@ -378,7 +400,7 @@ class OfflinePaymentController extends Controller
 				$this->createPlayers($booking->id, 1);
 				DB::table('session_players')->where('session_email','=', Auth::user()->email)->delete();
 			}
-
+			
 			if($bookingType == 2) {
 				if(count($sessionSlots)) {
 					$countDraw = 0;
@@ -404,29 +426,19 @@ class OfflinePaymentController extends Controller
         }
 
 
-        //save invoice
-        // Invoice::create([
-        //     'booking_id' => $booking->id,
-        //     'user_id' => Auth::user()->id,
-        //     'transaction_id' => time(),
-        //     'amount' => $amount_to_charge,
-        //     'payment_method' => __('app.offline_payment'),
-        //     'is_paid' => 0,
-        // ]);
-
         //attach all selected addons to addon_booking
-        $session_addons = DB::table('session_addons')->where('session_email','=', Auth::user()->email)->get();
-        foreach ($session_addons as $session_addon)
-        {
-            Addon::find($session_addon->addon_id)->bookings()->attach($booking);
-        }
+        // $session_addons = DB::table('session_addons')->where('session_email','=', Auth::user()->email)->get();
+        // foreach ($session_addons as $session_addon)
+        // {
+        //     Addon::find($session_addon->addon_id)->bookings()->attach($booking);
+        // }
 
         //delete all session addons
         DB::table('session_addons')->where('session_email','=', Auth::user()->email)->delete();
 
         //send booking received email
         $user = User::find(Auth::user()->id);
-        $admin = Role::find(1)->users()->get();
+        $admin = Role::find(3)->users()->get();
 		
 		
 		//send email to other participants LA

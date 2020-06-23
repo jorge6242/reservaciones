@@ -131,6 +131,8 @@ Route::group(['middleware'=>'authenticated'], function() {
     Route::get('/select-extra-services', 'UserBookingController@loadStep3')->name('loadStep3');
     Route::post('/postStep3', 'UserBookingController@postStep3')->name('postStep3');
     Route::get('/finalize-booking', 'UserBookingController@loadFinalStep')->name('loadFinalStep');
+    Route::get('/extra-service-participants', 'UserBookingController@getExtraServiceParticipants')->name('getExtraServiceParticipants');
+    Route::post('/extra-service-set-participant', 'UserBookingController@setParticipant')->name('setParticipant');
 
 
     //PAYMENT GATEWAYS
@@ -149,6 +151,8 @@ Route::group(['middleware'=>'authenticated'], function() {
     // ** AUXILIARY ROUTES  ** //
 
     Route::resource('/session_addons','SessionAddonsController');
+    Route::get('/remove-adddon-by-participant','SessionAddonsController@removeAddonByParticipant');
+    Route::get('/total-session-addons','SessionAddonsController@getTotal');
     Route::get('/account-disabled', function (){
         return view('errors.accountDisabled');
     });

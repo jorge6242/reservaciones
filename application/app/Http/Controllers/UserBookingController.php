@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Addon;
+use App\SessionAddon;
+use App\SessionPlayer;
 use App\Draw;
+use App\BookingTime;
+use App\Settings;
 use App\DrawRequest;
 use App\Booking;
 use App\Event;
@@ -110,9 +114,7 @@ class UserBookingController extends Controller
 	
 	
 		date_default_timezone_set(env('LOCAL_TIMEZONE','America/Caracas'));
-		
-		
-		
+				
 		//$now = date('m/d/Y h:i:s a', time());
 		//DB::table('session_slots')->where('expiration_date','<', time())->delete();
 		//DB::table('session_slots')->where('expiration_date','<', GETDATE())->delete();
@@ -151,18 +153,16 @@ class UserBookingController extends Controller
         $drawId = Session::get('draw_id');
 		
 		echo Package::find($selected_package_id)->title; 
-
         //get selected category_id
         $selected_category_id = Package::find($selected_package_id)->category->id;
 
         //get day name to select slot timings
         $timestamp_for_event = strtotime($event_date);
         $today_number = date('N', $timestamp_for_event);
-		
-
-		
+        $settings = Settings::query()->first();	
+               
 		//use booking schedule per package or global
-		if(config('settings.bookingTime_perpackage'))
+		if($settings->bookingTime_perpackage)
 		//if (1==1)	
 		{
 			
@@ -178,12 +178,12 @@ class UserBookingController extends Controller
                 "UID"=> $username, 
                 "PWD"=> $password
                 );
+              
 			$conn = sqlsrv_connect($servername, $connectionInfo);
 			// Check connection
-			if( $conn === false ) {
-				die( print_r( sqlsrv_errors(), true));
+			if (!$conn) {
+				die("Connection failed: " . sqlsrv_errors());
 			}
-			
 			
 			
             //validar horario para confirmacion con horario de uso de app
@@ -233,9 +233,8 @@ class UserBookingController extends Controller
 		*/
 		echo " @ " .  $hour_start . " - " . 	$hour_end . "<br>";
 		
-		
         //decide what will be the duration of each slot
-        if(config('settings.slots_with_package_duration'))
+        if($settings->slots_with_package_duration)
         {
             //use package duration as slot duration
             $package = Package::find($selected_package_id);
@@ -244,7 +243,7 @@ class UserBookingController extends Controller
         else
         {
             //use regular slot duration
-            $slot_duration = config('settings.slot_duration') * 60;
+            $slot_duration = $settings->slot_duration * 60;
         }
 
         //decide how many slots will be generated
@@ -283,9 +282,9 @@ class UserBookingController extends Controller
 
             // increment each slot by minutes_to_add
             $timeslot = date('H:i:s', strtotime($hour_start)+$minutes_to_add);
-
+            
             //clock format choice
-            if(config('settings.clock_format')==12)
+            if($settings->clock_format == 12)
             {
                 $list_slot[$i]['slot'] = date('h:i A', strtotime($timeslot));
             }
@@ -315,8 +314,8 @@ class UserBookingController extends Controller
                     //put multiple booking logic
 
                     //one booking at one slot
-
-                    if(config('settings.slots_method') == 1)
+                    
+                    if($settings->slots_method == 1)
                     {
                         //prevent multiple bookings at same time
                         $list_slot[$i]['is_available'] = false;
@@ -334,8 +333,8 @@ class UserBookingController extends Controller
                     }
 
                     //multiple with different package
-
-                    if(config('settings.slots_method') == 3)
+                    
+                    if($settings->slots_method == 3)
                     {
                         if($selected_package_id == $booking->package->id)
                         {
@@ -343,13 +342,13 @@ class UserBookingController extends Controller
                             $list_slot[$i]['is_available'] = false;
                             $package_booking = Package::find($booking->package_id);
                             $package = Package::find($selected_package_id);
-                            if(config('settings.slots_with_package_duration'))
+                            if($settings->slots_with_package_duration)
                             {
                                 $count_next_disabled = ($package_booking->duration / $package->duration) - 1;
                             }
                             else
                             {
-                                $count_next_disabled = ($package_booking->duration / config('settings.slot_duration')) - 1;
+                                $count_next_disabled = ($package_booking->duration / $settings->slot_duration) - 1;
 
                             }
                         }
@@ -365,13 +364,13 @@ class UserBookingController extends Controller
                             $list_slot[$i]['is_available'] = false;
                             $package_booking = Package::find($booking->package_id);
                             $package = Package::find($selected_package_id);
-                            if(config('settings.slots_with_package_duration'))
+                            if($settings->slots_with_package_duration)
                             {
                                 $count_next_disabled = ($package_booking->duration / $package->duration) - 1;
                             }
                             else
                             {
-                                $count_next_disabled = ($package_booking->duration / config('settings.slot_duration')) - 1;
+                                $count_next_disabled = ($package_booking->duration / $settings->slot_duration) - 1;
 
                             }
                             break;
@@ -416,8 +415,8 @@ class UserBookingController extends Controller
 				}
 
 				//check if slot is expired
-
-				if(config('settings.clock_format')==12)
+                
+				if($settings->clock_format == 12)
 				{
 					$current_time = date('h:i A');
 				}
@@ -794,8 +793,22 @@ class UserBookingController extends Controller
     public function loadStepPlayer()
     {
         //select all players of session
-        $session_players = DB::table('session_players')->where('session_email','=',Auth::user()->email)->get();
+        $user = Auth::user();
+        $exist = SessionPlayer::where('doc_id', $user->doc_id)->where('package_id', Session::get('package_id'))->where('player_type', 0)->first();
 
+        if(!$exist) {
+            SessionPlayer::create([
+                'doc_id' => $user->doc_id,
+                'player_type' => 0,
+                'session_email' => $user->email,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'email' => $user->email,
+                'phone_number' => $user->phone_number,
+                'package_id' => Session::get('package_id'),
+            ]);
+        }
+        $session_players = DB::table('session_players')->where('session_email','=',Auth::user()->email)->where('player_type','!=',0)->get();
          //load step Player
 		return view('select-booking-players', compact('session_players'));
     }
@@ -927,7 +940,7 @@ class UserBookingController extends Controller
     public function postStep2(Request $request)
     {
         $input = $request->all();
-
+        $setting = Settings::query()->first();
         //store form input into session and load next step
         $request->session()->put('address', $input['address']);
         $request->session()->put('event_date', $input['custom-event_date']);
@@ -951,9 +964,8 @@ class UserBookingController extends Controller
 
 			//obviar las cancelaciones
 			$bookings_count = count(DB::table('bookings')->where('booking_date','=', $dateBookings)->where('user_id','=', Auth::user()->id)->where('status','!=', __('backend.cancelled'))->get());
-			//$bookings_today = Auth::user()->bookings()->where('booking_date','=',($todayBookings));
-			$bookings_perday =  config('settings.bookingUserPerDay');
-
+            //$bookings_today = Auth::user()->bookings()->where('booking_date','=',($todayBookings));
+			$bookings_perday =  $setting->bookingUserPerDay;
 			
 			//echo $bookings_perday;
 			//die();
@@ -1070,7 +1082,7 @@ class UserBookingController extends Controller
 		// $packageEndDate = date('Y-m-d H:i:s', strtotime('+' . config('settings.bookingTimeout') . ' minute'));
 
 		//create session_slot
-		
+		$package_id = Session::get('package_id');
         
         if(Session::get('booking_type_id') === "1") {
             SessionSlot::create([
@@ -1078,6 +1090,7 @@ class UserBookingController extends Controller
                 'booking_date' =>  $input['custom-event_date'] ,
                 'booking_time' =>  $input['booking_slot'] ,
                 'booking_type' =>  Session::get('booking_type_id'),
+                'package_id' =>  $package_id,
     
              //'expiration_date' => "TIMESTAMPADD(MINUTE,3, GETDATE())"
                 
@@ -1095,13 +1108,14 @@ class UserBookingController extends Controller
                     'booking_date' =>  $input['custom-event_date'] ,
                     'booking_time' =>  $value ,
                     'booking_type' =>  Session::get('booking_type_id'),
+                    'package_id' =>  $package_id,
                 ]);
             }
         }
 
 		//update expiration date
 	
-		$param =  config('settings.bookingTimeout') ;
+		$param =  $setting->bookingTimeout;
 		
 		// $sql2="UPDATE session_slots SET expiration_date=TIMESTAMPADD(MINUTE, " . $param  .  " , created_at) WHERE session_email='" .  Auth::user()->email  .  "' and booking_date='" .  Session::get('event_date')  . "' AND booking_time='" .  Session::get('booking_slot')  . "'"  ;
 		
@@ -1130,8 +1144,9 @@ class UserBookingController extends Controller
      */
     public function loadStep3()
     {
-		$minPlayers = config('settings.bookingUser_minPlayers');
-		$maxPlayers = config('settings.bookingUser_maxPlayers');
+        $settings = Settings::query()->first();
+		$minPlayers = $settings->bookingUser_minPlayers;
+        $maxPlayers = $settings->bookingUser_maxPlayers;
 		
 		$session_players = count(DB::table('session_players')->where('session_email','=', Auth::user()->email)->get()) + 1;
 	
@@ -1152,16 +1167,7 @@ class UserBookingController extends Controller
 			$session_players = DB::table('session_players')->where('session_email','=',Auth::user()->email)->get();
 			 //load step Player
 			return view('select-booking-players', compact('session_players'));
-		}
-		else
-		{
-			//OK
-			//load step 2
-			//return view('select-booking-time', compact('disable_days_string'));
-		}
-		
-		
-		
+		}		
 		
         $package_id = Session::get('package_id');
         $package = Package::find($package_id);
@@ -1170,8 +1176,20 @@ class UserBookingController extends Controller
         //select all addons of category
         $addons = Category::find($category_id)->addons()->get();
         $session_addons = DB::table('session_addons')->where('session_email','=',Auth::user()->email)->get();
-
-        return view('select-extra-services', compact('addons', 'session_addons'));
+        $selectedPlayer = Session::get('selectedPlayer');
+        foreach ($addons as $key => $value) {
+            $sessionAddon = SessionAddon::where('addon_id', $value->id)->where('doc_id', $selectedPlayer)->where('package_id',$package_id)->where('session_email',Auth::user()->email)->first();
+            if($sessionAddon){
+                $addons[$key]->cant = $sessionAddon->cant;
+                $addons[$key]->buttonText = __('app.update_service_btn');
+                $addons[$key]->showDelete = 'show';
+            } else {
+                $addons[$key]->cant = 1;
+                $addons[$key]->buttonText = __('app.add_service_btn');
+                $addons[$key]->showDelete = 'hidde';
+            }
+        }
+        return view('select-extra-services', compact('addons', 'session_addons','selectedPlayer'));
     }
 
     /**
@@ -1339,6 +1357,33 @@ class UserBookingController extends Controller
         {
             return view('errors.404');
         }
+    }
+
+    public function getExtraServiceParticipants() {
+        $package_id = Session::get('package_id');
+        $user = auth()->user();
+        $arrayParticipants = array();
+        $user->isUser = true;
+        array_push($arrayParticipants, $user);
+        $participants = SessionPlayer::where('session_email', $user->email)->where('player_type','!=', 0)->where('package_id', $package_id)->get();
+        foreach ($participants as $key => $value) {
+            $participants[$key]->isUser = false;
+            array_push($arrayParticipants, $value);
+        }
+        foreach ($arrayParticipants as $key => $value) {
+            $addons = SessionAddon::where('package_id', $package_id)->where('doc_id', $value->doc_id)->with(['addon'])->get();
+            if($addons) {
+                $arrayParticipants[$key]->addons = $addons;
+            } else {
+                $arrayParticipants[$key]->addons = [];
+            }
+        }
+        return response()->json([ 'success' => true, 'data' => $arrayParticipants ]);
+    }
+
+    public function setParticipant(Request $request) {
+        Session::put('selectedPlayer',$request['doc_id']);
+        return response()->json([ 'success' => true ]);
     }
 
 }

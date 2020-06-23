@@ -10,7 +10,7 @@ class SessionPlayer extends Model
 	
     protected $fillable = [
         'doc_id', 'player_type', 'session_email',
-		'first_name', 'last_name','email','phone_number', 'token'
+		'first_name', 'last_name','email','phone_number', 'token','package_id'
     ];
 
 	// public function player()
