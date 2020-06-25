@@ -15,6 +15,12 @@
     text-decoration: none;
 }
 
+.collapse-href a {
+	font-size: 20px;
+	color: white;
+}
+
+
 </style>
 
 @section('content')
@@ -202,27 +208,37 @@
                 <div class="col-md-12 form-group" style="margin-top: 20px">
                          
                          <div class="row">
-                            <div class="col-md-6 form-group"> 
+                            <div class="col-md-5 form-group" style="margin-right: 5px;"> 
                                 <div class="row">
-                                    <div class="col-md-12 form-group"> 
-                                        <a class="booking-collapse-button" data-toggle="collapse" href="#participantsCollapse" role="button" aria-expanded="false" aria-controls="participantsCollapse">
-                                            Participantes
-                                        <i class="fa fa-angle-down" style="margin-left: 5px"></i>
-                                        </a>
+                                    <div class="col-md-12 form-group btn-primary"> 
+                                        <div class="row" style="padding: 10px;">
+                                            <div class="col-md-6 " style="text-align: left; font-weigth: bold; line-height: 2; font-size: 1.125rem;"> Participantes</div>
+                                            <div class="col-md-6 collapse-href" style="text-align: right;"> 
+                                                <a class="collapsed" data-toggle="collapse" href="#participantsCollapse" role="button" aria-expanded="false" aria-controls="participantsCollapse">
+                                                    <i class="fa fa-angle-down" style="margin-left: 5px"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-12 collapse" id="participantsCollapse"> 
                                         <div class="row" id="extra-service-participants"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 form-group"> 
+                            <div class="col-md-6 form-group" > 
                                 <div class="row">
-                                    <div class="col-md-12 form-group"> 
-                                        <a class="booking-collapse-button" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                            Resumen Servicios Adicionales
-                                        <i class="fa fa-angle-down" style="margin-left: 5px"></i>
-                                        </a>
+
+                                    <div class="col-md-12 form-group btn-primary"> 
+                                        <div class="row" style="padding: 10px;">
+                                            <div class="col-md-10 " style="text-align: left; font-weigth: bold; line-height: 2; font-size: 1.125rem;"> Resumen Servicios Adicionales</div>
+                                            <div class="col-md-2 collapse-href" style="text-align: right;"> 
+                                                <a class="collapsed" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                    <i class="fa fa-angle-down" style="margin-left: 5px"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
+
                                     <div class="col-md-12 collapse" id="collapseExample"> 
                                         <div class="row" id="total-addons"></div>                                        
                                     </div>
@@ -312,12 +328,12 @@
                 </div>
 
                 <div class="col-md-6">
-                    @if(config('settings.offline_payments'))
+                    
                         <br><br>
                         <h5>{{ __('app.offline_payment_heading') }}</h5>
                         <a href="{{ route('payOffline') }}" class="btn btn-success btn-lg btn-block"><i class="far fa-file-alt"></i>&nbsp;&nbsp;{{ __('app.complete_booking') }}</a>
                         <br><br><br>
-                    @endif
+                 
                 </div>
 
                 @if(!config('settings.paypal_enabled') && !config('settings.stripe_enabled') && !config('settings.offline_payments'))

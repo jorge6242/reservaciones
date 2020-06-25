@@ -312,6 +312,8 @@ class OfflinePaymentController extends Controller
 						'booking_time' => Session::get('booking_slot'),
 						'google_calendar_event_id' => $calendarEvent->id,
 						'status' => __('backend.processing'),
+						'booking_time2' => Session::get('booking_time2'),
+						'package_type_id' => Session::get('packageType')
 					]);
 					$this->createPlayers($booking->id, 1);
 					DB::table('session_players')->where('session_email','=', Auth::user()->email)->delete();
@@ -353,6 +355,8 @@ class OfflinePaymentController extends Controller
 						'booking_time' => Session::get('booking_slot'),
 						'locator' => $locator,
 						'status' => __('backend.processing'),
+						'booking_time2' => Session::get('booking_time2'),
+						'package_type_id' => Session::get('packageType')
 					]);
 					$this->createPlayers($booking->id, 1);
 					DB::table('session_players')->where('session_email','=', Auth::user()->email)->delete();
@@ -396,6 +400,8 @@ class OfflinePaymentController extends Controller
 					'booking_time' => Session::get('booking_slot'),
 					'locator' => $locator,
 					'status' => __('backend.processing'),
+					'booking_time2' => Session::get('booking_time2'),
+					'package_type_id' => Session::get('packageType')
 				]);
 				$this->createPlayers($booking->id, 1);
 				DB::table('session_players')->where('session_email','=', Auth::user()->email)->delete();

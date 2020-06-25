@@ -80,6 +80,8 @@ return [
     'address_error' => 'Por favor, proporcione la dirección de reserva.',
     'date_error' => 'Seleccione una fecha para su reserva.',
     'time_slot_error' => 'Por favor, seleccione la hora de su reserva.',
+    'package_type_error' => 'Seleccione Tipo de Juego',
+    'tennis_slot_error' => 'No hay disponibles horarios suficientes para el tipo de juego seleccionado',
     'draw_user_error' => 'Usuario ya tiene registro en sorteo seleccionado',
     'no_extra_services_title' => 'No se ofrecen servicios adicionales para su tipo de reserva.',
     'no_extra_services_subtitle' => 'Haga clic en el botón de abajo para finalizar su reserva por favor.',

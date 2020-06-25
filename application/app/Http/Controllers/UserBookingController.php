@@ -15,6 +15,7 @@ use App\Category;
 use App\Package;
 use Carbon\Carbon;
 use App\SessionSlot;
+use App\PackagesType;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -72,6 +73,22 @@ class UserBookingController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
+    public function getPackagesByType(Request $request)
+    {
+        $category_id = \request('parent');
+        $dates = [
+            [ 'date' => Carbon::now() ],
+            [ 'date' => Carbon::now()->addDay(1) ],
+            [ 'date' => Carbon::now()->addDay(2) ],
+        ];
+        $category = Category::where('id', $request['id'])->with(['packages'])->get();
+        return response()->json([ 'success' => true, 'data' => $category, 'dates' => $dates ]);
+    }
+
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getTimingSlots()
     {
 			echo "Leyenda";
@@ -111,7 +128,7 @@ class UserBookingController extends Controller
 
 			echo '</div>';
 
-	
+        Session::put('selectedPackageType',null);
 	
 		date_default_timezone_set(env('LOCAL_TIMEZONE','America/Caracas'));
 				
@@ -152,7 +169,8 @@ class UserBookingController extends Controller
 
         $drawId = Session::get('draw_id');
 		
-		echo Package::find($selected_package_id)->title; 
+        echo Package::find($selected_package_id)->title; 
+        
         //get selected category_id
         $selected_category_id = Package::find($selected_package_id)->category->id;
 
@@ -270,10 +288,9 @@ class UserBookingController extends Controller
 		$sessionSlots =  DB::table('session_slots')->where('booking_date','=',$event_date)->get();
 		
 		//$sessionSlots =  DB::table('session_slots')->where('booking_date','=',$event_date)->where('expiration_date','>=',time())->get();		
-        
+        $setting = Settings::query()->first();
 		//reset the counter to disable slots
         $count_next_disabled = 0;
-
         //start loop for slot generation
         for($i = 0; $i < $hours; $i++)
         {
@@ -305,7 +322,6 @@ class UserBookingController extends Controller
             }
 
 
-
             //checking slot availability
             foreach ($bookings as $booking)
             {
@@ -321,13 +337,14 @@ class UserBookingController extends Controller
                         $list_slot[$i]['is_available'] = false;
                         $package_booking = Package::find($booking->package_id);
                         $package = Package::find($selected_package_id);
-                        if(config('settings.slots_with_package_duration'))
+                        
+                        if($setting->slots_with_package_duration)
                         {
                             $count_next_disabled = ($package_booking->duration / $package->duration) - 1;
                         }
                         else
                         {
-                            $count_next_disabled = ($package_booking->duration / config('settings.slot_duration')) - 1;
+                            $count_next_disabled = ($package_booking->duration / $setting->slot_duration) - 1;
 
                         }
                     }
@@ -356,7 +373,7 @@ class UserBookingController extends Controller
 
                     //multiple with different category
 
-                    if(config('settings.slots_method') == 4)
+                    if($setting->slots_method == 4)
                     {
                         if($selected_category_id == $booking->package->category->id)
                         {
@@ -645,7 +662,9 @@ class UserBookingController extends Controller
     public function postStep1(Request $request)
     {
         $input = $request->all();
+        $categoryType = Package::find($input['package_id'])->category->category_type;
         $request->session()->put('package_id', $input['package_id']);
+        $request->session()->put('categoryType', $categoryType);
 
 		$request->session()->put('countdown', $input['countdown']);	
         
@@ -1081,8 +1100,21 @@ class UserBookingController extends Controller
 		// date_default_timezone_set('America/Caracas');
 		// $packageEndDate = date('Y-m-d H:i:s', strtotime('+' . config('settings.bookingTimeout') . ' minute'));
 
-		//create session_slot
-		$package_id = Session::get('package_id');
+        //create session_slot
+        $tennisSlot = json_decode($input['tennis_slot']);
+        $package_id = Session::get('package_id');
+        $packageType = $input['package-type'] ? $input['package-type'] : null; // Validar package_type 
+        $bookingTime2 = null; 
+
+        if($tennisSlot !== null) {
+            $input['booking_slot'] = $tennisSlot[0];
+            $bookingTime2 = end($tennisSlot);
+            Session::put('tennisSlots',$tennisSlot);
+            Session::put('booking_slot',$input['booking_slot']);
+        }
+        Session::put('packageType',$packageType);
+        Session::put('booking_time2',$bookingTime2);
+        
         
         if(Session::get('booking_type_id') === "1") {
             SessionSlot::create([
@@ -1091,12 +1123,8 @@ class UserBookingController extends Controller
                 'booking_time' =>  $input['booking_slot'] ,
                 'booking_type' =>  Session::get('booking_type_id'),
                 'package_id' =>  $package_id,
-    
-             //'expiration_date' => "TIMESTAMPADD(MINUTE,3, GETDATE())"
-                
-                //'expiration_date' =>   $packageEndDate  
-                //'created_at' =>   time() ,
-                //'updated_at' =>  time() 
+                'package_type_id' =>  $packageType,
+                'booking_time2' =>  $bookingTime2,
             ]);
         }
         if(Session::get('booking_type_id') === "2") {
@@ -1108,7 +1136,8 @@ class UserBookingController extends Controller
                     'booking_date' =>  $input['custom-event_date'] ,
                     'booking_time' =>  $value ,
                     'booking_type' =>  Session::get('booking_type_id'),
-                    'package_id' =>  $package_id,
+                    'package_type_id' =>  $packageType,
+                    'booking_time2' =>  $bookingTime2,
                 ]);
             }
         }
@@ -1116,10 +1145,10 @@ class UserBookingController extends Controller
 		//update expiration date
 	
 		$param =  $setting->bookingTimeout;
-		
+
 		// $sql2="UPDATE session_slots SET expiration_date=TIMESTAMPADD(MINUTE, " . $param  .  " , created_at) WHERE session_email='" .  Auth::user()->email  .  "' and booking_date='" .  Session::get('event_date')  . "' AND booking_time='" .  Session::get('booking_slot')  . "'"  ;
 		
-		$sql2="UPDATE session_slots SET created_at=GETDATE(), updated_at=GETDATE(),  expiration_date=    dateadd(MINUTE, " . $param  .  " , GETDATE()) WHERE session_email='" .  Auth::user()->email  .  "' and booking_date='" .  $input['custom-event_date']  . "' AND booking_time='" .  Session::get('booking_slot')  . "'"  ;
+		$sql2="UPDATE session_slots SET created_at=GETDATE(), updated_at=GETDATE(),  expiration_date=    dateadd(MINUTE, " . $param  .  " , GETDATE()) WHERE session_email='" .  Auth::user()->email  .  "' and booking_date='" .  $input['custom-event_date']  . "' AND booking_time='" .  $input['booking_slot']  . "'"  ;
 		
 		
 		
@@ -1384,6 +1413,22 @@ class UserBookingController extends Controller
     public function setParticipant(Request $request) {
         Session::put('selectedPlayer',$request['doc_id']);
         return response()->json([ 'success' => true ]);
+    }
+
+    public function getPackageType() {
+        $packageId = Session::get('package_id');
+        $packageTypes = [];
+        $category = Package::where('id',$packageId)->with(['category'])->first();
+        if($category && $category->category()->first()->category_type == 1) {
+            $packageTypes = PackagesType::where('package_id', $packageId)->get();
+        }
+        return response()->json([ 'success' => true, 'data' => $packageTypes ]);
+    }
+
+    public function setPackageType(Request $request) {
+        $packageType = PackagesType::find($request['id']);
+        Session::put('selectedPackageType', $packageType);
+        return response()->json([ 'success' => true, 'data' => $packageType ]);
     }
 
 }

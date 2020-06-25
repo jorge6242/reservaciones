@@ -37,6 +37,15 @@
         .package_title.package-draw.active {
 	        border: 1px solid #4E5E6A;
         }
+        #tennis-calendar .cell {
+            border: 1px solid #2c3e50;
+        }
+        #tennis-calendar .cell.active {
+            background-color: #f1c40f;
+        }
+        #tennis-calendar .header, .time {
+            font-weight: bold;
+        }
     </style>
 
 @endsection
@@ -160,7 +169,9 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-md-12" id="tennis-calendar"></div>
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div id="slots_loader" class="d-none"><p style="text-align: center;"><img src="{{ asset('images/loader.gif') }}" width="52" height="52"></p></div>
@@ -168,10 +179,15 @@
                 </div>
   @endif
                 <br>
+                <div id="package-type"></div>
+                <input type ="hidden" id="selected-package-type" value="">
                 <div id="custom_slots_holder" data-booking-type="{{ Session::get('booking_type_id') }}"></div>
                 <div class="row col-md-12">
                     <div class="alert alert-danger col-md-12 d-none" id="slot_error" style="margin-bottom: 50px;">
                         {{ __('app.time_slot_error') }}
+                    </div>
+                    <div class="alert alert-danger col-md-12 d-none" id="tennis_slot_error" style="margin-bottom: 50px;">
+                        
                     </div>
                     <div class="alert alert-danger col-md-12 d-none" id="user_draw_error" style="margin-bottom: 50px;">
                         {{ __('app.draw_user_error') }}
@@ -184,6 +200,7 @@
         </div>
         <input type="hidden" id="data-booking-type" value='{{ Session::get('booking_type_id') }}'>
         <input type="hidden" name="draw_booking_slot" id="draw_booking_slot" value=''>
+        <input type="hidden" name="tennis_slot" id="tennis_slot" value=''>
         <footer class="footer d-none d-sm-none d-md-block d-lg-block d-xl-block">
             <div class="container">
                 <div class="row">
@@ -243,7 +260,8 @@
         var nowDate = new Date();
         var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
         var maxDate = new Date();
-		maxDate.setDate(today.getDate() +  {{ \App\Settings::query()->first()->bookingUser_maxDays }} );  //LA set maximum booking days on future
+        const bookingUserMaxDays = '{{ \App\Settings::query()->first()->bookingUser_maxDays }}';
+		maxDate.setDate(today.getDate() + bookingUserMaxDays  );  //LA set maximum booking days on future
 		$('#custom-event_date').datepicker({
             orientation: "auto right",
             autoclose: true,
@@ -296,8 +314,61 @@
                 return false
             });
 
+    
+    
+    
+    function handlePackageType () {
+        const URL_CONCAT = $('meta[name="index"]').attr('content');
+        const id = document.getElementById("select-package-type").value;
+                $.ajax({
+                type: 'GET',
+                url: `${URL_CONCAT}/set-package-type`,
+                data: { id : id  },
+                beforeSend: function() {
+                    $('#selected-package-type').empty();
+                    $('#tennis_slot').val('');
+                    $('.btn-slot').removeClass('slot-draw-picked');
+                },
+                success: function(response) {
+                    $('#selected-package-type').val(JSON.stringify(response.data));
+                },
+            });
+        
+    }
+
+    function renderPackageType(data) {
+			let html = '';
+			data.forEach(element => {
+				html +=`<option value="${element.id}">${element.title}</option>`;
+			})
+			return html;
+		}
+
+    function getPackageType() {
+        const URL_CONCAT = $('meta[name="index"]').attr('content');
+                $.ajax({
+                type: 'GET',
+                url: `${URL_CONCAT}/get-package-type`,
+                beforeSend: function() {
+                    $('#package-type').empty();
+                },
+                success: function(response) {
+                    let html = '';
+                    html +=` <select name="package-type" id="select-package-type" onchange="handlePackageType()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
+                                <option value="">Seleccionar Tipo de Juego</option>
+							    ${renderPackageType(response.data)}	
+						</select> `;
+                    $('#package-type').html(html);
+                },
+                complete: function () {
+                    $('#slots_loader').addClass('d-none');
+                }
+            });
+    }
+
     function onSelectDraw() {
         const URL_CONCAT = $('meta[name="index"]').attr('content');
+        const categoryType = '{{ Session::get('categoryType') }}';
             const id = document.getElementById("select-draw").value;
                 $('#hour-list').empty();
                  $('#draw_booking_slot').val('');
@@ -315,10 +386,14 @@
                         },
                             beforeSend: function() {
                                 $('#slots_loader').removeClass('d-none');
+                                $('#selected-package-type').empty();
+                                $('#tennis_slot').val('');
                             },
                             success: function(response) {
                                 $('#custom_slots_holder').html(response);
-
+                                if(categoryType == 1) {
+                                    getPackageType();
+                                }
                             },
                             complete: function () {
                                 $('#slots_loader').addClass('d-none');
@@ -333,6 +408,7 @@
         var selected_date;
         selected_date = $(this).val();
         var URL_CONCAT = $('meta[name="index"]').attr('content');
+        const categoryType = '{{ Session::get('categoryType') }}';
 
         //prepare to send ajax request
         $.ajax({
@@ -341,9 +417,15 @@
             data: {event_date:selected_date},
             beforeSend: function() {
                 $('#slots_loader').removeClass('d-none');
+                $('#selected-package-type').empty();
+                $('#tennis_slot').val('');
             },
             success: function(response) {
                 $('#custom_slots_holder').html(response);
+                
+                if(categoryType == 1) {
+                    getPackageType();
+                }
             },
             complete: function () {
                 $('#slots_loader').addClass('d-none');
@@ -390,19 +472,93 @@
         } 
     );
 
+    function getBtnSLotPosition (hour) {
+            let count = 0;
+            let position = 0;
+            $('.btn-slot.available').each(function() {
+                count = count + 1;
+                 const currentHour = $(this).attr('data-slot-time');
+                if(currentHour == hour) {
+                    position = count;
+                }
+            });
+        return position;
+    }
+
     const array = [];
     $('#custom_slots_holder').on('click', 'a.btn-slot', function() {
         var slot_time = $(this).attr('data-slot-time');
         var bookingType = document.getElementById("data-booking-type").value;
+        let selectedPackageType = $("#selected-package-type").val();
+        const categoryType = '{{ Session::get('categoryType') }}';
+        $('#tennis_slot_error').addClass('d-none').html('');
+        $('.btn-slot').removeClass('slot-draw-picked');
+        $('#tennis_slot').val('');
+         if(categoryType == 1 && selectedPackageType === '' || selectedPackageType === 'null') {
+             $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.package_type_error') }}');
+             $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+         }
 
-        if(bookingType === "1") {
+         
+
+         if(bookingType === "1" && categoryType == 1 && selectedPackageType) {
+            selectedPackageType = JSON.parse(selectedPackageType);
+            const tennisCondition = selectedPackageType.length / 30;
+            let slots = [];
+            const btnsLength = $('.btn-slot.available').length;
+            const slotPosition = getBtnSLotPosition(slot_time);
+            const ButtonCondition = btnsLength - slotPosition;
+
+            if(tennisCondition == 2 && ButtonCondition < 1) {
+                $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
+                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+            }
+
+            if(tennisCondition == 2 && ButtonCondition < 2) {
+                $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
+                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+            }
+
+
+            if(tennisCondition == 2 && ButtonCondition >= 1) {
+                const slot2 = moment(slot_time, 'hh:mm A').add('30', 'minutes').format('hh:mm A');
+                slots = [ slot_time, slot2 ];
+                $('.btn-slot.available').each(function() {
+                 const currentHour = $(this).attr('data-slot-time');
+                 const exist = slots.find(e => e === currentHour );
+                    if (exist) {
+                        $(this).addClass('slot-draw-picked');
+                    }
+                });
+
+                $('#tennis_slot').val(JSON.stringify(slots));
+            }
+
+            if(tennisCondition == 3 && ButtonCondition >= 2) {
+                const slot2 = moment(slot_time, 'hh:mm A').add('30', 'minutes').format('hh:mm A');
+                const slot3 = moment(slot_time, 'hh:mm A').add('60', 'minutes').format('hh:mm A');
+                slots = [ slot_time, slot2, slot3 ];
+                $('.btn-slot.available').each(function() {
+                 const currentHour = $(this).attr('data-slot-time');
+                 const exist = slots.find(e => e === currentHour );
+                    if (exist) {
+                        $(this).addClass('slot-draw-picked');
+                    }
+                });
+
+                $('#tennis_slot').val(JSON.stringify(slots));
+            } 
+            
+         }
+        
+        if(bookingType === "1" && categoryType == 0) {
             $('#custom_slots_holder').find('.btn-slot').removeClass('slot-picked');
             $('#booking_slot').remove();
             $('#custom_booking_step_2').append('<input type="hidden" name="booking_slot" id="booking_slot" value="'+slot_time+'">');
             $(this).addClass('slot-picked');
         }
 
-        if(bookingType === "2") {
+        if(bookingType === "2" && categoryType == 0) {
              const hourSlots = $('input[name=draw_booking_slot]').val();
              if(hourSlots) {
                  const slots = JSON.parse(hourSlots);
@@ -492,6 +648,13 @@
         booking_slot = $('input[name=booking_slot]').val();
         const hourBookingSlots = $('input[name=draw_booking_slot]').val();
         const bookinType = $('input[name=booking_type_id]').val();
+        const tennisSlot = $('#tennis_slot').val();
+        const categoryType = '{{ Session::get('categoryType') }}';
+
+        if(categoryType == 1 && !tennisSlot) {
+            $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
+            $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+        }
 
         if(!bookinType) {
             $('#booking_type_error').removeClass('d-none');
@@ -506,7 +669,7 @@
             check = false;
         }
 
-        if(bookinType === "1") {
+        if(bookinType === "1" && categoryType == 0) {
             if(booking_slot === undefined) {
                 $('#slot_error').removeClass('d-none');
                 $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
@@ -514,7 +677,7 @@
             }
         }
 
-        if(bookinType === "2") {
+        if(bookinType === "2" && categoryType == 0) {
             if(hourBookingSlots === '') {
                 $('#slot_error').removeClass('d-none');
                 $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
@@ -535,11 +698,100 @@
         }
     });    
     
+    function handleSelectReport() {
+            moment.locale('es')
+            const customMoment = moment('2020-06-24 19:08:18.536759').format('MMMM Do YYYY');
+            console.log('customMoment ', customMoment);
+			$('#tennis-calendar').empty();
+			let html = `
+				<div class="row header">
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell">Cancha 1</div>
+					<div class="col-md-2 cell">Cancha 2</div>
+					<div class="col-md-2 cell">Cancha 3</div>
+					<div class="col-md-2 cell">Cancha 4</div>
+					<div class="col-md-2 cell">Cancha 5</div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">6:00</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">6:30</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">7:00</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">7:30</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">8:00</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">8:30</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">9:00</div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">9:30</div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">10:00</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+				</div>
+			`;
+			$('#tennis-calendar').html(html);
+			
+		}
     
     
     
-    
-    
+    //handleSelectReport();
     
     </script>
 

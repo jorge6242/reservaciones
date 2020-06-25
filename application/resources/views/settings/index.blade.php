@@ -40,6 +40,7 @@
                             <li role="presentation" class="active"><a href="#business" role="tab" data-toggle="tab"><i class="icon-briefcase"></i>&nbsp;&nbsp;{{ __('backend.business') }}</a></li>
                             <li role="presentation"><a href="#currency" role="tab" data-toggle="tab"><i class="icon-credit-card"></i>&nbsp;&nbsp;{{ __('backend.currency') }}</a></li>
                             <li role="presentation"><a href="#booking" role="tab" data-toggle="tab"><i class="icon-calendar"></i>&nbsp;&nbsp;{{ __('backend.booking') }}</a></li>
+                            <li role="presentation"><a href="#settingPerTime" role="tab" data-toggle="tab"><i class="icon-calendar"></i>&nbsp;&nbsp;{{ __('backend.settings_per_time') }}</a></li>
                             <li role="presentation"><a href="#gst" role="tab" data-toggle="tab"><i class="icon-info"></i>&nbsp;&nbsp;{{ __('backend.gst') }}</a></li>
                             <li role="presentation"><a href="#stripe" role="tab" data-toggle="tab"><i class="fa fa-cc-stripe"></i>&nbsp;&nbsp;Stripe</a></li>
                             <li role="presentation"><a href="#paypal" role="tab" data-toggle="tab"><i class="fa fa-paypal"></i>&nbsp;&nbsp;Paypal</a></li>
@@ -404,6 +405,45 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div role="tabpanel" class="tab-pane fade in" id="settingPerTime">
+                                <div class="row clearfix">
+
+                                    <div class="col-md-4">
+                                        <label><strong>{{ __('backend.bookingUser_maxTimePerDay') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUser_maxTimePerDay" value="{{ $settings->bookingUser_maxTimePerDay }}">
+                                    </div>
+									
+                                    <div class="col-md-4">
+                                        <label><strong>{{ __('backend.bookingUser_maxTimePerWeek') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUser_maxTimePerWeek" value="{{ $settings->bookingUser_maxTimePerWeek }}">
+                                    </div>
+									
+                                    <div class="col-md-4">
+                                        <label><strong>{{ __('backend.bookingUser_maxTimePerMonth') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUser_maxTimePerMonth" value="{{ $settings->bookingUser_maxTimePerMonth }}">
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label><strong>{{ __('backend.bookingGuest_maxTimePerDay') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingGuest_maxTimePerDay" value="{{ $settings->bookingGuest_maxTimePerDay }}">
+                                    </div>
+									
+                                    <div class="col-md-4">
+                                        <label><strong>{{ __('backend.bookingGuest_maxTimePerWeek') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingGuest_maxTimePerWeek" value="{{ $settings->bookingGuest_maxTimePerWeek }}">
+                                    </div>
+									
+                                    <div class="col-md-4">
+                                        <label><strong>{{ __('backend.bookingGuest_maxTimePerMonth') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingGuest_maxTimePerMonth" value="{{ $settings->bookingGuest_maxTimePerMonth }}">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
                             <div role="tabpanel" class="tab-pane fade in" id="gst">
                                 <div class="row clearfix">
                                     <div class="form-group col-md-12">

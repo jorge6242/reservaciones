@@ -372,6 +372,13 @@ return [
     'cancel_request' => 'Permitir que los clientes soliciten desde su cuenta',
     'info_booking_cancel_update' => 'Si habilita a los clientes para solicitar la cancelación de reserva, puede ir a Cancelar solicitudes para rastrear todas las solicitudes realizadas por los clientes. Límite de días significa que cuántos días antes de la fecha de reserva real, los clientes pueden actualizar o solicitar la cancelación. Puede dejar los días límites vacíos en caso de que no esté habilitando modificación o cancelar solicitudes para clientes.',
     'settings_error' => 'Algo salió mal, verifique el formulario para ver si hay errores.',
+    'settings_per_time' => 'Reservacion por tiempo',
+    'bookingUser_maxTimePerDay' => 'Tiempo Max por usuario Diario',
+    'bookingUser_maxTimePerWeek' => 'Tiempo Max por usuario Semanal',
+    'bookingUser_maxTimePerMonth' => 'Tiempo Max por usuario Mensual',
+    'bookingGuest_maxTimePerDay' => 'Tiempo Max por invitado Diario',
+    'bookingGuest_maxTimePerWeek' => 'Tiempo Max por invitado Semanal',
+    'bookingGuest_maxTimePerMonth' => 'Tiempo Max por invitado Mensual',
 	//
 
     //alerts translations
@@ -454,7 +461,7 @@ return [
 	'bookingTime_perpackage' => 'Tiempos de Reserva por Paquete',
 	'bookingTime_perpackageGlobal' => 'Global',
 	'bookingTime_perpackagePaquete' => 'Por Paquete',
-	'bookingUserPlayPerDay' => 'Máximo de veces que un socio puede jugar al día',
+    'bookingUserPlayPerDay' => 'Máximo de veces que un socio puede jugar al día',
 	
 	
 

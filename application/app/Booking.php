@@ -9,7 +9,7 @@ class Booking extends Model
 
     protected $fillable = [
         'user_id', 'locator','package_id', 'booking_address', 'booking_instructions', 'booking_date',
-        'booking_time', 'google_calendar_event_id' , 'status', 'court_id', 'booking_time2'
+        'booking_time', 'google_calendar_event_id' , 'status', 'court_id', 'booking_time2', 'package_type_id'
     ];
 
     public function invoice()

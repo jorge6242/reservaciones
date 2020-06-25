@@ -65,7 +65,13 @@ class Settings extends Model
 		'bookingSMSPlayers',
 		'bookingSMS_clientid',
 		'bookingTime_perpackage',
-		'bookingUserPlayPerDay',
+        'bookingUserPlayPerDay',
+        'bookingUser_maxTimePerDay', 
+        'bookingUser_maxTimePerWeek',
+        'bookingUser_maxTimePerMonth',
+        'bookingGuest_maxTimePerDay',
+        'bookingGuest_maxTimePerWeek',
+        'bookingGuest_maxTimePerMonth',
     ];
 
 }

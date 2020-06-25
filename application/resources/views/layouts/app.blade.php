@@ -22,6 +22,7 @@
     <title>{{ $title }} | {{ config('settings.business_name', 'Bookify') }}</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="icon" href="{{ asset('favicon.png') }}">
+    <script type="text/javascript" src="{{ asset('js/moment.min.js') }}" rel="stylesheet"></script>
     @yield('styles')
     @include('settings.customization')
     <style>

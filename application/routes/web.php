@@ -40,11 +40,14 @@ Route::get('/home-login', 'CustomLoginController@index');
 // ** AJAX REQUESTS ** //
 
 Route::post('/get_packages', 'UserBookingController@getPackages')->name('packages');
+Route::get('/get-packages-by-type', 'UserBookingController@getPackagesByType')->name('getPackagesByType');
 Route::get('/get-booking-types', 'UserBookingController@getBookingType')->name('getBookingType');
 Route::get('/get-draws', 'UserBookingController@getDraws')->name('getDraws');
 Route::get('/get-draw-times', 'UserBookingController@getDrawTimes')->name('getDrawTimes');
 Route::get('/get-date-draw', 'UserBookingController@getDateDraw')->name('getDateDraw');
 Route::get('/check-user-draw', 'UserBookingController@checkUserDraw')->name('checkUserDraw');
+Route::get('/get-package-type', 'UserBookingController@getPackageType')->name('getPackageType');
+Route::get('/set-package-type', 'UserBookingController@setPackageType')->name('setPackageType');
 Route::post('/set-hour-list', 'UserBookingController@getHoursByDate')->name('getHoursByDate');
 Route::post('/remove-hour-list', 'UserBookingController@removeHoursByDate')->name('removeHoursByDate');
 Route::post('/get_timing_slots', 'UserBookingController@getTimingSlots')->name('slots');

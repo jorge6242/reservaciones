@@ -42,6 +42,20 @@
     background: #007bff !important;
 }
 
+#tennis-calendar {
+	margin: 20px 0px 20px 0px;
+}
+
+#tennis-calendar .cell {
+	border: 1px solid #2c3e50;
+}
+#tennis-calendar .cell.active {
+	background-color: #f1c40f;
+}
+#tennis-calendar .header, .time {
+	font-weight: bold;
+}
+
 </style>
 
 <?php
@@ -574,7 +588,7 @@
                         @if(count($categories))
                             @foreach($categories as $category)
                                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
-                                    <div class="type_box category_box" data-category-id="{{ $category->id }}">
+                                    <div class="type_box custom_category_box" data-category-type="{{ $category->category_type }}" data-category-id="{{ $category->id }}">
                                         <div class="responsive-image"><img class="responsive-image" alt="{{ $category->title }}" src="{{ asset($category->photo->file) }}"></div>
                                         <div class="type_title">
                                             <div class="text-container">
@@ -599,6 +613,8 @@
                     </div>
                 </div>
 
+                <div id="packages-by-type"></div>
+                <div id="tennis-calendar"></div>
                 <div id="packages_holder"></div>
 
                 <div class="row">
@@ -683,6 +699,217 @@
 			// }, 1000);
 		  // });
 		// }
+
+		function handleSelectReport() {
+			$('#tennis-calendar').empty();
+			let html = `
+				<div class="row header">
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell">Cancha 1</div>
+					<div class="col-md-2 cell">Cancha 2</div>
+					<div class="col-md-2 cell">Cancha 3</div>
+					<div class="col-md-2 cell">Cancha 4</div>
+					<div class="col-md-2 cell">Cancha 5</div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">6:00</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">6:30</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">7:00</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">7:30</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">8:00</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">8:30</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">9:00</div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">9:30</div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+                </div>
+                <div class="row">
+					<div class="col-md-2 cell time">10:00</div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell"></div>
+					<div class="col-md-2 cell active"></div>
+					<div class="col-md-2 cell"></div>
+				</div>
+			`;
+			$('#tennis-calendar').html(html);
+			
+		}
+
+		function renderDates(dates) {
+			let html = '';
+			dates.forEach(element => {
+				html +=`<option value="${element.date}">${moment(element.date.date).format('MMMM Do YYYY')}</option>`;
+			})
+			return html;
+		}
+
+	    $("div").on("click", "div.custom_category_box", function(){
+        var category_id = $(this).attr('data-category-id');
+        var category_type = $(this).attr('data-category-type');
+        $('.type_title').removeClass('active');
+        $(this).find('.type_title').addClass('active');
+        var URL_CONCAT = $('meta[name="index"]').attr('content');
+		if(category_type == 0) {
+			$.ajax({
+            type: 'POST',
+            url: URL_CONCAT + '/get_packages',
+            data: {parent:category_id},
+            beforeSend: function() {
+                $('#packages_loader').removeClass('d-none');
+				$('#packages-by-type').empty();
+				$('#tennis-calendar').empty();
+                $('#packages_holder').html('&nbsp;');
+            },
+            success: function(response) {
+                $('#packages_holder').fadeIn().html(response);
+				$(".owl-carousel").owlCarousel({
+                    margin:20,
+                    dots:false,
+                    nav:true,
+                    navText: [
+                        '<img src="'+ URL_CONCAT + '/images/left.png">',
+                        '<img src="'+ URL_CONCAT + '/images/right.png">'
+                    ],
+                    responsiveClass: true,
+                    responsive: {
+                        0: {
+                            items: 1,
+							loop:true,
+                        },
+                        480: {
+                            items: 1,
+							loop:true,
+                        },
+                        769: {
+                            items: 3,
+							loop:true,
+                        }
+                    }
+                });
+                
+            },
+            complete: function () {
+                $('#packages_loader').addClass('d-none');
+            }
+        });
+		}
+
+		if(category_type == 1) {
+			$.ajax({
+            type: 'GET',
+            url: URL_CONCAT + '/get-packages-by-type',
+            data: {id:category_id},
+            beforeSend: function() {
+                $('#packages_loader').removeClass('d-none');
+				$('#packages_holder').empty();
+                $('#packages-by-type').empty();
+                $('#tennis-calendar').empty();
+            },
+            success: function(response) {
+				let html = '';
+				html +=` <select class="form-control" name="tennis-time" onchange="handleSelectReport()">
+							${renderDates(response.dates)}	
+						</select> `;
+				console.log('response ', response);
+                
+				$('#packages-by-type').fadeIn().html(html);
+				$.ajax({
+				type: 'POST',
+				url: URL_CONCAT + '/get_packages',
+				data: {parent:category_id},
+				beforeSend: function() {
+					$('#packages_loader').removeClass('d-none');
+					$('#packages_holder').html('&nbsp;');
+				},
+				success: function(response) {
+					$('#packages_holder').fadeIn().html(response);
+					$(".owl-carousel").owlCarousel({
+						margin:20,
+						dots:false,
+						nav:true,
+						navText: [
+							'<img src="'+ URL_CONCAT + '/images/left.png">',
+							'<img src="'+ URL_CONCAT + '/images/right.png">'
+						],
+						responsiveClass: true,
+						responsive: {
+							0: {
+								items: 1
+							},
+							480: {
+								items: 1
+							},
+							769: {
+								items: 3
+							}
+						}
+				});
+				},
+				complete: function () {
+					$('#packages_loader').addClass('d-none');
+				}
+				});
+
+            	},
+				complete: function () {
+					$('#packages_loader').addClass('d-none');
+				}
+				});
+		}
+    });
 
     $('body').on('click', 'div.package_box', function() {
         var package_id = $(this).attr('custom-data-package-id');

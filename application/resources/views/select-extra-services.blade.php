@@ -114,7 +114,7 @@
                                 <div class="alert alert-danger col-md-12 form-group d-none" id="addon_error"></div>
                                 @if($selectedPlayer)
                                     <div class="col-md-12 form-group">
-                                        <div class="owl-carousel owl-theme owl-loaded owl-drag" id="addons_carousel">
+                                        <div class="owl-carousel owl-theme owl-loaded owl-drag" id="custom-addons_carousel">
                                             @foreach($addons as $addon)
 
                                                 <div class="package_box">
@@ -269,6 +269,31 @@
     
 
     $(document).ready(function(){
+        const BASE_URL = $('meta[name="index"]').attr('content');
+        $("#custom-addons_carousel").owlCarousel({
+            margin:20,
+            dots:false,
+            nav:true,
+            navText: [
+                '<img src="'+ BASE_URL +'/images/left.png">',
+                '<img src="'+ BASE_URL +'/images/right.png">'
+            ],
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                    loop:true,
+                },
+                480: {
+                    items: 1,
+                    loop:true,
+                },
+                769: {
+                    items: 3,
+                    loop:true,
+                }
+            }
+        });
 
         getParticipants();
 

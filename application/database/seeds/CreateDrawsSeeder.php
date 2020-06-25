@@ -2,6 +2,7 @@
 
 use App\Draw;
 use App\Event;
+use App\Package;
 use Illuminate\Database\Seeder;
 
 class CreateDrawsSeeder extends Seeder
@@ -15,27 +16,41 @@ class CreateDrawsSeeder extends Seeder
     {
         $data = [
             [ 
-                'description' => 'Sorteo 1',
-                'status' => 1,
-                'event_type' => 'Evento Tipo Sorteo',
+                'title' => 'Cancha 1', 
+                'description' => '<br>', 
+                'price' => 0, 
+                'category_id' => 4, 
+                'photo_id' => 24, 
+                'duration' => 10,
+                'category_type' => 1,
             ],
             [ 
-                'description' => 'Sorteo 2',
-                'status' => 1,
-                'event_type' => 'Evento Tipo Sorteo',
+                'title' => 'Cancha 2', 
+                'description' => '<br>', 
+                'price' => 0, 
+                'category_id' => 4, 
+                'photo_id' => 24, 
+                'duration' => 10,
+                'category_type' => 1,
             ],
             [ 
-                'description' => 'Sorteo 3',
-                'status' => 1,
-                'event_type' => 'Evento Tipo Sorteo',
+                'title' => 'Cancha 3', 
+                'description' => '<br>', 
+                'price' => 0, 
+                'category_id' => 4, 
+                'photo_id' => 24, 
+                'duration' => 10,
+                'category_type' => 1,
             ],
         ];
         foreach ($data as $element) {
-            $event = Event::where('description',$element['event_type'])->first();
-            Draw::create([
-                'description' => $element['description'],
-                'status' => $element['status'],
-                'event_id' => $event->id,
+            Package::create([
+                'title' => $element['title'], 
+                'description' => $element['description'], 
+                'price' => $element['price'], 
+                'category_id' => $element['category_id'], 
+                'photo_id' => $element['photo_id'], 
+                'duration' => $element['duration'],
             ]);
         }
     }
