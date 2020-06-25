@@ -9,7 +9,7 @@
 -- ADD COLUMN locator VARCHAR(255) NULL;
 
 ALTER TABLE session_slots ADD package_id INT NULL;
-ALTER TABLE session_slots ADD booking_time2 datetime NULL;
+ALTER TABLE session_slots ADD booking_time2 varchar(255) NULL;
 ALTER TABLE session_slots ADD court_id INT NULL;
 
 ALTER TABLE session_players ADD package_id INT NULL;
@@ -19,7 +19,7 @@ ALTER TABLE session_addons ADD cant INT NULL;
 ALTER TABLE session_addons ADD doc_id  VARCHAR(255) NULL;
 ALTER TABLE session_addons ADD package_id INT NULL;
 
-ALTER TABLE bookings ADD booking_time2 datetime NULL;
+ALTER TABLE bookings ADD booking_time2 varchar(255) NULL;
 ALTER TABLE bookings ADD court_id INT NULL;
 
 ALTER TABLE addon_booking ADD booking_players_id INT NULL;
