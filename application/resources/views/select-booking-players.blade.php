@@ -97,7 +97,9 @@ function ajaxFunctionInclude(PlayerSlot){
 				var queryString = "?command=include&doc_id=" + player1+ "&email=" +  "{{Auth::user()->email}}" 
 				+  "&booking_date=" + "{{ Session::get('event_date') }}" 
 				+  "&token=" + "<?php echo $calculated_token; ?>"
-				 + "&package_id="+'{{ Session::get('package_id') }}';  
+				 + "&package_id="+'{{ Session::get('package_id') }}' 
+				 + "&categoryType="+'{{ Session::get('categoryType') }}' 
+				 + "&packageType="+'{{ Session::get('packageType') }}';
 				//PlayerSlot=1;
 			}
 		}

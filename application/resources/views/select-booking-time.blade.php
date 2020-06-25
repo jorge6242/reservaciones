@@ -107,23 +107,29 @@
                     </div>
                 </div>
 
-                <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">      
-                    <div class="package_box select-booking-type " booking-type-id="2">
-                        <div class="responsive-image"><img class="responsive-image" alt="Golf" src="/images/sorteo.jpg"></div>
-                            <div class="package_title package-draw">
+                 @if(Session::get('selectedCategoryDraw') == 1)
+                    <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">      
+                        <div class="package_box select-booking-type " booking-type-id="2">
+                            <div class="responsive-image"><img class="responsive-image" alt="Golf" src="/images/sorteo.jpg"></div>
+                                <div class="package_title package-draw">
 
-                                <div class="type_title package-draw">
-                                    <div class="text-container">
-                                        <p class="text_type">Sorteo</p>
-                                        {{-- <div class="package_btn ">
-                                            <a class="btn btn-primary btn-lg btn-block btn_package_select package-draw" >Seleccionar</a>
-                                        </div> --}}
+                                    <div class="type_title package-draw">
+                                        <div class="text-container">
+                                            <p class="text_type">Sorteo</p>
+                                            {{-- <div class="package_btn ">
+                                                <a class="btn btn-primary btn-lg btn-block btn_package_select package-draw" >Seleccionar</a>
+                                            </div> --}}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>              
-                    </div>                                                                                   
-				</div>
+                            </div>              
+                        </div>                                                                                   
+                @endif
+                @if(Session::get('selectedCategoryDraw') == 0)
+                    <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3"></div>
+                @endif
+            
+            </div>
 
 
     @if(Session::get('booking_type_id'))
@@ -169,9 +175,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-md-12" id="tennis-calendar"></div>
-                </div>
+                </div> --}}
                 <div class="row">
                     <div class="col-md-12">
                         <div id="slots_loader" class="d-none"><p style="text-align: center;"><img src="{{ asset('images/loader.gif') }}" width="52" height="52"></p></div>
@@ -179,8 +185,10 @@
                 </div>
   @endif
                 <br>
-                <div id="package-type"></div>
-                <input type ="hidden" id="selected-package-type" value="">
+                <div class="col-md-12">
+                    <div id="package-type"></div>
+                    <input type ="hidden" id="selected-package-type" value="">
+                </div>
                 <div id="custom_slots_holder" data-booking-type="{{ Session::get('booking_type_id') }}"></div>
                 <div class="row col-md-12">
                     <div class="alert alert-danger col-md-12 d-none" id="slot_error" style="margin-bottom: 50px;">
@@ -275,10 +283,17 @@
 
         $('body').on('click', '.select-booking-type', function() {
                 const BASE_URL = $('meta[name="index"]').attr('content');
-                var booking_type_id = $(this).attr('booking-type-id');
+                let booking_type_id = $(this).attr('booking-type-id');
+                const selectedCategory = '{{ Session::get('selectedCategory') }}';
+                const selectedCategoryDraw = '{{ Session::get('selectedCategoryDraw') }}';
                 $('#booking_type_error').addClass('d-none');
                 $('#booking_type_id').remove();
                 $('#booking_step_1-1').append('<input type="hidden" attr-1 name="booking_type_id" id="booking_type_id" value="'+booking_type_id+'">');
+
+                if(selectedCategoryDraw == 0) {
+                     $('#booking_step_1-1').append('<input type="hidden" attr-1 name="booking_type_id" id="booking_type_id" value="1">');
+                     booking_type_id = 1;
+                }
 
 
                 $('.package_title').removeClass('active');
@@ -300,6 +315,8 @@
                             },
                         });
             });
+
+
             $('#booking_step_1-1').submit(function(e){
                 const booking_type  = $('input[name=booking_type_id]').val();
                 let check = true;
@@ -467,10 +484,6 @@
     }
     setBookingType();
     getDraws();
-
-    $( "a.btn-slot" ).on( "mouseenter", function() {
-        } 
-    );
 
     function getBtnSLotPosition (hour) {
             let count = 0;

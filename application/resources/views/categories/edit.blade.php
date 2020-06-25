@@ -37,6 +37,21 @@
                                 @endif
                             </div>
 
+                             <div class="form-group{{$errors->has('category_type') ? ' has-error' : ''}}">
+                                    <label class="control-label" for="category_type">{{ __('backend.category_type') }}</label>
+                                    <select class="form-control" name="category_type">
+                                        <option value="0" {{ $category->category_type == 0 ? 'selected' : '' }}>Estandar</option>
+                                        <option value="1" {{ $category->category_type == 1 ? 'selected' : '' }}>Por tiempo</option>
+                                    </select>
+                            </div>
+                            <div class="form-group{{$errors->has('draw') ? ' has-error' : ''}}">
+                                    <label class="control-label" for="draw">{{ __('backend.draw') }}</label>
+                                    <select class="form-control" name="draw">
+                                        <option value="0" {{ $category->draw == 0 ? 'selected' : '' }}>NO</option>
+                                        <option value="1" {{ $category->draw == 1 ? 'selected' : '' }}>SI</option>
+                                    </select>
+                            </div>
+
 
                             <div class="form-group{{$errors->has('photo_id') ? ' has-error' : ''}}">
                                 <label for="photo_id" class="control-label">{{ __('backend.select_image') }}</label>

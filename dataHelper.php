@@ -55,6 +55,8 @@
 		$session_email = $_GET['email'];
 		$command = $_GET['command'];
 		$package_id = $_GET['package_id'];
+		$categoryType = $_GET['categoryType'];
+		$categoryType = $_GET['categoryType'];
 		
 		//echo $command;
 		//exit();
@@ -266,6 +268,16 @@
 				$max_guests = $row['bookingUser_maxGuests'];
 				$bookings_perday =  $row['bookingUserPerDay'];
 				$bookings_playsperday =  $row['bookingUserPlayPerDay'];
+
+				// Parametros para Tenis
+
+				$bookingUser_maxTimePerDay =  $row['bookingUser_maxTimePerDay'];
+				$bookingUser_maxTimePerWeek =  $row['bookingUser_maxTimePerWeek'];
+				$bookingUser_maxTimePerMonth =  $row['bookingUser_maxTimePerMonth'];
+				$bookingGuest_maxTimePerDay =  $row['bookingGuest_maxTimePerDay'];
+				$bookingGuest_maxTimePerWeek =  $row['bookingGuest_maxTimePerWeek'];
+				$bookingGuest_maxTimePerMonth =  $row['bookingGuest_maxTimePerMonth'];
+
 			}
 
 			sqlsrv_free_stmt( $resultSettings);			
@@ -701,7 +713,8 @@ else if ($command == "include") // include player
 		sqlsrv_free_stmt( $resultPlayerCount);
 		
 
-		if ($cant>=$max_players-1)
+		// Caso Estandar
+		if ($categoryType == 0 && $cant>=$max_players-1)
 		{
 			$has_errors = 1;
 			$err_message = $err_message . "<br>Máximo número de participantes permitidos: " . $max_players; // . " Maximo en settings: " . $max_players;
@@ -735,7 +748,7 @@ else if ($command == "include") // include player
 		sqlsrv_free_stmt( $resultGuestCount);
 
 
-		if ($cant_Guests>$max_guests)
+		if ($categoryType == 0 && $cant_Guests>$max_guests)
 		{
 			$has_errors = 1;
 			$err_message = $err_message . "<br>Máximo número de Invitados permitidos: " . $max_guests;
@@ -791,7 +804,7 @@ else if ($command == "include") // include player
 		
 		//if ($intBookingUserCount>0) $is_user=1;
 		  
-		if ($intBookingPlayerCount+$intBookingUserCount >= $bookings_playsperday) 
+		if ($categoryType == 0 &&  $intBookingPlayerCount+$intBookingUserCount >= $bookings_playsperday) 
 		{ 
 			$has_errors = 1;
 			$err_message = $err_message . "<br>Este participante no puede exceder el máximo de participaciones por día.";

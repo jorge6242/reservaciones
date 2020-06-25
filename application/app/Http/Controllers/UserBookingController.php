@@ -662,9 +662,16 @@ class UserBookingController extends Controller
     public function postStep1(Request $request)
     {
         $input = $request->all();
+        $selectedCategoryDraw = Package::find($input['package_id'])->category->draw;
         $categoryType = Package::find($input['package_id'])->category->category_type;
         $request->session()->put('package_id', $input['package_id']);
+        $request->session()->put('selectedCategoryDraw', $selectedCategoryDraw);
         $request->session()->put('categoryType', $categoryType);
+        
+        $request->session()->put('booking_type_id', '');
+        if($selectedCategoryDraw == 0) {
+            $request->session()->put('booking_type_id', '1');
+        }
 
 		$request->session()->put('countdown', $input['countdown']);	
         

@@ -224,3 +224,6 @@
 24/06/2020 08:55:22 pm - include;GRENDYS GARCIA;1;1;;
 25/06/2020 09:10:21 am - include;ANA 1 ARANEO;1;1;;
 25/06/2020 09:11:24 am - include;GRENDYS GARCIA;1;1;;
+25/06/2020 06:17:46 pm - include;GRENDYS GARCIA;1;0;<br>Máximo número de participantes permitidos: 4<br>Ya es participante en la reservación;
+25/06/2020 07:45:26 pm - Deleted
+25/06/2020 07:47:04 pm - include;GRENDYS GARCIA;1;1;;

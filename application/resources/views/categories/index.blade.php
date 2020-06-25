@@ -39,6 +39,22 @@
                                     @endif
                                 </div>
 
+                                <div class="form-group{{$errors->has('category_type') ? ' has-error' : ''}}">
+                                    <label class="control-label" for="category_type">{{ __('backend.category_type') }}</label>
+                                    <select class="form-control" name="category_type">
+                                        <option value="0">Estandar</option>
+                                        <option value="1">Por tiempo</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group{{$errors->has('draw') ? ' has-error' : ''}}">
+                                    <label class="control-label" for="draw">{{ __('backend.draw') }}</label>
+                                    <select class="form-control" name="draw">
+                                        <option value="0">NO</option>
+                                        <option value="1">SI</option>
+                                    </select>
+                                </div>
+
 
                                 <div class="form-group{{$errors->has('photo_id') ? ' has-error' : ''}}">
                                     <label for="photo_id" class="control-label">{{ __('backend.select_image') }}</label>
@@ -76,6 +92,8 @@
                                         <th>#</th>
                                         <th>{{ __('backend.image') }}</th>
                                         <th>{{ __('backend.title') }}</th>
+                                        <th>{{ __('backend.category_type') }}</th>
+                                        <th>{{ __('backend.draw') }}</th>
                                         <th>{{ __('backend.created') }}</th>
                                         <th>{{ __('backend.updated') }}</th>
                                         <th>{{ __('backend.actions') }}</th>
@@ -86,6 +104,8 @@
                                         <th>#</th>
                                         <th>{{ __('backend.image') }}</th>
                                         <th>{{ __('backend.title') }}</th>
+                                        <th>{{ __('backend.category_type') }}</th>
+                                        <th>{{ __('backend.draw') }}</th>
                                         <th>{{ __('backend.created') }}</th>
                                         <th>{{ __('backend.updated') }}</th>
                                         <th>{{ __('backend.actions') }}</th>
@@ -97,6 +117,22 @@
                                             <td>{{ $category->id }}</td>
                                             <td><img src="{{ asset($category->photo->file) }}" width="40" height="40"></td>
                                             <td>{{ $category->title }}</td>
+                                            <td>
+                                                @if($category->category_type !== NULL && $category->category_type == 0)
+                                                    Estandar
+                                                @endif
+                                                @if($category->category_type !== NULL && $category->category_type == 1)
+                                                    Por Tiempo
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($category->draw !== NULL && $category->draw == 0)
+                                                    NO
+                                                @endif
+                                                @if($category->draw !== NULL && $category->draw == 1)
+                                                    SI
+                                                @endif
+                                            </td>
                                             <td>{{ $category->created_at->diffForHumans() }}</td>
                                             <td>{{ $category->updated_at->diffForHumans() }}</td>
                                             <td>

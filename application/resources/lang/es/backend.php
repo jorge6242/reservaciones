@@ -202,6 +202,7 @@ return [
     'result' => 'Resultado',
     'user' => 'Usuario',
     'category' => 'Categoría',
+    'category_type' => 'Tipo de Categoria',
     'package' => 'Paquete',
     'addon' => 'Complemento',
     'group' => 'Grupo',
