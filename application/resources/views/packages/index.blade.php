@@ -47,7 +47,7 @@
                                     <th>{{ __('backend.title') }}</th>
                                     <th>{{ __('backend.price') }}</th>
                                     <th>{{ __('backend.category') }}</th>
-                                    <th>{{ __('backend.package_time') }}</th>
+                                    <th>{{ __('backend.package_time') }} ({{ __('backend.minutes') }})</th>
                                     <th>{{ __('backend.validation_type') }}</th>
                                     <th>{{ __('backend.created') }}</th>
                                     <th>{{ __('backend.updated') }}</th>
@@ -96,6 +96,7 @@
 
                                         </td>
                                         <td>{{ $package->category->title }}</td>
+                                        <td>{{ $package->duration }}</td>
                                         <td>
                                             @if( $package->validation_type !== null && $package->validation_type == 0)
                                             {{ __('backend.bookingTime_perpackagePaquete') }}
@@ -107,7 +108,6 @@
                                             {{ __('backend.by_category_type') }}
                                             @endif
                                         </td>
-                                        <td>{{ $package->duration }}</td>
                                         <td>{{ $package->created_at->diffForHumans() }}</td>
                                         <td>{{ $package->updated_at->diffForHumans() }}</td>
                                         <td>
