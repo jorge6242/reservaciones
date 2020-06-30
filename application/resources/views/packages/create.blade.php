@@ -62,7 +62,7 @@
                                 @endif
                             </div>
 
-                            <div class="col-md-6 form-group{{$errors->has('duration') ? ' has-error' : ''}}">
+                            <div class="col-md-6 form-group{{ $errors->has('duration') ? ' has-error' : ''}}">
                                 <label class="control-label" for="duration">{{ __('backend.duration_in_minutes') }}</label>
                                 <select class="form-control" name="duration">
                                     @for($factor=1; $factor<=6; $factor++)
@@ -90,6 +90,21 @@
                                 @if ($errors->has('duration'))
                                     <span class="help-block">
                                         <strong class="text-danger">{{ $errors->first('duration') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="col-md-6 form-group{{ $errors->has('validation_type') ? ' has-error' : ''}}">
+                                <label class="control-label" for="validation_type">{{ __('backend.validation_type') }}</label>
+                                <select class="form-control" name="validation_type">
+                                    <option value="">{{ __('backend.select_one') }}</option>
+                                    <option value="0">{{ __('backend.bookingTime_perpackagePaquete') }}</option>
+                                    <option value="1">{{ __('backend.by_category') }}</option>
+                                    <option value="2">{{ __('backend.by_category_type') }}</option>
+                                </select>
+                                @if ($errors->has('validation_type'))
+                                    <span class="help-block">
+                                        <strong class="text-danger">{{ $errors->first('validation_type') }}</strong>
                                     </span>
                                 @endif
                             </div>

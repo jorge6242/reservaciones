@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use Illuminate\Http\Request;
 use App\Http\Requests\PackageRequest;
 use App\Http\Requests\PackageUpdateRequest;
 use App\Package;
@@ -27,10 +28,16 @@ class AdminPackagesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $category = $request['category'];
         $packages = Package::all();
-        return view('packages.index', compact('packages'));
+        if($category && $category !== '') {
+            $packages = Package::where('category_id',$category)->get();
+        }
+        $categories = Category::all();
+        $selectedCategory = $category && $category !== '' ? $category : '';
+        return view('packages.index', compact('packages','categories','selectedCategory'));
         // return view('packages.index');
     }
 

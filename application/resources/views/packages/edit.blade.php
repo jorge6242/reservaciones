@@ -95,6 +95,21 @@
                                 @endif
                             </div>
 
+                            <div class="col-md-6 form-group{{ $errors->has('validation_type') ? ' has-error' : ''}}">
+                                <label class="control-label" for="validation_type">{{ __('backend.validation_type') }}</label>
+                                <select class="form-control" name="validation_type">
+                                    <option value="">{{ __('backend.select_one') }}</option>
+                                    <option value="0" {{ $package->validation_type == 0 ? 'selected' : '' }} >{{ __('backend.bookingTime_perpackagePaquete') }}</option>
+                                    <option value="1" {{ $package->validation_type == 1 ? 'selected' : '' }} >{{ __('backend.by_category') }}</option>
+                                    <option value="2" {{ $package->validation_type == 2 ? 'selected' : '' }} >{{ __('backend.by_category_type') }}</option>
+                                </select>
+                                @if ($errors->has('validation_type'))
+                                    <span class="help-block">
+                                        <strong class="text-danger">{{ $errors->first('validation_type') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
                             <div class="col-md-12 form-group{{$errors->has('description') ? ' has-error' : ''}}">
                                 <label class="control-label" for="description">{{ __('backend.description') }}</label>
                                 <textarea name="description" class="summernote">{{ $package->description }}</textarea>

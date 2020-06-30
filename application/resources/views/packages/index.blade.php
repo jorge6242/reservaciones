@@ -18,9 +18,23 @@
                 @include('alerts.packages')
                 <a class="btn btn-primary btn-lg btn-add" href="{{ route('packages.create') }}"><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ __('backend.add_new_package') }}</a>
                 <div class="panel panel-white">
-                    <div class="panel-heading clearfix">
+                    <div class="panel-heading clearfix" style="margin-bottom: 24px; height: 90px;">
                         <div class="col-md-12">
                             <h4 class="panel-title">{{ __('backend.all_packages') }}</h4>
+                        </div>
+                        <div class="col-md-12">
+                        
+                            <div class="row">
+                                <div class="col-md-4 form-group" style="margin-top: 20px;">
+                                    <select class="form-control" id="category_id" name="category_id" onchange="handleCategory()">
+                                        <option value="">Seleccione Categoria</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ $category->id == $selectedCategory ? 'selected' : '' }}>{{ $category->title }}</option>
+                                        @endforeach
+                                    </select>                        
+                                </div>
+                            </div>
+                        
                         </div>
                     </div>
                     <div class="panel-body">
@@ -33,6 +47,8 @@
                                     <th>{{ __('backend.title') }}</th>
                                     <th>{{ __('backend.price') }}</th>
                                     <th>{{ __('backend.category') }}</th>
+                                    <th>{{ __('backend.package_time') }}</th>
+                                    <th>{{ __('backend.validation_type') }}</th>
                                     <th>{{ __('backend.created') }}</th>
                                     <th>{{ __('backend.updated') }}</th>
                                     <th>{{ __('backend.actions') }}</th>
@@ -45,6 +61,8 @@
                                     <th>{{ __('backend.title') }}</th>
                                     <th>{{ __('backend.price') }}</th>
                                     <th>{{ __('backend.category') }}</th>
+                                    <th>{{ __('backend.package_time') }}</th>
+                                    <th>{{ __('backend.validation_type') }}</th>
                                     <th>{{ __('backend.created') }}</th>
                                     <th>{{ __('backend.updated') }}</th>
                                     <th>{{ __('backend.actions') }}</th>
@@ -78,6 +96,18 @@
 
                                         </td>
                                         <td>{{ $package->category->title }}</td>
+                                        <td>
+                                            @if( $package->validation_type !== null && $package->validation_type == 0)
+                                            {{ __('backend.bookingTime_perpackagePaquete') }}
+                                            @endif
+                                            @if( $package->validation_type !== null && $package->validation_type == 1)
+                                            {{ __('backend.by_category') }}
+                                            @endif
+                                            @if( $package->validation_type !== null && $package->validation_type == 2)
+                                            {{ __('backend.by_category_type') }}
+                                            @endif
+                                        </td>
+                                        <td>{{ $package->duration }}</td>
                                         <td>{{ $package->created_at->diffForHumans() }}</td>
                                         <td>{{ $package->updated_at->diffForHumans() }}</td>
                                         <td>
@@ -117,5 +147,18 @@
             </div>
         </div>
     </div>
+
+<script>
+
+    function handleCategory() {
+        const id = document.getElementById("category_id").value;
+        if(id > 0) {
+            window.location.href = `/packages?category=${id}`;
+        }
+        
+    }
+
+
+</script>
 
 @endsection

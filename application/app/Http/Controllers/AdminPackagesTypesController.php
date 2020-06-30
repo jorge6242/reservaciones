@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\PackagesType;
 use App\Draw;
 use App\Package;
+use App\Category;
 use App\Http\Requests\PackagesTypesRequest;
 use App\Http\Requests\EventsUpdateRequest;
 use Illuminate\Support\Facades\Session;
@@ -20,10 +21,26 @@ class AdminPackagesTypesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $category = $request['category'];
+        $package = $request['package'];
+        
+        $packages = [];
         $courts = PackagesType::with(['package'])->get();
-        return view('packages_types.index', compact('courts'));
+        if($category && $category !== '') {
+            $courts = PackagesType::whereHas('package', function($q) use ($category) {
+                $q->where('category_id', $category);
+            })->get();
+            $packages = Package::where('category_id', $category)->get();
+        }
+        if($package && $package !== '') {
+            $courts = PackagesType::where('package_id', $package)->get();
+        }
+        $categories = Category::all();
+        $selectedCategory = $category && $category !== '' ? $category : '';
+        $selectedPackage = $package && $package !== '' ? $package : '';
+        return view('packages_types.index', compact('courts', 'categories' ,'selectedCategory','packages','selectedPackage'));
     }
 
     /**

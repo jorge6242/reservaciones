@@ -463,7 +463,18 @@ return [
 	'bookingTime_perpackageGlobal' => 'Global',
 	'bookingTime_perpackagePaquete' => 'Por Paquete',
     'bookingUserPlayPerDay' => 'Máximo de veces que un socio puede jugar al día',
-	
-	
+
+    'validations' => 'Validaciones',
+    'notifications' => 'Notificaciones',
+    'bookingUserPerWeek' => 'Maximo de veces que un Socio puede jugar Semanal',
+    'bookingUserPerMonth' => 'Maximo de veces que un Socio puede jugar Mensual',
+    'bookingGuestPerDay' => 'Maximo de veces que un Invitado puede jugar al Dia',
+    'bookingGuestPerWeek' => 'Maximo de veces que un Invitado puede jugar Semanal',
+    'bookingGuestPerMonth' => 'Maximo de veces que un Invitado puede jugar Mensual',
+    'bookingUser_MinGuests' => 'Minimo de Invitados en una Reservacion',
+
+    'validation_type' => 'Tipo de Validacion',
+    'by_category' => 'Por Categoria',
+    'by_category_type' => 'Por Tipo de Categoria',
 
 ];

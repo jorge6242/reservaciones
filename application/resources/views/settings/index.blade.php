@@ -40,7 +40,8 @@
                             <li role="presentation" class="active"><a href="#business" role="tab" data-toggle="tab"><i class="icon-briefcase"></i>&nbsp;&nbsp;{{ __('backend.business') }}</a></li>
                             <li role="presentation"><a href="#currency" role="tab" data-toggle="tab"><i class="icon-credit-card"></i>&nbsp;&nbsp;{{ __('backend.currency') }}</a></li>
                             <li role="presentation"><a href="#booking" role="tab" data-toggle="tab"><i class="icon-calendar"></i>&nbsp;&nbsp;{{ __('backend.booking') }}</a></li>
-                            <li role="presentation"><a href="#settingPerTime" role="tab" data-toggle="tab"><i class="icon-calendar"></i>&nbsp;&nbsp;{{ __('backend.settings_per_time') }}</a></li>
+                            <li role="presentation"><a href="#validations" role="tab" data-toggle="tab"><i class="fa fa-cog"></i>&nbsp;&nbsp;{{ __('backend.validations') }}</a></li>
+                            <li role="presentation"><a href="#notifications" role="tab" data-toggle="tab"><i class="fa fa-bell"></i>&nbsp;&nbsp;{{ __('backend.notifications') }}</a></li>
                             <li role="presentation"><a href="#gst" role="tab" data-toggle="tab"><i class="icon-info"></i>&nbsp;&nbsp;{{ __('backend.gst') }}</a></li>
                             <li role="presentation"><a href="#stripe" role="tab" data-toggle="tab"><i class="fa fa-cc-stripe"></i>&nbsp;&nbsp;Stripe</a></li>
                             <li role="presentation"><a href="#paypal" role="tab" data-toggle="tab"><i class="fa fa-paypal"></i>&nbsp;&nbsp;Paypal</a></li>
@@ -294,21 +295,7 @@
 
 									
 									
-                                    <div class="col-md-12">&nbsp;</div>
-                                    <div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingUser_maxDays') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingUser_maxDays" value="{{ $settings->bookingUser_maxDays }}">
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingUserPerDay') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingUserPerDay" value="{{ $settings->bookingUserPerDay }}">
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingUserPlayPerDay') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingUserPlayPerDay" value="{{ $settings->bookingUserPlayPerDay }}">
-                                    </div>									
+                                    <div class="col-md-12">&nbsp;</div>								
 									
                                     <div class="col-md-12">&nbsp;</div>
                                     <div class="col-md-6">
@@ -334,68 +321,7 @@
                                     <div class="col-md-6">
                                         <label><strong>{{ __('backend.days_limit_to_cancel') }}</strong></label>
                                         <input type="number" class="form-control" name="days_limit_to_cancel" value="{{ $settings->days_limit_to_cancel }}">
-                                    </div>
-									
-									
-                                    <div class="col-md-12">&nbsp;</div>
-                                    <div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingUser_minPlayers') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingUser_minPlayers" value="{{ $settings->bookingUser_minPlayers }}">
-                                    </div>
-									
-                                    <div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingUser_maxPlayers') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingUser_maxPlayers" value="{{ $settings->bookingUser_maxPlayers }}">
-                                    </div>
-									
-                                    <div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingUser_maxGuests') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingUser_maxGuests" value="{{ $settings->bookingUser_maxGuests }}">
-                                    </div>
-									
-									
-                                    <div class="col-md-12">&nbsp;</div>
-									<div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingEmailMainPlayer') }}</strong></label>
-                                        <select class="form-control" name="bookingEmailMainPlayer">
-                                            <option value="0"{{ $settings->bookingEmailMainPlayer == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
-                                            <option value="1"{{ $settings->bookingEmailMainPlayer == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
-                                        </select>
-                                    </div>
-									<div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingEmailPlayers') }}</strong></label>
-                                        <select class="form-control" name="bookingEmailPlayers">
-                                            <option value="0"{{ $settings->bookingEmailPlayers == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
-                                            <option value="1"{{ $settings->bookingEmailPlayers == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
-                                        </select>
-                                    </div>
-									<div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingEmailAdmins') }}</strong></label>
-                                        <select class="form-control" name="bookingEmailAdmins">
-                                            <option value="0"{{ $settings->bookingEmailAdmins == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
-                                            <option value="1"{{ $settings->bookingEmailAdmins == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
-                                        </select>
-                                    </div>
-
-									<div class="col-md-12">&nbsp;</div>
-									<div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingSMSMainPlayer') }}</strong></label>
-                                        <select class="form-control" name="bookingSMSMainPlayer">
-                                            <option value="0"{{ $settings->bookingSMSMainPlayer == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
-                                            <option value="1"{{ $settings->bookingSMSMainPlayer == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
-                                        </select>
-                                    </div>
-									<div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingSMSPlayers') }}</strong></label>
-                                        <select class="form-control" name="bookingSMSPlayers">
-                                            <option value="0"{{ $settings->bookingSMSPlayers == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
-                                            <option value="1"{{ $settings->bookingSMSPlayers == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label><strong>{{ __('backend.bookingSMS_clientid') }}</strong></label>
-                                        <input type="text" class="form-control" name="bookingSMS_clientid" value="{{ $settings->bookingSMS_clientid }}">
-                                    </div>
+                                    </div>									
 
                                     <div class="col-md-12">&nbsp;</div>
                                     <div class="col-md-12">
@@ -407,42 +333,167 @@
                             </div>
 
 
-                            <div role="tabpanel" class="tab-pane fade in" id="settingPerTime">
+                            <div role="tabpanel" class="tab-pane fade in" id="validations">
                                 <div class="row clearfix">
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-12 form-group" style="font-weigth: bold; font-size: 16px"><strong>Globales</strong></div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingUser_maxDays') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUser_maxDays" value="{{ $settings->bookingUser_maxDays }}">
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingUserPerDay') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUserPerDay" value="{{ $settings->bookingUserPerDay }}">
+                                    </div>
+
+                                     <div class="col-md-12 form-group" style="font-weigth: bold; margin-top: 20px; font-size: 16px"><strong>Reservacion Por Tiempo</strong></div>
+
+                                    <div class="col-md-4 form-group">
                                         <label><strong>{{ __('backend.bookingUser_maxTimePerDay') }}</strong></label>
                                         <input type="number" class="form-control" name="bookingUser_maxTimePerDay" value="{{ $settings->bookingUser_maxTimePerDay }}">
                                     </div>
 									
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 form-group">
                                         <label><strong>{{ __('backend.bookingUser_maxTimePerWeek') }}</strong></label>
                                         <input type="number" class="form-control" name="bookingUser_maxTimePerWeek" value="{{ $settings->bookingUser_maxTimePerWeek }}">
                                     </div>
 									
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 form-group">
                                         <label><strong>{{ __('backend.bookingUser_maxTimePerMonth') }}</strong></label>
                                         <input type="number" class="form-control" name="bookingUser_maxTimePerMonth" value="{{ $settings->bookingUser_maxTimePerMonth }}">
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 form-group">
                                         <label><strong>{{ __('backend.bookingGuest_maxTimePerDay') }}</strong></label>
                                         <input type="number" class="form-control" name="bookingGuest_maxTimePerDay" value="{{ $settings->bookingGuest_maxTimePerDay }}">
                                     </div>
 									
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 form-group">
                                         <label><strong>{{ __('backend.bookingGuest_maxTimePerWeek') }}</strong></label>
                                         <input type="number" class="form-control" name="bookingGuest_maxTimePerWeek" value="{{ $settings->bookingGuest_maxTimePerWeek }}">
                                     </div>
 									
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 form-group">
                                         <label><strong>{{ __('backend.bookingGuest_maxTimePerMonth') }}</strong></label>
                                         <input type="number" class="form-control" name="bookingGuest_maxTimePerMonth" value="{{ $settings->bookingGuest_maxTimePerMonth }}">
+                                    </div>
+
+                                    <div class="col-md-12 form-group" style="font-weigth: bold; margin-top: 20px; font-size: 16px"><strong>Reservacion Standard</strong></div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingUserPlayPerDay') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUserPlayPerDay" value="{{ $settings->bookingUserPlayPerDay }}">
+                                    </div>
+
+
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingUserPerWeek') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUserPerWeek" value="{{ $settings->bookingUserPerWeek }}">
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingUserPerMonth') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUserPerMonth" value="{{ $settings->bookingUserPerMonth }}">
+                                    </div>
+
+                                     <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingGuestPerDay') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingGuestPerDay" value="{{ $settings->bookingGuestPerDay }}">
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingGuestPerWeek') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingGuestPerWeek" value="{{ $settings->bookingGuestPerWeek }}">
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingGuestPerMonth') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingGuestPerMonth" value="{{ $settings->bookingGuestPerMonth }}">
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingUser_minPlayers') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUser_minPlayers" value="{{ $settings->bookingUser_minPlayers }}">
+                                    </div>
+									
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingUser_maxPlayers') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUser_maxPlayers" value="{{ $settings->bookingUser_maxPlayers }}">
+                                    </div>
+
+                                    <div class="col-md-12 form-group">
+                                    
+                                        <div class="row">
+                                        
+                                            <div class="col-md-4 form-group">
+                                                <label><strong>{{ __('backend.bookingUser_MinGuests') }}</strong></label>
+                                                <input type="number" class="form-control" name="bookingUser_MinGuests" value="{{ $settings->bookingUser_MinGuests }}">
+                                            </div>
+
+                                            <div class="col-md-4 form-group">
+                                                <label><strong>{{ __('backend.bookingUser_maxGuests') }}</strong></label>
+                                                <input type="number" class="form-control" name="bookingUser_maxGuests" value="{{ $settings->bookingUser_maxGuests }}">
+                                            </div>
+                                        
+                                        </div>
+                                    
                                     </div>
                                     
                                 </div>
                             </div>
 
+                            <div role="tabpanel" class="tab-pane fade in" id="notifications">
+                            
+                                <div class="row">
+                                
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingEmailMainPlayer') }}</strong></label>
+                                        <select class="form-control" name="bookingEmailMainPlayer">
+                                            <option value="0"{{ $settings->bookingEmailMainPlayer == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
+                                            <option value="1"{{ $settings->bookingEmailMainPlayer == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingEmailPlayers') }}</strong></label>
+                                        <select class="form-control" name="bookingEmailPlayers">
+                                            <option value="0"{{ $settings->bookingEmailPlayers == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
+                                            <option value="1"{{ $settings->bookingEmailPlayers == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
+                                        </select>
+                                    </div>
+									<div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingEmailAdmins') }}</strong></label>
+                                        <select class="form-control" name="bookingEmailAdmins">
+                                            <option value="0"{{ $settings->bookingEmailAdmins == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
+                                            <option value="1"{{ $settings->bookingEmailAdmins == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
+                                        </select>
+                                    </div>
+
+									<div class="col-md-12">&nbsp;</div>
+									<div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingSMSMainPlayer') }}</strong></label>
+                                        <select class="form-control" name="bookingSMSMainPlayer">
+                                            <option value="0"{{ $settings->bookingSMSMainPlayer == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
+                                            <option value="1"{{ $settings->bookingSMSMainPlayer == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
+                                        </select>
+                                    </div>
+									<div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingSMSPlayers') }}</strong></label>
+                                        <select class="form-control" name="bookingSMSPlayers">
+                                            <option value="0"{{ $settings->bookingSMSPlayers == 0 ? ' selected' : '' }}>{{ __('backend.no') }}</option>
+                                            <option value="1"{{ $settings->bookingSMSPlayers == 1 ? ' selected' : '' }}>{{ __('backend.yes') }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                        <label><strong>{{ __('backend.bookingSMS_clientid') }}</strong></label>
+                                        <input type="text" class="form-control" name="bookingSMS_clientid" value="{{ $settings->bookingSMS_clientid }}">
+                                    </div>
+
+                                </div>
+                            
+                            </div>
 
                             <div role="tabpanel" class="tab-pane fade in" id="gst">
                                 <div class="row clearfix">

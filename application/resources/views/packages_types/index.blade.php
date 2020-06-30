@@ -19,9 +19,39 @@
                 @include('alerts.packages_types')
                 <a class="btn btn-primary btn-lg btn-add" href="{{ route('packages-types.create') }}"><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ __('backend.packages_types_add') }}</a>
                 <div class="panel panel-white">
-                    <div class="panel-heading clearfix">
-                        <h4 class="panel-title">{{ __('backend.packages_types') }}</h4>
+                
+                    <div class="panel-heading clearfix" style="margin-bottom: 24px; height: 90px;">
+
+                        <div class="col-md-12">
+                            <h4 class="panel-title">{{ __('backend.packages_types') }}</h4>
+                        </div>
+                       
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-4 form-group" style="margin-top: 20px;">
+                                    <select class="form-control" id="category_id" name="category_id" onchange="handleCategory()">
+                                        <option value="">Seleccione Categoria</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->id }}" {{ $category->id == $selectedCategory ? 'selected' : '' }}>{{ $category->title }}</option>
+                                        @endforeach
+                                    </select>                        
+                                </div>
+
+                            @if($selectedCategory !== '')
+                                <div class="col-md-4 form-group" style="margin-top: 20px;">
+                                    <select class="form-control" id="package_id" name="package_id" onchange="handlePackage()">
+                                        <option value="">Seleccione Paquete</option>
+                                        @foreach($packages as $element)
+                                            <option value="{{ $element->id }}" {{ $element->id == $selectedPackage ? 'selected' : '' }} >{{ $element->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+                            </div>
+                        </div>
+
                     </div>
+
                     <div class="panel-body">
                         <div class="table-responsive">
                             <table id="xtreme-table" class="display table" style="width: 100%; cellspacing: 0;">
@@ -98,6 +128,29 @@
             </div>
         </div>
     </div>
+
+<script>
+
+    function handleCategory() {
+        const id = document.getElementById("category_id").value;
+        if(id > 0) {
+            window.location.href = `/packages-types?category=${id}`;
+        } else {
+             window.location.href = "/packages-types";
+        }
+    }
+
+    function handlePackage() {
+        const id = document.getElementById("package_id").value;
+        const category = '{{ $selectedCategory }}';
+        if(id > 0) {
+            window.location.href = `/packages-types?category=${category}&package=${id}`;
+        } else {
+            window.location.href = `/packages-types?category=${category}`;
+        }
+    }
+
+</script>
 
 @endsection
 

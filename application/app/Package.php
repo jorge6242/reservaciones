@@ -14,6 +14,7 @@ class Package extends Model
         'photo_id', 
         'duration',
         'category_type',
+        'validation_type'
     ];
 
     public function category()

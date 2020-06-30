@@ -72,6 +72,12 @@ class Settings extends Model
         'bookingGuest_maxTimePerDay',
         'bookingGuest_maxTimePerWeek',
         'bookingGuest_maxTimePerMonth',
+        'bookingUserPerWeek',
+        'bookingUserPerMonth',
+        'bookingGuestPerDay',
+        'bookingGuestPerWeek',
+        'bookingGuestPerMonth',
+        'bookingUser_MinGuests'
     ];
 
 }
