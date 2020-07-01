@@ -817,8 +817,8 @@ function ajaxFunctionSelect(doc_id){
 							<input type="hidden" class="form-control form-control-lg" name="player1Status"
                                    id="player1Status"  autocomplete="off">
 							<div id="player1Icons" name="player1Icons"></div>
-							<font color="red">
-							<div id="player1ErrorMessage" name="player1ErrorMessage"></div></font>								  
+							
+							<div id="player1ErrorMessage" name="player1ErrorMessage" style="color:red"></div><							  
                         </div>
 
 				</div>	

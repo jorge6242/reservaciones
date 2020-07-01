@@ -466,11 +466,11 @@ return [
 
     'validations' => 'Validaciones',
     'notifications' => 'Notificaciones',
-    'bookingUserPerWeek' => 'Maximo de veces que un Socio puede jugar Semanal',
-    'bookingUserPerMonth' => 'Maximo de veces que un Socio puede jugar Mensual',
-    'bookingGuestPerDay' => 'Maximo de veces que un Invitado puede jugar al Dia',
-    'bookingGuestPerWeek' => 'Maximo de veces que un Invitado puede jugar Semanal',
-    'bookingGuestPerMonth' => 'Maximo de veces que un Invitado puede jugar Mensual',
+    'bookingUserPlayPerWeek' => 'Maximo de veces que un Socio puede jugar Semanal',
+    'bookingUserPlayPerMonth' => 'Maximo de veces que un Socio puede jugar Mensual',
+    'bookingGuestPlayPerDay' => 'Maximo de veces que un Invitado puede jugar al Dia',
+    'bookingGuestPlayPerWeek' => 'Maximo de veces que un Invitado puede jugar Semanal',
+    'bookingGuestPlayPerMonth' => 'Maximo de veces que un Invitado puede jugar Mensual',
     'bookingUser_MinGuests' => 'Minimo de Invitados en una Reservacion',
 
     'validation_type' => 'Tipo de Validacion',

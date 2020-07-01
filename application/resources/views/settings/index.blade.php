@@ -389,28 +389,28 @@
 
 
                                     <div class="col-md-4 form-group">
-                                        <label><strong>{{ __('backend.bookingUserPerWeek') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingUserPerWeek" value="{{ $settings->bookingUserPerWeek }}">
+                                        <label><strong>{{ __('backend.bookingUserPlayPerWeek') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUserPlayPerWeek" value="{{ $settings->bookingUserPlayPerWeek }}">
                                     </div>
 
                                     <div class="col-md-4 form-group">
-                                        <label><strong>{{ __('backend.bookingUserPerMonth') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingUserPerMonth" value="{{ $settings->bookingUserPerMonth }}">
+                                        <label><strong>{{ __('backend.bookingUserPlayPerMonth') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingUserPlayPerMonth" value="{{ $settings->bookingUserPlayPerMonth }}">
                                     </div>
 
                                      <div class="col-md-4 form-group">
-                                        <label><strong>{{ __('backend.bookingGuestPerDay') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingGuestPerDay" value="{{ $settings->bookingGuestPerDay }}">
+                                        <label><strong>{{ __('backend.bookingGuestPlayPerDay') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingGuestPlayPerDay" value="{{ $settings->bookingGuestPlayPerDay }}">
                                     </div>
 
                                     <div class="col-md-4 form-group">
-                                        <label><strong>{{ __('backend.bookingGuestPerWeek') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingGuestPerWeek" value="{{ $settings->bookingGuestPerWeek }}">
+                                        <label><strong>{{ __('backend.bookingGuestPlayPerWeek') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingGuestPlayPerWeek" value="{{ $settings->bookingGuestPlayPerWeek }}">
                                     </div>
 
                                     <div class="col-md-4 form-group">
-                                        <label><strong>{{ __('backend.bookingGuestPerMonth') }}</strong></label>
-                                        <input type="number" class="form-control" name="bookingGuestPerMonth" value="{{ $settings->bookingGuestPerMonth }}">
+                                        <label><strong>{{ __('backend.bookingGuestPlayPerMonth') }}</strong></label>
+                                        <input type="number" class="form-control" name="bookingGuestPlayPerMonth" value="{{ $settings->bookingGuestPlayPerMonth }}">
                                     </div>
 
                                     <div class="col-md-4 form-group">
