@@ -227,3 +227,24 @@
 25/06/2020 06:17:46 pm - include;GRENDYS GARCIA;1;0;<br>Máximo número de participantes permitidos: 4<br>Ya es participante en la reservación;
 25/06/2020 07:45:26 pm - Deleted
 25/06/2020 07:47:04 pm - include;GRENDYS GARCIA;1;1;;
+30/06/2020 05:33:13 pm - Deleted
+30/06/2020 05:34:17 pm - include;GRENDYS GARCIA;1;1;;
+30/06/2020 05:34:28 pm - include;GRENDYS GARCIA;1;0;<br>Ya es participante en la reservación;
+30/06/2020 05:35:15 pm - include;GRENDYS GARCIA;1;0;<br>Ya es participante en la reservación;
+30/06/2020 05:36:08 pm - include;GRENDYS GARCIA;1;0;<br>Ya es participante en la reservación;
+30/06/2020 05:42:55 pm - include;GRENDYS GARCIA;1;0;<br>Ya es participante en la reservación;
+30/06/2020 05:51:33 pm - include;N/A;1;0;<br>Invitado No activo;
+30/06/2020 05:53:48 pm - include;N/A;1;0;<br>Invitado No activo;
+30/06/2020 06:05:15 pm - Deleted
+30/06/2020 06:06:30 pm - include;GRENDYS GARCIA;1;1;;
+30/06/2020 06:23:34 pm - Deleted
+30/06/2020 06:24:38 pm - include;GRENDYS GARCIA;1;1;;
+30/06/2020 06:29:36 pm - Deleted
+30/06/2020 06:30:38 pm - include;GRENDYS GARCIA;1;1;;
+30/06/2020 06:31:23 pm - Deleted
+30/06/2020 06:32:26 pm - include;GRENDYS GARCIA;1;1;;
+30/06/2020 06:33:46 pm - include;GRENDYS GARCIA;1;0;<br>Máximo número de participantes permitidos: 2<br>Ya es participante en la reservación;
+30/06/2020 06:38:09 pm - Deleted
+30/06/2020 06:39:14 pm - include;GRENDYS GARCIA;1;1;;
+30/06/2020 06:39:24 pm - Deleted
+30/06/2020 06:42:00 pm - include;GRENDYS GARCIA;1;1;;

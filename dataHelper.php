@@ -1,7 +1,7 @@
 <?php 
 	//echo $_SERVER['REQUEST_URI'];
 
-	require 'wsLibrary.php';
+	include 'wsLibrary.php';
 	
 	// require __DIR__ . '/application/vendor/autoload.php';
 
@@ -56,7 +56,7 @@
 		$command = $_GET['command'];
 		$package_id = $_GET['package_id'];
 		$categoryType = $_GET['categoryType'];
-		$categoryType = $_GET['categoryType'];
+		$packageType = $_GET['packageType'];
 		
 		//echo $command;
 		//exit();
@@ -252,9 +252,9 @@
 		}
 
 		{ //get settings
+
 			$querySettings = "select * from settings";
-		   
-			$resultSettings = sqlsrv_query($connection, $querySettings); 
+			$resultSettings = sqlsrv_query($connection, $querySettings);
 
 			if( $resultSettings === false) {
 				die( print_r( sqlsrv_errors(), true) );
@@ -269,14 +269,79 @@
 				$bookings_perday =  $row['bookingUserPerDay'];
 				$bookings_playsperday =  $row['bookingUserPlayPerDay'];
 
-				// Parametros para Tenis
 
-				$bookingUser_maxTimePerDay =  $row['bookingUser_maxTimePerDay'];
-				$bookingUser_maxTimePerWeek =  $row['bookingUser_maxTimePerWeek'];
-				$bookingUser_maxTimePerMonth =  $row['bookingUser_maxTimePerMonth'];
-				$bookingGuest_maxTimePerDay =  $row['bookingGuest_maxTimePerDay'];
-				$bookingGuest_maxTimePerWeek =  $row['bookingGuest_maxTimePerWeek'];
-				$bookingGuest_maxTimePerMonth =  $row['bookingGuest_maxTimePerMonth'];
+				//Validaciones genericas
+				$booking_min = '';
+				$booking_max = '';
+				$player_min = '';
+				$player_max = '';
+				$guest_min = '';
+				$guest_max = '';
+
+				//Validaciones Limites
+				$bookingUser_maxPerDay = '';
+				$bookingUser_maxPerWeek = '';
+				$bookingUser_maxPerMonth = '';
+				$bookingGuest_maxPerDay = '';
+				$bookingGuest_maxPerWeek = '';
+				$bookingGuest_maxPerMonth = '';
+
+
+				// Standard
+				if($categoryType == 0) {
+
+					$booking_min = $row['bookingUser_minPlayers'];
+					$booking_max = $row['bookingUser_maxPlayers'];
+					$player_min = 1;
+					$player_max = $row['bookingUser_maxPlayers'];
+					$guest_min = 0;
+					$guest_max = $row['bookingUser_maxGuests'];
+
+					$bookingUser_maxPerDay = $row['bookingUserPlayPerDay'];
+					$bookingUser_maxPerWeek = $row['bookingUserPlayPerWeek'];
+					$bookingUser_maxPerMonth = $row['bookingUserPlayPerMonth'];
+					$bookingGuest_maxPerDay = $row['bookingGuestPlayPerDay'];
+					$bookingGuest_maxPerWeek = $row['bookingGuestPlayPerWeek'];
+					$bookingGuest_maxPerMonth =$row['bookingGuestPlayPerMonth'];
+
+				}
+
+				// Per Time
+				if($categoryType == 1) {
+
+					// Consultar parametros para el Tipo de Paquete
+					$query = "SELECT * from packages_types where id='" . $packageType . "'";
+					$result = sqlsrv_query($connection, $query); 
+
+					if( $result === false) {
+						die( print_r( sqlsrv_errors(), true) );
+					}
+
+					// Setear los parametros por tipo de paquete
+					while( $packageTypeRow = sqlsrv_fetch_array( $result, SQLSRV_FETCH_ASSOC) ) {
+						$cant = $packageTypeRow['cant'];
+						$booking_min = $packageTypeRow['booking_min'];
+						$booking_max = $packageTypeRow['booking_max'];
+						$player_min = $packageTypeRow['player_min'];
+						$player_max = $packageTypeRow['player_max'];
+						$guest_min = $packageTypeRow['guest_min'];
+						$guest_max = $packageTypeRow['guest_max'];
+					}
+
+
+					$bookingUser_maxPerDay = $row['bookingUser_maxTimePerDay'];
+					$bookingUser_maxPerWeek = $row['bookingUser_maxTimePerWeek'];
+					$bookingUser_maxPerMonth = $row['bookingUser_maxTimePerMonth'];
+					$bookingGuest_maxPerDay = $row['bookingGuest_maxTimePerDay'];
+					$bookingGuest_maxPerWeek = $row['bookingGuest_maxTimePerWeek'];
+					$bookingGuest_maxPerMonth =$row['bookingGuest_maxTimePerMonth'];
+
+				}
+
+
+
+
+
 
 			}
 
@@ -491,7 +556,7 @@ else if ($command == "include") // include player
 	while( $row = sqlsrv_fetch_array( $resultGroup, SQLSRV_FETCH_ASSOC) ) {
 		  $group_id = $row['group_id'];
 	}
-
+	//echo "group_id: ".$group_id;
 	sqlsrv_free_stmt( $resultGroup);	
 
 	
@@ -695,7 +760,7 @@ else if ($command == "include") // include player
 	}
 
 
-	{ //validate number of players
+	{ //validate number of players (Booking)
 
 		$cant = 0;
 		$queryPlayerCount = "SELECT count(*) as cant from session_players where session_email='" . $session_email . "'";
@@ -711,13 +776,10 @@ else if ($command == "include") // include player
 		}
 
 		sqlsrv_free_stmt( $resultPlayerCount);
-		
-
-		// Caso Estandar
-		if ($categoryType == 0 && $cant>=$max_players-1)
-		{
+		//echo "<br> cant ".$cant."  maximo booking_max ".$booking_max;
+		if ($cant >= $booking_max ) {
 			$has_errors = 1;
-			$err_message = $err_message . "<br>Máximo número de participantes permitidos: " . $max_players; // . " Maximo en settings: " . $max_players;
+			$err_message = $err_message . "<br>Máximo número de participantes permitidos: " . $booking_max; // . " Maximo en settings: " . $max_players;
 		}
 		
 		// if ($cant<$min_players-1)
@@ -729,7 +791,32 @@ else if ($command == "include") // include player
 
 	}
 
-	//validate number of guests
+	{ //validate number of players (Partners)
+
+		$cant = 0;
+		$partnerQuery = "SELECT count(*) as cant from session_players where session_email='" . $session_email . "' and player_type = 0";
+   
+		$resultPartner = sqlsrv_query($connection, $partnerQuery); 
+
+		if( $resultPartner === false) {
+			die( print_r( sqlsrv_errors(), true) );
+		}
+
+		while( $partnerRow = sqlsrv_fetch_array( $resultPartner, SQLSRV_FETCH_ASSOC) ) {
+			  $cant = $partnerRow['cant'];
+		}
+
+		sqlsrv_free_stmt( $resultPartner);
+		//echo "<br> cant ".$cant."maximo player_max (Partners) ".$player_max;
+		if ($cant >= $player_max ) {
+			$has_errors = 1;
+			$err_message = $err_message . "<br>Máximo número de Socios permitidos: " . $player_max; // . " Maximo en settings: " . $max_players;
+		}
+		
+
+	}
+
+	////validate number of players (Guest)
 	if ($is_user==0)  // It is assumed that the new player would be a guest
 	{ 
 		$cant_Guests = 0;
@@ -747,11 +834,10 @@ else if ($command == "include") // include player
 
 		sqlsrv_free_stmt( $resultGuestCount);
 
-
-		if ($categoryType == 0 && $cant_Guests>$max_guests)
-		{
+		//echo "<br> cant_Guests ".$cant_Guests." maximo guest_max (Guest) ".$guest_max;
+		if ($cant_Guests >= $guest_max) {
 			$has_errors = 1;
-			$err_message = $err_message . "<br>Máximo número de Invitados permitidos: " . $max_guests;
+			$err_message = $err_message . "<br>Máximo número de Invitados permitidos: " . $guest_max;
 		}
 		else
 		{
@@ -768,48 +854,89 @@ else if ($command == "include") // include player
 		$intBookingPlayerCount = 0;
 		$intBookingUserCount = 0;
 
-		$queryBookingPlayerCount = "select count(*) as cant from booking_players p join bookings b on b.id = p.booking_id where p.doc_id = '" . $doc_id . "' and p.confirmed=1 and b.booking_date='" . $bookingdate . "' and b.status!='" . $cancelled_status . "'";
+		// $queryBookingPlayerCount = "select count(*) as cant 
+		// from booking_players p join bookings b on b.id = p.booking_id 
+		// 	where p.doc_id = '" . $doc_id . "' 
+		// 	and p.confirmed=1 
+		// 	and b.booking_date='" . $bookingdate . "' 
+		// 	and b.status!='" . $cancelled_status . "'
+		// ";
+
+		$unidadmedida= '';
+		$tablePerDayWeekMonth = $is_user == 0 ? 'guests' : 'users';
+		if($categoryType == 0) {
+			$unidadmedida= 'partidas';
+			$queryPerDayWeekMonth = "SELECT u.first_name, u.last_name, u.doc_id, u.id , 
+			         (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
+						FROM ".$tablePerDayWeekMonth." u
+						WHERE u.doc_id = ".$doc_id."
+			";
+		}
+
+		else if($categoryType == 1) {
+			$unidadmedida= 'minutos';
+			$queryPerDayWeekMonth = "SELECT u.first_name, u.last_name, u.doc_id, u.id , 
+					 (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
+						FROM ".$tablePerDayWeekMonth." u
+						WHERE u.doc_id = ".$doc_id."
+			";
+		}
+
+		$messagePerDayWeekMonth = "<br>Este participante no puede exceder el numero de ".$unidadmedida."";
 	   
-		$resultBookingPlayerCount = sqlsrv_query($connection, $queryBookingPlayerCount); 
+		$resultBookingPlayerCount = sqlsrv_query($connection, $queryPerDayWeekMonth); 
 
-
-		if( $resultBookingPlayerCount === false) {
-			die( print_r( sqlsrv_errors(), true) );
+		while( $rowPerDayWeekMonth = sqlsrv_fetch_array( $resultBookingPlayerCount, SQLSRV_FETCH_ASSOC) ) {
+			  $calculoDia = $rowPerDayWeekMonth['calculoDia'];
+			  $calculoSemana = $rowPerDayWeekMonth['calculoSemana'];
+			  $calculoMes = $rowPerDayWeekMonth['calculoMes'];
 		}
 
-		while( $row = sqlsrv_fetch_array( $resultBookingPlayerCount, SQLSRV_FETCH_ASSOC) ) {
-			  $intBookingPlayerCount = $row['cant'];
+		//echo "isUser: ".$is_user;
+
+		$conditionPerDay = $is_user == 0 ? $bookingGuest_maxPerDay : $bookingUser_maxPerDay;
+		$conditionPerWeek = $is_user == 0 ? $bookingGuest_maxPerWeek : $bookingUser_maxPerWeek;
+		$conditionPerMonth = $is_user == 0 ? $bookingGuest_maxPerMonth : $bookingUser_maxPerMonth;
+
+		if ($calculoDia >= $conditionPerDay) { 
+			$has_errors = 1;
+			$err_message = $err_message ." ". $messagePerDayWeekMonth." por día.";
 		}
+
+		if ($calculoSemana >= $conditionPerWeek) { 
+			$has_errors = 1;
+			$err_message = $err_message ." ". $messagePerDayWeekMonth." por Semana.";
+		}
+
+		if ($calculoMes >= $conditionPerMonth) { 
+			$has_errors = 1;
+			$err_message = $err_message ." ". $messagePerDayWeekMonth." por Mes.";
+		}
+
 
 		sqlsrv_free_stmt( $resultBookingPlayerCount);
 
 
 
-		$queryBookingUserCount = "select count(*) as cant from bookings b join users u on b.user_id = u.id where u.doc_id = '" . $doc_id . "' and b.booking_date='" . $bookingdate . "' and b.status!='" . $cancelled_status . "'";
-
-		//echo $queryBookingUserCount;
+		// $queryBookingUserCount = "select count(*) as cant from bookings b join users u on b.user_id = u.id where u.doc_id = '" . $doc_id . "' and b.booking_date='" . $bookingdate . "' and b.status!='" . $cancelled_status . "'";
+		// //echo $queryBookingUserCount;		
+		// $resultBookingUserCount = sqlsrv_query($connection, $queryBookingUserCount); 
+		// if( $resultBookingUserCount === false) {
+		// 	die( print_r( sqlsrv_errors(), true) );
 		
-		$resultBookingUserCount = sqlsrv_query($connection, $queryBookingUserCount); 
-
-
-		if( $resultBookingUserCount === false) {
-			die( print_r( sqlsrv_errors(), true) );
-		}
-
-		while( $row = sqlsrv_fetch_array( $resultBookingUserCount, SQLSRV_FETCH_ASSOC) ) {
-			  $intBookingUserCount = $row['cant'];
-		}
-		sqlsrv_free_stmt( $resultBookingUserCount);		
+		// while( $row = sqlsrv_fetch_array( $resultBookingUserCount, SQLSRV_FETCH_ASSOC) ) {
+		// 	  $intBookingUserCount = $row['cant'];
+		// }
+		// sqlsrv_free_stmt( $resultBookingUserCount);		
 		
-		
-		//if ($intBookingUserCount>0) $is_user=1;
-		  
-		if ($categoryType == 0 &&  $intBookingPlayerCount+$intBookingUserCount >= $bookings_playsperday) 
-		{ 
-			$has_errors = 1;
-			$err_message = $err_message . "<br>Este participante no puede exceder el máximo de participaciones por día.";
+		// //if ($intBookingUserCount>0) $is_user=1;
+  
+		// if ($intBookingPlayerCount+$intBookingUserCount >= $bookings_playsperday) 
+		// { 
+		// 	$has_errors = 1;
+		// 	$err_message = $err_message . "<br>Este participante no puede exceder el máximo de participaciones por día.";
 			
-		}
+		// }
 	}
 	
 	
