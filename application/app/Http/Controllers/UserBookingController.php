@@ -1252,10 +1252,10 @@ class UserBookingController extends Controller
         }
 
         // Validacion Socios
-        // $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->where('player_type', 0)->count();
-        // if($cant < $params->player_min) {
-        //     $message .= "<br> El mínimo de Socios debe ser " . $params->player_min . "";
-        // }
+        $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->where('player_type', 0)->count();
+        if($cant < $params->player_min) {
+            $message .= "<br> El mínimo de Socios debe ser " . $params->player_min . "";
+        }
 
         // Validacion Invitadoss
         $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->where('player_type', 1)->count();

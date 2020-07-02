@@ -417,7 +417,7 @@
 
         if(res.success) {
             $('#user_draw_error').removeClass('d-none');
-            $('#addon_error').removeClass('d-none').text(res.message);           
+            $('#addon_error').removeClass('d-none').html(res.message);           
             check = false;
         }
 
