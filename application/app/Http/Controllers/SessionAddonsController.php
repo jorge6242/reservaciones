@@ -53,6 +53,7 @@ class SessionAddonsController extends Controller
         $addonParameters = AddonsParameter::where('addon_id', $input['addon_id'])->where('package_id', Session::get('package_id'))->first();
         $playerExist = SessionAddon::where('doc_id', $input['doc_id'])->where('addon_id',$input['addon_id'])->first();
         $sessionPlayer = SessionPlayer::where('doc_id',$input['doc_id'])->where('package_id', Session::get('package_id'))->first();
+        $AddonCant = SessionAddon::where('session_email', auth()->user()->email)->where('addon_id',$input['addon_id'])->sum('cant');
         $min = 0;
         $max = 0;
         $isUser = auth()->user()->doc_id == $input['doc_id'] ? true : false;
@@ -60,10 +61,19 @@ class SessionAddonsController extends Controller
             $min = $addonParameters->player_min;
             $max = $addonParameters->player_max;
         }
+
         if(!$isUser && $sessionPlayer && $sessionPlayer->player_type == 1) {
             $min = $addonParameters->guest_min;
             $max = $addonParameters->guest_max;
         }
+
+        if((int)$AddonCant > (int)$addonParameters->booking_max) {
+            return response()->json([ 
+                'success' => false,
+                'message' => 'Para el Addon: '.$addonParameters->addon->title.', solo se permite seleccionar maximo '.$addonParameters->booking_max.' para la reserva ',
+            ]);
+        }
+
         if($addonParameters && $input['cant'] >= $min && $input['cant'] <= $max) {
             if($playerExist) {
                 SessionAddon::where('doc_id', $playerExist->doc_id)->where('addon_id', $playerExist->addon_id)->update(['cant' => $input['cant']]);
@@ -79,9 +89,36 @@ class SessionAddonsController extends Controller
                 'success' => false,
                 'message' => 'Para el Addon: '.$addonParameters->addon->title.', solo se permite seleccionar minimo '.$min.' y maximo '.$max,
             ]);
-        }
-        
+        }     
+    }
+
+        /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function checkBookingAddons(Request $request) {
+
+        $sessionAddons = \DB::select("SELECT DISTINCT addon_id FROM session_addons where session_email = '".auth()->user()->email."' and package_id = '".Session::get('package_id')."'  ");
+
        
+        $string = '';
+        foreach ($sessionAddons as $key => $element) {
+
+            $addonParameters = AddonsParameter::where('addon_id', $element->addon_id)->where('package_id', Session::get('package_id'))->first();
+            $AddonCant = SessionAddon::where('session_email', auth()->user()->email)->where('addon_id',$element->addon_id)->sum('cant');
+
+            if((int)$AddonCant < (int)$addonParameters->booking_min) {
+                $string .= '<br> Para el Addon: '.$addonParameters->addon->title.', solo se permite seleccionar minimo '.$addonParameters->booking_min.' para la reserva ';
+            }
+        }
+
+        return response()->json([ 
+            'success' => $string !== '' ? true : false,
+            'message' => $string,
+            'data' => $sessionAddons,
+        ]);
     }
 
     /**

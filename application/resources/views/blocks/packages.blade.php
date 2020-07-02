@@ -28,7 +28,7 @@
 
 </style>
 
-<div class="owl-carousel owl-theme owl-loaded owl-drag">
+<div class="owl-carousel custom owl-theme owl-loaded owl-drag">
     @if(count($packages))
         @foreach($packages as $package)
             

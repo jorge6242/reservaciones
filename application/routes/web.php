@@ -154,6 +154,7 @@ Route::group(['middleware'=>'authenticated'], function() {
     // ** AUXILIARY ROUTES  ** //
 
     Route::resource('/session_addons','SessionAddonsController');
+    Route::get('/check-booking-addons','SessionAddonsController@checkBookingAddons');
     Route::get('/remove-adddon-by-participant','SessionAddonsController@removeAddonByParticipant');
     Route::get('/total-session-addons','SessionAddonsController@getTotal');
     Route::get('/account-disabled', function (){

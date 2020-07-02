@@ -73,7 +73,7 @@
 		include 'BookingCountDown.php';	
 	?>		
 
-    <form method="post" id="booking_step_3" action="{{ route('postStep3') }}">
+    <form method="post" id="custom_booking_step_3" action="{{ route('postStep3') }}">
         <input type="hidden" name="session_email" value="{{ Auth::user()->email }}">
         {{ csrf_field() }}
 		
@@ -114,7 +114,7 @@
                                 <div class="alert alert-danger col-md-12 form-group d-none" id="addon_error"></div>
                                 @if($selectedPlayer)
                                     <div class="col-md-12 form-group">
-                                        <div class="owl-carousel owl-theme owl-loaded owl-drag" id="custom-addons_carousel">
+                                        <div class="owl-carousel custom-addons_carousel owl-theme owl-loaded owl-drag" id="custom-addons_carousel">
                                             @foreach($addons as $addon)
 
                                                 <div class="package_box">
@@ -204,9 +204,9 @@
                         </span>
                     </div>
                     <div class="col-md-6 text-right">
-                        <a href="{{ route('loadFinalStep') }}" class="navbar-btn btn btn-primary btn-lg ml-auto">
+                    <button type="submit" class="navbar-btn btn btn-primary btn-lg ml-auto">
                             {{ __('app.step_three_button') }}
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -218,9 +218,9 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <a href="{{ route('loadFinalStep') }}" class="navbar-btn btn btn-primary btn-lg ml-auto">
+                        <button type="submit" class="navbar-btn btn btn-primary btn-lg ml-auto">
                             {{ __('app.step_three_button') }}
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -270,10 +270,11 @@
 
     $(document).ready(function(){
         const BASE_URL = $('meta[name="index"]').attr('content');
-        $("#custom-addons_carousel").owlCarousel({
+        $(".owl-carousel.custom-addons_carousel").owlCarousel({
             margin:20,
             dots:false,
             nav:true,
+            items: 1,
             navText: [
                 '<img src="'+ BASE_URL +'/images/left.png">',
                 '<img src="'+ BASE_URL +'/images/right.png">'
@@ -290,7 +291,6 @@
                 },
                 769: {
                     items: 3,
-                    loop:true,
                 }
             }
         });
@@ -391,6 +391,45 @@
             });
             return html;
         }
+        
+        function checkBookingAddonsParameters() {
+            const URL_CONCAT = $('meta[name="index"]').attr('content');
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                type: 'GET',
+                url: `${URL_CONCAT}/check-booking-addons`,
+                    success: function(response) {
+                        resolve(response);
+                        return false;
+                    },
+                })
+            });
+        }
+
+
+
+    $('#custom_booking_step_3').submit(async function(e){
+        e.preventDefault();
+        $('#addon_error').addClass('d-none').empty();
+        let check = true;
+
+        const res = await checkBookingAddonsParameters();
+
+        if(res.success) {
+            $('#user_draw_error').removeClass('d-none');
+            $('#addon_error').removeClass('d-none').text(res.message);           
+            check = false;
+        }
+
+        if(check === false) {
+            return false;
+        } else {
+            this.submit();
+        }
+        
+    }); 
+
+
 	</script>
     <script>
     

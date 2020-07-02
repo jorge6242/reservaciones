@@ -16,6 +16,7 @@ use App\Package;
 use Carbon\Carbon;
 use App\SessionSlot;
 use App\PackagesType;
+use App\AddonsParameter;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -1175,35 +1176,102 @@ class UserBookingController extends Controller
         return redirect('/finalize-booking');
     }
 
+    public function getParams() {
+        $categoryType = Session::get('categoryType'); 
+        $settings = Settings::query()->first();
+
+        $params = (object) [
+            'booking_min' => null,
+            'booking_max' => null,
+            'player_min' => null,
+            'player_max' =>  null,
+            'guest_min' =>  null,
+            'guest_max' =>  null,
+            'bookingUser_maxPerDay' => null,
+            'bookingUser_maxPerWeek' => null,
+            'bookingUser_maxPerMonth' => null,
+            'bookingGuest_maxPerDay' => null,
+            'bookingGuest_maxPerWeek' => null,
+            'bookingGuest_maxPerMonth' => null,
+        ];
+
+        switch ($categoryType) {
+            case "0":
+                //Standard
+                $params->booking_min = $settings->bookingUser_minPlayers;
+                $params->booking_max = $settings->bookingUser_maxPlayers;
+                $params->player_min = 1;
+                $params->player_max = $settings->bookingUser_maxPlayers;
+                $params->guest_min = 1;
+                $params->guest_max = $settings->bookingUser_maxGuests;
+                $params->bookingUser_maxPerDay = $settings->bookingUserPlayPerDay;
+                $params->bookingUser_maxPerWeek = $settings->bookingUserPlayPerWeek;
+                $params->bookingUser_maxPerMonth = $settings->bookingUserPlayPerMonth;
+                $params->bookingGuest_maxPerDay = $settings->bookingGuestPlayPerDay;
+                $params->bookingGuest_maxPerWeek = $settings->bookingGuestPlayPerWeek;
+                $params->bookingGuest_maxPerMonth = $settings->bookingGuestPlayPerMonth;
+                break;
+            case "1":
+                //Per Time
+
+                // Consultar parametros para el Tipo de Paquete
+                $packageType = Session::get('selectedPackageType');
+
+                $params->booking_min = $packageType->booking_min;
+                $params->booking_max = $packageType->booking_max;
+                $params->player_min = $packageType->player_min;
+                $params->player_max = $packageType->player_max;
+                $params->guest_min = $packageType->guest_min;;
+                $params->guest_max = $packageType->guest_max;;
+                $params->bookingUser_maxPerDay = $settings->bookingUser_maxTimePerDay;
+                $params->bookingUser_maxPerWeek = $settings->bookingUser_maxTimePerWeek;
+                $params->bookingUser_maxPerMonth = $settings->bookingUser_maxTimePerMonth;
+                $params->bookingGuest_maxPerDay = $settings->bookingGuest_maxTimePerDay;
+                $params->bookingGuest_maxPerWeek = $settings->bookingGuest_maxTimePerWeek;
+                $params->bookingGuest_maxPerMonth = $settings->bookingGuest_maxTimePerMonth;
+                break;
+        }
+
+        return $params;
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function loadStep3()
     {
-        $settings = Settings::query()->first();
-		$minPlayers = $settings->bookingUser_minPlayers;
-        $maxPlayers = $settings->bookingUser_maxPlayers;
+        
+        $params = $this->getParams();
+        $userEmail = Auth::user()->email;
 		
-		$session_players = count(DB::table('session_players')->where('session_email','=', Auth::user()->email)->get()) + 1;
-	
-		
-		//echo "<br>" . $minPlayers . " - " . $session_players . " - "   . $maxPlayers;
-		
-		//if (($session_players >= $minPlayers) && ($session_players <= $maxPlayers))
-		if (($session_players < $minPlayers) || ($session_players > $maxPlayers))
-		{
-			if (($session_players< $minPlayers))
-			echo "<font color='#ff0000'><center>El mínimo de participantes debe ser " . $minPlayers . "</center></font><br>"; 
-			
-			if (($session_players > $maxPlayers))
-			
-			echo "<font color='#ff0000'><center>El máximo de participantes debe ser " . $maxPlayers . "</center></font>"; 
-			
-			//select all players of session
-			$session_players = DB::table('session_players')->where('session_email','=',Auth::user()->email)->get();
-			 //load step Player
-			return view('select-booking-players', compact('session_players'));
-		}		
+        $message = "";
+        // Validacion Reserva
+        $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->count();
+        if($cant < $params->booking_min) {
+            $message .= "<br> El mínimo de participantes debe ser " . $params->booking_min . "";
+        }
+
+        // Validacion Socios
+        // $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->where('player_type', 0)->count();
+        // if($cant < $params->player_min) {
+        //     $message .= "<br> El mínimo de Socios debe ser " . $params->player_min . "";
+        // }
+
+        // Validacion Invitadoss
+        $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->where('player_type', 1)->count();
+        if($cant < $params->guest_min) {
+            $message .= "<br> El mínimo de Invitados debe ser " . $params->guest_min . "";
+        }
+
+        // Si existe mensaje de error se envia a la plantilla blade de participantes
+        if($message !== '') {
+            echo "<font color='#ff0000'><center>".$message."</center></font><br>";
+            //select all players of session
+            $session_players = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->where('player_type','!=', -1)->get();;
+            //load step Player
+           return view('select-booking-players', compact('session_players'));
+        }
+
 		
         $package_id = Session::get('package_id');
         $package = Package::find($package_id);
@@ -1237,6 +1305,48 @@ class UserBookingController extends Controller
         $category = Package::find(Session::get('package_id'))->category->title;
         $package = Package::find(Session::get('package_id'));
         $session_addons = DB::table('session_addons')->where('session_email','=',Auth::user()->email)->get();
+
+
+        $sessionAddons = \DB::select("SELECT DISTINCT addon_id FROM session_addons where session_email = '".auth()->user()->email."' and package_id = '".Session::get('package_id')."'  ");
+
+       
+        $string = '';
+        foreach ($sessionAddons as $key => $element) {
+
+            $addonParameters = AddonsParameter::where('addon_id', $element->addon_id)->where('package_id', Session::get('package_id'))->first();
+            $AddonCant = SessionAddon::where('session_email', auth()->user()->email)->where('addon_id',$element->addon_id)->sum('cant');
+
+            if((int)$AddonCant < (int)$addonParameters->booking_min) {
+                $string .= '<br> Para el Addon: '.$addonParameters->addon->title.', solo se permite seleccionar minimo '.$addonParameters->booking_min.' para la reserva ';
+            }
+        }
+
+        if($string !== '') {
+            $package_id = Session::get('package_id');
+            $package = Package::find($package_id);
+            $category_id = $package->category_id;
+    
+            //select all addons of category
+            $addons = Category::find($category_id)->addons()->get();
+            $session_addons = DB::table('session_addons')->where('session_email','=',Auth::user()->email)->get();
+            $selectedPlayer = Session::get('selectedPlayer');
+            foreach ($addons as $key => $value) {
+                $sessionAddon = SessionAddon::where('addon_id', $value->id)->where('doc_id', $selectedPlayer)->where('package_id',$package_id)->where('session_email',Auth::user()->email)->first();
+                if($sessionAddon){
+                    $addons[$key]->cant = $sessionAddon->cant;
+                    $addons[$key]->buttonText = __('app.update_service_btn');
+                    $addons[$key]->showDelete = 'show';
+                } else {
+                    $addons[$key]->cant = 1;
+                    $addons[$key]->buttonText = __('app.add_service_btn');
+                    $addons[$key]->showDelete = 'hidde';
+                }
+            }
+            echo "<font color='#ff0000'><center>$string</center></font><br>";
+            return view('select-extra-services', compact('addons', 'session_addons','selectedPlayer'));
+        }
+
+
 
         //calculate total
         $total = $package->price;

@@ -328,12 +328,12 @@
                 </div>
 
                 <div class="col-md-6">
-                    
+                     @if(config('settings.offline_payments'))
                         <br><br>
                         <h5>{{ __('app.offline_payment_heading') }}</h5>
                         <a href="{{ route('payOffline') }}" class="btn btn-success btn-lg btn-block"><i class="far fa-file-alt"></i>&nbsp;&nbsp;{{ __('app.complete_booking') }}</a>
                         <br><br><br>
-                 
+                     @endif
                 </div>
 
                 @if(!config('settings.paypal_enabled') && !config('settings.stripe_enabled') && !config('settings.offline_payments'))

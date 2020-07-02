@@ -46,6 +46,15 @@
         #tennis-calendar .header, .time {
             font-weight: bold;
         }
+
+        @media only screen and (max-width: 600px) {
+            #tennis-calendar .cell {
+                font-size: 9px;
+                flex: 0 0 16.66666667%;
+                max-width: 16.66666667%;
+            }
+        }
+
     </style>
 
 @endsection
@@ -175,9 +184,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="row">
-                    <div class="col-md-12" id="tennis-calendar"></div>
-                </div> --}}
+               
                 <div class="row">
                     <div class="col-md-12">
                         <div id="slots_loader" class="d-none"><p style="text-align: center;"><img src="{{ asset('images/loader.gif') }}" width="52" height="52"></p></div>
@@ -187,6 +194,7 @@
                 <br>
                 <div class="col-md-12">
                     <div id="package-type"></div>
+                    <div class="col-md-12" id="tennis-calendar"></div>
                     <input type ="hidden" id="selected-package-type" value="">
                 </div>
                 <div id="custom_slots_holder" data-booking-type="{{ Session::get('booking_type_id') }}"></div>
@@ -718,84 +726,84 @@
 			$('#tennis-calendar').empty();
 			let html = `
 				<div class="row header">
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell">Cancha 1</div>
-					<div class="col-md-2 cell">Cancha 2</div>
-					<div class="col-md-2 cell">Cancha 3</div>
-					<div class="col-md-2 cell">Cancha 4</div>
-					<div class="col-md-2 cell">Cancha 5</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 1</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 2</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 3</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 4</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 5</div>
                 </div>
                 <div class="row">
-					<div class="col-md-2 cell time">6:00</div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell time">6:00</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
                 </div>
                 <div class="row">
-					<div class="col-md-2 cell time">6:30</div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell time">6:30</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
                 </div>
                 <div class="row">
-					<div class="col-md-2 cell time">7:00</div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell time">7:00</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
                 </div>
                 <div class="row">
-					<div class="col-md-2 cell time">7:30</div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell time">7:30</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
                 </div>
                 <div class="row">
-					<div class="col-md-2 cell time">8:00</div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell time">8:00</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
                 </div>
                 <div class="row">
-					<div class="col-md-2 cell time">8:30</div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell time">8:30</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
                 </div>
                 <div class="row">
-					<div class="col-md-2 cell time">9:00</div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell time">9:00</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
                 </div>
                 <div class="row">
-					<div class="col-md-2 cell time">9:30</div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell time">9:30</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
                 </div>
                 <div class="row">
-					<div class="col-md-2 cell time">10:00</div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell"></div>
-					<div class="col-md-2 cell active"></div>
-					<div class="col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell time">10:00</div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
+					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
 				</div>
 			`;
 			$('#tennis-calendar').html(html);
