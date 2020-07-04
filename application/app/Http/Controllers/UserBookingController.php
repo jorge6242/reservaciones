@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 //use Spatie\GoogleCalendar\Event;
 
+use DateTime;
+
 class UserBookingController extends Controller
 {
 
@@ -86,6 +88,38 @@ class UserBookingController extends Controller
         return response()->json([ 'success' => true, 'data' => $category, 'dates' => $dates ]);
     }
 
+    public function getSlotsPerTime($date ,$packageTypeId, $hour, $slotHour) {
+        $parseHour = DateTime::createFromFormat('h:ia', $hour);
+        $parseHour = $parseHour->format('H:i:s');
+        $currentDate = $date.' '.$parseHour;
+        $startHour = Carbon::parse($currentDate);
+    
+        $arrayHours = array();
+        $packageType = PackagesType::find($packageTypeId);
+        if($packageType->length == 60) {
+            //$parseHour->format('H:i a');
+            $hour1 = strtoupper(Carbon::parse($hour)->format('g:i A'));
+            $hour2 = strtoupper(Carbon::parse($hour)->addMinutes(30)->format('g:i A'));
+            $arrayHours = [ $hour1, $hour2 ];
+        }
+        if($packageType->length == 90) {
+            //$parseHour->format('H:i a');
+            $hour1 = strtoupper(Carbon::parse($hour)->format('g:i A'));
+            $hour2 = strtoupper(Carbon::parse($hour)->addMinutes(30)->format('g:i A'));
+            $hour3 = strtoupper(Carbon::parse($hour)->addMinutes(60)->format('g:i A'));
+            $arrayHours = [ $hour1, $hour2, $hour3 ];
+        }
+        $exist = false;
+
+        foreach ($arrayHours as $key => $value) {
+            if($value == strtoupper(Carbon::parse($slotHour)->format('g:i A'))) {
+                $exist = true;
+            }
+        }
+
+        return $exist;
+    }
+
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -138,7 +172,7 @@ class UserBookingController extends Controller
 		//DB::table('session_slots')->where('expiration_date','<', GETDATE())->delete();
        
 		
-	   
+        $categoryType = Session::get('categoryType');
 			//delete all session slots expired
             require 'config.inc';
        
@@ -297,7 +331,6 @@ class UserBookingController extends Controller
         {
             // minutes to add in lap of each slot
             $minutes_to_add = $slot_duration * $i;
-
             // increment each slot by minutes_to_add
             $timeslot = date('H:i:s', strtotime($hour_start)+$minutes_to_add);
             
@@ -321,17 +354,27 @@ class UserBookingController extends Controller
             {
                 $list_slot[$i]['is_available'] = true;
             }
-
-
+ 
             //checking slot availability
             foreach ($bookings as $booking)
             {
+               
+                // Esta es la logica para que se pinten los slots cuando es por tiempo.
+                if(strtotime($booking->booking_date)==strtotime($event_date) && $categoryType == 1 && $booking->booking_time2 !== null ) {
+                   
+                    $existSlot = $this->getSlotsPerTime($booking->booking_date ,$booking->package_type_id, $booking->booking_time, $timeslot);
+                    if($existSlot) {
+                        $list_slot[$i]['is_available'] = false;
+                    }
+                }
+
                 if(strtotime($booking->booking_date)==strtotime($event_date) && strtotime($booking->booking_time)==strtotime($timeslot))
                 {
                     //put multiple booking logic
 
                     //one booking at one slot
                     
+
                     if($settings->slots_method == 1)
                     {
                         //prevent multiple bookings at same time
@@ -354,7 +397,7 @@ class UserBookingController extends Controller
                     
                     if($settings->slots_method == 3)
                     {
-                        if($selected_package_id == $booking->package->id)
+                        if($selected_package_id == $booking->package_id)
                         {
                             //prevent multiple bookings at same time
                             $list_slot[$i]['is_available'] = false;
@@ -1294,6 +1337,60 @@ class UserBookingController extends Controller
             }
         }
         return view('select-extra-services', compact('addons', 'session_addons','selectedPlayer'));
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function checkUserPackageParameters(Request $request) {
+        $params = $this->getParams();
+        $authUser = Auth::user();
+        $package = $request['package_id'];
+        $categoryType = Package::find($package)->category->category_type;
+        $unidadmedida = '';
+
+        
+        // Validar el Tipo de Categoria en la tabla category
+        if($categoryType == 0) {
+			$unidadmedida= 'partidas';
+			$dataUser = DB::select("SELECT u.first_name, u.last_name, u.doc_id, u.id , 
+            (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
+               FROM users u
+               WHERE u.doc_id = '".$authUser->doc_id."' ");
+		}
+
+		else if($categoryType == 1) {
+			$unidadmedida= 'minutos';
+			$dataUser = DB::select("SELECT u.first_name, u.last_name, u.doc_id, u.id , 
+            (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
+               FROM users u
+               WHERE u.doc_id = '".$authUser->doc_id."' ");
+		}
+
+        $calculoDia = $$dataUser->calculoDia;
+        $calculoSemana = $$dataUser->calculoSemana;
+        $calculoMes = $$dataUser->calculoMes;
+        $string = '';
+
+        $messagePerDayWeekMonth = "<br>Participante no puede exceder el numero de ".$unidadmedida."";
+		if ($calculoDia >= $conditionPerDay) { 
+			$string .= $messagePerDayWeekMonth." por día.";
+		}
+
+		if ($calculoSemana >= $conditionPerWeek) { 
+			$string .= $messagePerDayWeekMonth." por Semana.";
+		}
+
+		if ($calculoMes >= $conditionPerMonth) { 
+			$string .= $messagePerDayWeekMonth." por Mes.";
+        }
+        
+        return response()->json([ 
+            //'success' => $string !== '' ? true : false,
+            'success' => false,
+            'message' => $string,
+        ]);
+
     }
 
     /**

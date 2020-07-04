@@ -136,6 +136,7 @@ Route::group(['middleware'=>'authenticated'], function() {
     Route::get('/finalize-booking', 'UserBookingController@loadFinalStep')->name('loadFinalStep');
     Route::get('/extra-service-participants', 'UserBookingController@getExtraServiceParticipants')->name('getExtraServiceParticipants');
     Route::post('/extra-service-set-participant', 'UserBookingController@setParticipant')->name('setParticipant');
+    Route::get('/check-user-package-parameters', 'UserBookingController@checkUserPackageParameters')->name('checkUserPackageParameters');
 
 
     //PAYMENT GATEWAYS

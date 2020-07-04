@@ -506,6 +506,17 @@
         return position;
     }
 
+    function checkAvailableButtonSLot(hour) {
+        let exist = false;
+            $('.btn-slot.available').each(function() {
+                 const currentHour = $(this).attr('data-slot-time');
+                if(currentHour == hour) {
+                    exist = true;
+                }
+            });
+        return exist;
+    }
+
     const array = [];
     $('#custom_slots_holder').on('click', 'a.btn-slot', function() {
         var slot_time = $(this).attr('data-slot-time');
@@ -544,13 +555,20 @@
             if(tennisCondition == 2 && ButtonCondition >= 1) {
                 const slot2 = moment(slot_time, 'hh:mm A').add('30', 'minutes').format('hh:mm A');
                 slots = [ slot_time, slot2 ];
-                $('.btn-slot.available').each(function() {
-                 const currentHour = $(this).attr('data-slot-time');
-                 const exist = slots.find(e => e === currentHour );
-                    if (exist) {
-                        $(this).addClass('slot-draw-picked');
-                    }
-                });
+                const availableSlots = checkAvailableButtonSLot(slot2);
+                if(availableSlots) {
+                    $('.btn-slot.available').each(function() {
+                    const currentHour = $(this).attr('data-slot-time');
+                    const exist = slots.find(e => e === currentHour );
+                        if (exist) {
+                            $(this).addClass('slot-draw-picked');
+                        }
+                    });
+                } else {
+                    $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
+                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+                }
+
 
                 $('#tennis_slot').val(JSON.stringify(slots));
             }
@@ -559,13 +577,20 @@
                 const slot2 = moment(slot_time, 'hh:mm A').add('30', 'minutes').format('hh:mm A');
                 const slot3 = moment(slot_time, 'hh:mm A').add('60', 'minutes').format('hh:mm A');
                 slots = [ slot_time, slot2, slot3 ];
-                $('.btn-slot.available').each(function() {
-                 const currentHour = $(this).attr('data-slot-time');
-                 const exist = slots.find(e => e === currentHour );
-                    if (exist) {
-                        $(this).addClass('slot-draw-picked');
-                    }
-                });
+                const availableSlots = checkAvailableButtonSLot(slot2);
+                if(availableSlots) {
+                    $('.btn-slot.available').each(function() {
+                    const currentHour = $(this).attr('data-slot-time');
+                    const exist = slots.find(e => e === currentHour );
+                        if (exist) {
+                            $(this).addClass('slot-draw-picked');
+                        }
+                    });
+                } else {
+                    $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
+                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+                }
+
 
                 $('#tennis_slot').val(JSON.stringify(slots));
             } 

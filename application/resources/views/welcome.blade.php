@@ -68,322 +68,7 @@
 
 </style>
 
-<?php
-	
-	// require 'wsLibrary.php';
-	require 'wsLibrary.php';
-	
-	function str_Normalize($data)
-	{
-		$aux = $data;
-		$aux = str_replace("'","",$aux);	
-		$aux = str_replace("\"","",$aux);	
-		return $aux;
-	}
-	
-
-	
-	// //check if logged
-	// if($user = Auth::user())
-	// //if (!Auth::check())
-	// {	
-		// $todayBookings = date("d-m-Y");
-
-		
-		// $bookings_today = count(DB::table('bookings')->where('booking_date','=', $todayBookings)->where('user_id','=', Auth::user()->id)->get());
-		// //$bookings_today = Auth::user()->bookings()->where('booking_date','=',($todayBookings));
-		// $bookings_perday =  config('settings.bookingUserPerDay');
-		
-		// //echo $bookings_today . " vs " . $bookings_perday . " @ " . $todayBookings;
-
-		// //check total bookings for current day already made
-		// if ($bookings_today <= $bookings_perday)
-		// {
-			// //echo "OK";	
-			// //echo $todayBookings;
-		// }
-		// else
-		// {
-			
-			// echo "<center>MAX RESERVACIONES POR DIA EXCEDIDO</center>";	
-			// //return view('custom.restricted');		
-			
-			// echo '<script>';
-			// echo '			window.location.href = `custom/RestrictedUserBooking.php?type=custom&customText=MAX RESERVACIONES POR DIA EXCEDIDO`;';
-		// //	echo '			window.location.href = `{{ url('login') }}`;';		
-			// echo '			</script>';
-			// exit;	
-		// }
-		// //			@if(count($session_players))
-		// //				@foreach($session_players as $player)				
-	// }
-
-
-	//Force an schedule for bookings to users  LA 	
-	$today = date("Y-m-d");
-	date_default_timezone_set(env('LOCAL_TIMEZONE','America/Caracas'));
-	//date_default_timezone_set('Asia/Kolkata');
-	
-	
-	$StartTime = App\Settings::query()->first()->bookingUser_startTime;
-	$EndTime = App\Settings::query()->first()->bookingUser_endTime;
-
-	$datetime1 = new DateTime($today . ' ' . $StartTime);
-	$datetime2 = new DateTime($today . ' ' . $EndTime);
-	$curDateTime = new DateTime();
-
-
-	if (($curDateTime > $datetime1) && ($curDateTime < $datetime2)) {
-			//echo "EN HORARIO";	
-	}else
-	{
-		echo "<center>FUERA HORARIO</center>";
-		
-		//return view('custom.restricted');		
-		echo '<script>';
-		echo 'window.location.href = `custom/RestrictedUserBooking.php?type=schedule&StartTime=' . $StartTime . '&EndTime=' . $EndTime .  '`;';
-	//	echo '			window.location.href = `{{ url(index) }}`;';		
-		echo '			</script>';
-	//	exit;		
-	}
-
-	//include 'wsLibrary.php';
-
-	//validate balance of group-
-	$group_id = Auth::user()->group_id;
-	$user_id = Auth::user()->id ;
-	
-	//logged but without group_id
-	if (($user_id!='') && ($group_id ==''))
-	{
-		echo "Usuario invalido";
-		echo "<a href='login'>Haga click para ingresar nuevamente</a>";
-
-		echo '<script>';
-		echo '			window.location.href = `custom/RestrictedUserBooking.php?type=custom&customText=Usuario invalido`;';	
-		echo '			</script>';
-		exit();		
-
-		/*
-		echo '<script>';
-		echo '			window.location.href = `login`;';
-	//	echo '			window.location.href = `{{ url('login') }}`;';		
-		echo '			</script>';
-*/
-		
-	}
-
-
-	//echo "$group_id" . $group_id;
-	if ($group_id !='')
-	{
-		$result = wsConsultaSaldo($group_id, $balance, $comments);
-		$balance_date = date('Y-m-d H:i:s');
-		
-		
-		//echo $result;
-		//exit();
-		
-		// echo $webservice;
-		// echo CONST_URI_WEB_SERVICE;
-		// echo "***" . $result;
-		// echo $comments;
-		
-		if (($result==-1) || ($result==-3))
-		{
-			$balance = Auth::user()->group->balance;
-			$balance_date = Auth::user()->group->balance_date;
-		}
-		else
-		{
-			if (($result==-2))
-			{
-				$balance=0;
-
-				//echo '$result' . $result . '**';
-				
-				// Auth::user()->group->balance = $balance;
-				// Auth::user()->group->balance_date = $balance_date;
-				// Auth::user()->group->update();
-				
-				
-				
-				// $servername = env('DB_HOST');
-				// $username=  env('DB_USERNAME');
-				// $password = env('DB_PASSWORD');
-				// $database = env('DB_DATABASE');
-
-			$connectionInfo = array( 
-				"Database"=> $database,
-				"UID"=> $username, 
-				"PWD"=> $password
-			);
-            $connection = sqlsrv_connect($servername, $connectionInfo);
-				
-				// Check connection 
-				if (!$connection) 
-				{ 
-					echo "Database connection failed."; 
-				}			
-				
-				//update local database
-				$query = "DELETE FROM groups WHERE id='" . $group_id . "'";	
-				$qry_result = sqlsrv_query($connection,$query ) or die(sqlsrv_error($connection));
-
-				$query = "INSERT INTO groups (id, balance,is_suspended, is_active, balance_date,created_at, updated_at) VALUES ('" . $group_id . "'," . $balance . ",0,1,NOW(),NOW(), NOW())";	
-				
-				//echo $query;
-
-				$qry_result = sqlsrv_query($connection,$query ) or die(sqlsrv_error($connection));
-			}
-	}
-
-		if ($result<=0) {
-				//echo "SOLVENTE";	
-		}else
-		{
-			echo "<center>PRESENTA SALDO <br>";
-			echo "Monto: " . $balance;
-			echo " @ ";
-			echo $balance_date;
-			echo "</center>";
-				
-			echo '<script>';
-			echo '			window.location.href = `custom/RestrictedUserBooking.php?type=balance&balance=' . $balance . '&group_id=' . $group_id  .  '&balance_date=' . $balance_date . '`;';
-		//	echo '			window.location.href = `{{ url('login') }}`;';		
-			echo '			</script>';
-			exit;		
-		}		
-	}
-	
-	//check blacklist
-	
-	//user is logged
-	//echo "check blacklist";
-	if($user = Auth::user())
-	//if (!Auth::check())	
-	//if ($user_id != '')
-	{
-		
-		//echo "check blacklist";
-		
-		$doc_id = Auth::user()->doc_id ;
-		// 0: ok , 1: en lista negra, -1: error
-		
-		//echo $doc_id ;
-		
-		
-		
-		$retval = wsConsultarBlackList($doc_id, $comments, $first_name, $last_name);
-		  //echo $retval;
-		 // exit();
-
-		$first_name = str_Normalize($first_name);
-		$last_name = str_Normalize($last_name);
-
-			$connectionInfo = array( 
-				"Database"=> $database,
-				"UID"=> $username, 
-				"PWD"=> $password
-			);
-            $connection = sqlsrv_connect($servername, $connectionInfo);
-		
-		if ($retval == 1 )
-		{
-			
-			
-			$blacklist = 1;
-			$err_message = $err_message . "<br>Actualmente Sr/a " . $first_name . " " .  $last_name . " posee una condicion que le impide realizar reservas - " . $comments ;
-			$has_errors = 1;
-			
-			
-			
-			//update local table
-			$query = "DELETE FROM blacklists WHERE doc_id='" . $doc_id . "'";	
-			$qry_result = sqlsrv_query($connection,$query ) or die(sqlsrv_error($connection));
-
-
-
-			$query = "INSERT INTO blacklists (doc_id, comments, created_at, updated_at, first_name, last_name) VALUES ('" . $doc_id . "','" . $comments . "',NOW(), NOW(),'" . $first_name . "','" . $last_name . "')";	
-			$qry_result = sqlsrv_query($connection,$query ) or die(sqlsrv_error($connection));
-			echo "jjj";
-		}
-		else  if ($retval == 0 )
-		{
-			//update local table deleting records
-			$query = "DELETE FROM blacklists WHERE doc_id='" . $doc_id . "'";	
-			$qry_result = sqlsrv_query($connection,$query ) or die(sqlsrv_error($connection));
-			
-		}
-		elseif ($retval == -1 )  //error WS
-		{
-
-			$queryBlackList = "SELECT * from blacklists where doc_id='" . $doc_id . "'";
-		   
-			$resultBlackList = sqlsrv_query($connection, $queryBlackList); 
-			  
-			if ($resultBlackList) 
-			{ 
-				$rowBlackListCount = sqlsrv_num_rows($resultBlackList); 
-			   // printf("Number of row in the table : " . $row); 
-				if ($rowBlackListCount>0) 
-				{
-					$blacklist=1;
-					while($row = sqlsrv_fetch_array($resultBlackList)){
-						$comments = $row['comments'];
-					}
-				}
-				else
-				{
-
-				}
-			}
-			if ($blacklist==1)
-			{
-				$err_message = $err_message . "<br>Actualmente presenta una condicion que le impide realizar reservas - " . $comments;
-				$has_errors = 1;
-			}
-			else
-			{
-				//$err_message = $err_message . "<br>Participantes - " . $cant;
-			}
-			sqlsrv_next_result($resultBlackList); 
-
-			
-		}
-		
-		// echo '$has_errors' . $has_errors;
-		// exit();
-		
-		
-		if ($has_errors==1)
-		{
-				//echo "<center>Registrado en Blacklist<br>";
-				echo "<center>No es posible reservar<br>";
-				echo $comments;
-				echo "</center>";
-				
-				$comments = "Actualmente posee una condicion que le impide realizar reservaciones . <br><br>Dirijase al Club para mayor informacion";
-				
-				echo '<script>';
-				echo '			window.location.href = `custom/RestrictedUserBooking.php?type=custom&customText=' . $comments . '`;';
-			//	echo '			window.location.href = `{{ url('login') }}`;';		
-				echo '			</script>';
-				exit;		
-
-		}
-		
-
-		
-		
-	}
-	
-
-
-
-
-?>
-
+{{-- aqui va el codigo --}}
 
     <div class="jumbotron promo">
         <div class="container">
@@ -394,7 +79,7 @@
         </div>
     </div>
 
-    <form method="post" id="booking_step_1" action="{{ Auth::user() ? route('postStep1') : route('register') }}">
+    <form method="post" id="custom_booking_step_1" action="{{ Auth::user() ? route('postStep1') : route('register') }}">
 
         {{csrf_field()}}
 
@@ -630,6 +315,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="alert alert-danger d-none" id="package_error">{{ __('app.no_package_selected_error') }}</div>
+                        <div class="alert alert-danger d-none" id="welcome-message-error"></div>
                         <br>
                     </div>
                 </div>
@@ -806,7 +492,7 @@
 			return html;
 		}
 
-	    $("div").on("click", "div.custom_category_box", function(){
+	$("div").on("click", "div.custom_category_box", function(){
         var category_id = $(this).attr('data-category-id');
         var category_type = $(this).attr('data-category-type');
         $('.type_title').removeClass('active');
@@ -934,8 +620,95 @@
 
 
         $('#package_id').remove();
-        $('#booking_step_1').append('<input type="hidden" name="package_id" id="package_id" value="'+package_id+'">');
+        $('#custom_booking_step_1').append('<input type="hidden" name="package_id" id="package_id" value="'+package_id+'">');
     });
+
+	function checkPackageParameters() {
+		const URL_CONCAT = $('meta[name="index"]').attr('content');
+		const package_id  = $('input[name=package_id]').val();
+		return new Promise(function(resolve, reject) {
+			$.ajax({
+			type: 'GET',
+			url: `${URL_CONCAT}/check-user-package-parameters`,
+			data: { package_id: package_id },
+				success: function(response) {
+					resolve(response);
+					return false;
+				},
+			})
+		});
+	}
+
+    $('#custom_booking_step_1').submit(async function(e){
+		e.preventDefault();
+        var check;
+        check = true;
+        var first_name;
+        first_name = $('input[name=first_name]').val();
+        var last_name;
+        last_name = $('input[name=last_name]').val();
+        var phone_number;
+        phone_number = $('input[name=phone_number]').val();
+        var email;
+        email = $('input[name=email]').val();
+		$('#welcome-message-error').addClass('d-none').empty();
+
+        if(first_name === "") {
+            $('#first_name').addClass('is-invalid');
+            $('#first_name_error_holder').removeClass('d-none');
+            check = false;
+        }
+
+        if(last_name === "") {
+            $('#last_name').addClass('is-invalid');
+            $('#last_name_error_holder').removeClass('d-none');
+            check = false;
+        }
+
+        if(phone_number === "") {
+            $('#phone_number').addClass('is-invalid');
+            $('#phone_number_error_holder').removeClass('d-none');
+            check = false;
+        }
+
+        if(email === "") {
+            $('#email').addClass('is-invalid');
+            $('#email_error_holder').removeClass('d-none');
+            check = false;
+        }
+
+        var emailReg = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        if(!emailReg.test(email)) {
+            $('#email').addClass('is-invalid');
+            $('#email_error_holder').removeClass('d-none');
+            check = false;
+        }
+
+        if(check === false) {
+            $("html, body").animate({ scrollTop: 0 }, "slow");
+            return false;
+        }
+
+        var package_id  = $('input[name=package_id]').val();
+		
+        if(package_id === undefined) {
+            $('#package_error').removeClass('d-none');
+            $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+            check = false;
+        }
+
+		const res = await checkPackageParameters();
+        if(res.success) {
+            $('#welcome-message-error').removeClass('d-none').html(res.message);           
+            check = false;
+        }
+        if(check === false) {
+            return false;
+        }
+		var enviar = document.getElementById("custom_booking_step_1");
+		enviar.submit();
+    });
+ 
 
 
 	</script>
