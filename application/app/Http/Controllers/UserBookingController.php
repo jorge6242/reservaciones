@@ -359,7 +359,7 @@ class UserBookingController extends Controller
             foreach ($bookings as $booking)
             {
                
-                // Esta es la logica para que se pinten los slots cuando es por tiempo.
+                // Logica para que se pinten los slots cuando es por tiempo.
                 if(strtotime($booking->booking_date)==strtotime($event_date) && $categoryType == 1 && $booking->booking_time2 !== null ) {
                    
                     $existSlot = $this->getSlotsPerTime($booking->booking_date ,$booking->package_type_id, $booking->booking_time, $timeslot);
@@ -368,7 +368,8 @@ class UserBookingController extends Controller
                     }
                 }
 
-                if(strtotime($booking->booking_date)==strtotime($event_date) && strtotime($booking->booking_time)==strtotime($timeslot))
+                // Logica para que se pinten los slots cuando es Standard.
+                if(strtotime($categoryType == 0 && $booking->booking_date)==strtotime($event_date) && strtotime($booking->booking_time)==strtotime($timeslot))
                 {
                     //put multiple booking logic
 
@@ -463,16 +464,21 @@ class UserBookingController extends Controller
 				//check slot availability against SessionSlots -- LA
 				foreach ($sessionSlots as $sessionSlot)
 				{
-					if (strtotime($sessionSlot->booking_date)==strtotime($event_date) && strtotime($sessionSlot->booking_time)==strtotime($timeslot))
-					{
-							$list_slot[$i]['is_available'] = false;
-							$list_slot[$i]['is_blocked'] = true;
-							$list_slot[$i]['description'] = "PROGRESS";
-					}
-					else
-					{
-							//$list_slot[$i]['is_blocked'] = false;
-					}
+                    // SessionSlots modo Standard
+                    if($categoryType == 0 && strtotime($sessionSlot->booking_date)==strtotime($event_date) && strtotime($sessionSlot->booking_time)==strtotime($timeslot)) {
+                        $list_slot[$i]['is_available'] = false;
+                        $list_slot[$i]['is_blocked'] = true;
+                        $list_slot[$i]['description'] = "PROGRESS";
+                    }
+                    // SessionSlots modo Por tiempo
+                    else if($categoryType == 1 && strtotime($sessionSlot->booking_date)==strtotime($event_date) && $sessionSlot->booking_time2 !== null ) {
+                        $existSlot = $this->getSlotsPerTime($sessionSlot->booking_date ,$sessionSlot->package_type_id, $sessionSlot->booking_time, $timeslot);
+                        if($existSlot) {
+                            $list_slot[$i]['is_available'] = false;
+                            $list_slot[$i]['is_blocked'] = true;
+                            $list_slot[$i]['description'] = "PROGRESS";
+                        }
+                    }
 				}
 
 				//check if slot is expired

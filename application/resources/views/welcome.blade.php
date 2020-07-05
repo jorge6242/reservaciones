@@ -384,7 +384,6 @@
 
 ?>
 
-
     <div class="jumbotron promo">
         <div class="container">
             <h1 class="text-center promo-heading">{{ __('app.welcome_title') }}</h1>
