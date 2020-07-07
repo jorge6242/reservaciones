@@ -896,6 +896,7 @@
                 $('#packages_loader').removeClass('d-none');
 				$('#packages-by-type').empty();
 				$('#packages-calendar').empty();
+                $('#statusSlots').empty();
                 $('#packages_holder').html('&nbsp;');
             },
             success: function(response) {
