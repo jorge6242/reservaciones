@@ -51,6 +51,7 @@
                                     <th>{{ __('backend.validation_type') }}</th>
                                     <th>{{ __('backend.created') }}</th>
                                     <th>{{ __('backend.updated') }}</th>
+                                    <th>{{ __('backend.is_active') }}</th>
                                     <th>{{ __('backend.actions') }}</th>
                                 </tr>
                                 </thead>
@@ -65,6 +66,7 @@
                                     <th>{{ __('backend.validation_type') }}</th>
                                     <th>{{ __('backend.created') }}</th>
                                     <th>{{ __('backend.updated') }}</th>
+                                     <th>{{ __('backend.is_active') }}</th>
                                     <th>{{ __('backend.actions') }}</th>
                                 </tr>
                                 </tfoot>
@@ -110,6 +112,14 @@
                                         </td>
                                         <td>{{ $package->created_at->diffForHumans() }}</td>
                                         <td>{{ $package->updated_at->diffForHumans() }}</td>
+                                        <td>
+                                            @if($package->is_active !== null && $package->is_active == 0)
+                                                Inactivo
+                                            @endif
+                                            @if($package->is_active !== null && $package->is_active == 1)
+                                                Activo
+                                            @endif
+                                        </td>
                                         <td>
                                             <a href="{{ route('packages.edit', $package->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                             <a class="btn btn-danger btn-xs" data-toggle="modal" data-target="#{{ $package->id }}"><i class="fa fa-trash-o"></i></a>

@@ -70,10 +70,10 @@
                                 @endif
                             </div>
 
-                            <div class="col-md-12 form-group">
+                            <div class="col-md-6 form-group">
                             
-                                <div class="col-md-1 form-group" style="margin-left: -15px;"> {{ __('backend.package_time') }}  </div>
-                                <div class="col-md-3 form-group{{$errors->has('length') ? ' has-error' : ''}}">
+                                <div class="col-md-3 form-group" style="margin-left: -15px;"> {{ __('backend.package_time') }}  </div>
+                                <div class="col-md-5 form-group{{$errors->has('length') ? ' has-error' : ''}}">
                                     <input type="number" class="form-control" name="length" value="{{$court->length}}">
                                     @if ($errors->has('length'))
                                         <span class="help-block">
@@ -81,17 +81,25 @@
                                         </span>
                                     @endif
                                 </div>
-                                <div class="col-md-3 form-group" >{{ __('backend.minutes') }}</div>
+                                <div class="col-md-4 form-group" >{{ __('backend.minutes') }}</div>
 
                             </div>
 
-                            <div class="col-md-1 form-group"> {{ __('backend.status') }}  </div>
-                            <div class="col-md-11 form-group">
-                                <select class="form-control" name="status" >
-                                    <option value="" >Seleccione</option>
-                                    <option value="0" {{ $court->status == 0 ? 'selected' : '' }}>{{ __('backend.disabled') }}</option>
-                                    <option value="1" {{ $court->status == 1 ? 'selected' : '' }}>{{ __('backend.active') }}</option>
-                                </select>
+                            <div class="col-md-6">
+                            
+                                <div class="row">
+                                
+                                    <div class="col-md-2 form-group"> {{ __('backend.status') }}  </div>
+                                    <div class="col-md-10 form-group">
+                                        <select class="form-control" name="status" >
+                                            <option value="" >Seleccione</option>
+                                            <option value="0" {{ $court->status == 0 ? 'selected' : '' }}>{{ __('backend.disabled') }}</option>
+                                            <option value="1" {{ $court->status == 1 ? 'selected' : '' }}>{{ __('backend.active') }}</option>
+                                        </select>
+                                    </div>
+                                
+                                </div>
+
                             </div>
 
 

@@ -82,7 +82,8 @@ return [
     'package_time' => 'Tiempo',
     'minutes' => 'Minutos',
     
-    'packages_types' => 'Tipos de Paquete',
+    'packages_types' => 'Tipos de Paquetes',
+    'packages_type_exception' => 'Excepciones Por tIpos de Paquetes',
     'packages_typess_manage' => 'Gestionar Tipos de Paquete',
     'packages_types_add' => 'Agregar Tipo de Paquete',
     'packages_types_edit' => 'Editar Tipo de Paquete',

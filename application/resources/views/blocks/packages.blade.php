@@ -32,7 +32,7 @@
     @if(count($packages))
         @foreach($packages as $package)
             
-                <div class="package_box" custom-data-package-id="{{ $package->id }}">
+                <div class="package_box custom-data-package-{{ $package->id }} " custom-data-package-id="{{ $package->id }}">
                     <div class="responsive-image"><img class="responsive-image" alt="{{ $package->title }}" src="{{ asset($package->photo->file) }}"></div>
                     <div class="package_title container">
                     <div class="type_title pack">

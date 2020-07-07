@@ -42,22 +42,46 @@
     background: #007bff !important;
 }
 
-#tennis-calendar {
+#packages-calendar {
 	margin: 20px 0px 20px 0px;
 }
 
-#tennis-calendar .cell {
+#packages-calendar .cell {
 	border: 1px solid #2c3e50;
 }
-#tennis-calendar .cell.active {
-	background-color: #f1c40f;
+#packages-calendar .cell.active {
+	background-color: #27ae60;
 }
-#tennis-calendar .header, .time {
+
+#packages-calendar .cell.blocked {
+	background-color: #e74c3c;
+}
+
+#packages-calendar .cell.expired {
+	background-color: #7f8c8d;
+}
+
+#packages-calendar .header, .time {
 	font-weight: bold;
 }
 
+#packages-calendar .cell.header.active-header {
+    border-top: 5px solid #3498db;
+    border-left: 5px solid #3498db;
+    border-right: 5px solid #3498db;
+}
+
+#packages-calendar .cell.body.active-body {
+    border-left: 5px solid #3498db;
+    border-right: 5px solid #3498db;
+}
+
+.custom-table {
+    border: 5px solid;
+}
+
 @media only screen and (max-width: 600px) {
-	#tennis-calendar .cell {
+	#packages-calendar .cell {
 		font-size: 9px;
 		flex: 0 0 16.66666667%;
 		max-width: 16.66666667%;
@@ -384,6 +408,7 @@
 
 ?>
 
+
     <div class="jumbotron promo">
         <div class="container">
             <h1 class="text-center promo-heading">{{ __('app.welcome_title') }}</h1>
@@ -622,8 +647,11 @@
                     </div>
                 </div>
 
-                <div id="packages-by-type"></div>
-                <div id="tennis-calendar"></div>
+                <div class="row">
+                    <div class="col-md-12 form-group" id="packages-by-type"></div>
+                    <div class="col-md-12 form-group" id="statusSlots"></div>
+                    <div class="col-md-12" id="packages-calendar" style="text-align:center"></div>
+                </div>
                 <div id="packages_holder"></div>
 
                 <div class="row">
@@ -710,98 +738,145 @@
 		  // });
 		// }
 
-		function handleSelectReport() {
-			$('#tennis-calendar').empty();
-			let html = `
-				<div class="row header">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 1</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 2</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 3</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 4</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell">Cancha 5</div>
-                </div>
-                <div class="row">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell time">6:00</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-                </div>
-                <div class="row">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell time">6:30</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-                </div>
-                <div class="row">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell time">7:00</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-                </div>
-                <div class="row">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell time">7:30</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-                </div>
-                <div class="row">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell time">8:00</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-                </div>
-                <div class="row">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell time">8:30</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-                </div>
-                <div class="row">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell time">9:00</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-                </div>
-                <div class="row">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell time">9:30</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-                </div>
-                <div class="row">
-					<div class="col-sm-2 col-xs-2 col-md-2 cell time">10:00</div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell active"></div>
-					<div class="col-sm-2 col-xs-2 col-md-2 cell"></div>
-				</div>
-			`;
-			$('#tennis-calendar').html(html);
+        function handlePackageCalendar(id) {
+            $(`.cell`).removeClass('active-header');
+            $(`.cell`).removeClass('active-body');
+            $('.package_title.container').removeClass('active');
+            $('.type_title.pack').removeClass('active');
+            $(`.cell.header.calendar-package-${id}`).addClass('active-header');
+            $(`.cell.body.calendar-package-${id}`).addClass('active-body');
+            $(`.custom-data-package-${id}`).find('.type_title.pack').addClass('active');
+            $(`.custom-data-package-${id}`).find('.package_title.container').addClass('active');
+
+            $('#package_id').remove();
+            $('#custom_booking_step_1').append(`<input type="hidden" name="package_id" id="package_id" value="${id}">`);
+        }
+
+        function renderCalendarHeader(packages) {
+            let html = '';
+			packages.forEach(element => {
+				html +=`<td class="cell header calendar-package-${element.id}" onclick="handlePackageCalendar(${element.id})" style="cursor:pointer" >${element.title}</td>`;
+			})
+            return html;
+        }
+
+        function renderStatus(data) {
+            if(data.expired) return 'expired';
+            if(data.blocked) return 'blocked';
+            if(!data.available) return 'active';
+        }
+
+        function renderSchedule(data) {
+            let html = '';
+			data.forEach(element => {
+				html +=`<td class="cell ${renderStatus(element)} body calendar-package-${element.id}" calendar-package="${element.id}" >&nbsp;</td>`;
+			});
+            return html;
+        }
+
+		function handleSelectDay(category) {
+            let date = document.getElementById("tennis-time").value;
+			var URL_CONCAT = $('meta[name="index"]').attr('content');
+            const packageId  = $('#package_id').val();
+            if(date !== '') {
+                let number = moment(date).weekday();
+                if(number == 0) number = number + 1;
+                $.ajax({
+                type: 'GET',
+                url: URL_CONCAT + '/booking-category-calendar',
+                data: { 
+                    date : date,
+                    number : number,
+                    category : category,
+                },
+                    beforeSend: function() {
+                        $('#packages_loader').removeClass('d-none');
+                    },
+                    success: function(response) {
+                        const packages = response.packages;
+                        const schedule = response.schedule;
+                        let html = '';
+                        const header = `
+                            <tr class="header">
+                                <td class="cell"></td>
+                                ${renderCalendarHeader(packages)}
+                            </tr>`;
+
+                        let content = '';
+                        schedule.forEach(element => {
+                            content += `
+                                <tr>
+                                    <td class="cell time" >${moment(element.hour, 'hh:mm A').format('hh:mm A')}</td>
+                                    ${renderSchedule(element.packages)}
+                                </tr>
+                            `;
+                        } );
+
+                        html += `
+                        <div class="row">
+                            <div class="col-sm-12 col-xs-12 col-md-12" style="overflow-y: scroll; height: 300px;">
+                                <table class="table custom-table" border="1" >
+                                    ${header}
+                                    ${content}  
+                                </table>   
+                            </div>
+                        </div>
+                        `;
+                        $('#packages-calendar').fadeIn().html(html);
+                        $('#packages_loader').addClass('d-none');
+
+                            $.ajax({
+                            type: 'POST',
+                            url: URL_CONCAT + '/get_packages',
+                            data: {parent:category},
+                            beforeSend: function() {
+                                $('#packages_loader').removeClass('d-none');
+                                $('#packages_holder').html('&nbsp;');
+                                 $('#package_id').remove();
+                            },
+                            success: function(response) {
+                                $('#packages_holder').fadeIn().html(response);
+                                $(".owl-carousel").owlCarousel({
+                                    margin:20,
+                                    dots:false,
+                                    nav:true,
+                                    items: 1,
+                                    navText: [
+                                        '<img src="'+ URL_CONCAT + '/images/left.png">',
+                                        '<img src="'+ URL_CONCAT + '/images/right.png">'
+                                    ],
+                                    responsiveClass: true,
+                                    responsive: {
+                                        0: {
+                                            items: 1,
+                                            loop:true,
+                                        },
+                                        480: {
+                                            items: 1,
+                                            loop:true,
+                                        },
+                                        769: {
+                                            items: 3
+                                        }
+                                    }
+                            });
+                            },
+                            complete: function () {
+                                $('#packages_loader').addClass('d-none');
+                            }
+                            });
+
+                    },
+                });
+            }
 			
 		}
 
 		function renderDates(dates) {
 			let html = '';
+            html +=`<option value="" selected >Seleccione Dia</option>`;
 			dates.forEach(element => {
-				html +=`<option value="${element.date}">${moment(element.date.date).format('MMMM Do YYYY')}</option>`;
+				html +=`<option value="${moment(element.date.date).format('DD-MM-YYYY')}">${moment(element.date.date).format('MMMM Do YYYY')}</option>`;
 			})
 			return html;
 		}
@@ -820,7 +895,7 @@
             beforeSend: function() {
                 $('#packages_loader').removeClass('d-none');
 				$('#packages-by-type').empty();
-				$('#tennis-calendar').empty();
+				$('#packages-calendar').empty();
                 $('#packages_holder').html('&nbsp;');
             },
             success: function(response) {
@@ -866,56 +941,40 @@
                 $('#packages_loader').removeClass('d-none');
 				$('#packages_holder').empty();
                 $('#packages-by-type').empty();
-                $('#tennis-calendar').empty();
+                $('#statusSlots').empty();
+                $('#packages-calendar').empty();
             },
             success: function(response) {
 				let html = '';
-				html +=` <select class="form-control" name="tennis-time" onchange="handleSelectReport()">
-							${renderDates(response.dates)}	
+				html +=` <select class="form-control" name="tennis-time" id="tennis-time" onchange="handleSelectDay(${category_id})">
+                            ${renderDates(response.dates)}	
 						</select> `;
-				console.log('response ', response);
-                
 				$('#packages-by-type').fadeIn().html(html);
-				$.ajax({
-				type: 'POST',
-				url: URL_CONCAT + '/get_packages',
-				data: {parent:category_id},
-				beforeSend: function() {
-					$('#packages_loader').removeClass('d-none');
-					$('#packages_holder').html('&nbsp;');
-				},
-				success: function(response) {
-					$('#packages_holder').fadeIn().html(response);
-					$(".owl-carousel").owlCarousel({
-						margin:20,
-						dots:false,
-						nav:true,
-						items: 1,
-						navText: [
-							'<img src="'+ URL_CONCAT + '/images/left.png">',
-							'<img src="'+ URL_CONCAT + '/images/right.png">'
-						],
-						responsiveClass: true,
-						responsive: {
-							0: {
-								items: 1,
-								loop:true,
-							},
-							480: {
-								items: 1,
-								loop:true,
-							},
-							769: {
-								items: 3
-							}
-						}
-				});
-				},
-				complete: function () {
-					$('#packages_loader').addClass('d-none');
-				}
-				});
 
+                let slots = `
+                <div class="row">           
+                    <div class="col-md-2">
+                    <a class="btn btn-outline-dark btn-lg btn-block btn-slot disabled"> DISPONIBLE</a>
+                    </div>
+                    
+                    <div class="col-md-2">
+                    <a class="btn   btn-lg btn-block  btn-slot btn-warning disabled">EVENTO</a>
+                    </div>
+                    
+                    <div class="col-md-2">
+                    <a class="btn   btn-lg btn-block  btn-slot btn-secondary disabled"><font color="FFFFFF"> EXPIRADO</font></a>
+                    </div>
+                    
+                    <div class="col-md-2">
+                    <a class="btn   btn-lg btn-block  btn-slot btn-success disabled"><font color="FFFFFF"> RESERVADO</font></a>
+                    </div>
+
+                    <div class="col-md-2">
+                    <a class="btn   btn-lg btn-block  btn-slot btn-danger disabled"><font color="FFFFFF"> EN PROCESO </font></a>
+                    </div>
+                </div>
+                `;
+                $('#statusSlots').fadeIn().html(slots);
             	},
 				complete: function () {
 					$('#packages_loader').addClass('d-none');
@@ -928,10 +987,14 @@
         var package_id = $(this).attr('custom-data-package-id');
 		$('.package_title.container').removeClass('active');
 		$('.type_title.pack').removeClass('active');
+        $(`.cell`).removeClass('active-header');
+        $(`.cell`).removeClass('active-body');
 		$(this).find('.type_title.pack').addClass('active');
 		$(this).find('.package_title.container').addClass('active');
         $('#package_error').addClass('d-none');
 
+        $(`.cell.header.calendar-package-${package_id}`).addClass('active-header');
+        $(`.cell.body.calendar-package-${package_id}`).addClass('active-body');
 
         $('#package_id').remove();
         $('#custom_booking_step_1').append('<input type="hidden" name="package_id" id="package_id" value="'+package_id+'">');

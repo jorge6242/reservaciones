@@ -114,6 +114,7 @@ Route::group(['middleware'=>'customer'], function(){
     Route::post('/cancel-request', 'CancelRequestController@store')->name('cancelRequest');
     Route::get('/update-booking/{id}', 'UserBookingController@update')->name('updateBooking');
     Route::patch('/booking/{id}', 'UserBookingController@update_booking')->name('postUpdateBooking');
+    Route::get('/booking-category-calendar', 'UserBookingController@getBookingCategoryCalendar')->name('getBookingCategoryCalendar');
 
 });
 
@@ -137,6 +138,7 @@ Route::group(['middleware'=>'authenticated'], function() {
     Route::get('/extra-service-participants', 'UserBookingController@getExtraServiceParticipants')->name('getExtraServiceParticipants');
     Route::post('/extra-service-set-participant', 'UserBookingController@setParticipant')->name('setParticipant');
     Route::get('/check-user-package-parameters', 'UserBookingController@checkUserPackageParameters')->name('checkUserPackageParameters');
+    Route::resource('/package-types-exception', 'AdminPackageTypeExceptionController');
 
 
     //PAYMENT GATEWAYS

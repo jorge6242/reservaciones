@@ -56,10 +56,10 @@
                                 @endif
                             </div>
 
-                            <div class="col-md-12 form-group">
+                            <div class="col-md-6 form-group">
                                 
-                                <div class="col-md-1 form-group" style="margin-left: -15px;"> {{ __('backend.package_time') }}  </div>
-                                <div class="col-md-1 form-group{{$errors->has('length') ? ' has-error' : ''}}">
+                                <div class="col-md-2 form-group" style="margin-left: -15px;"> {{ __('backend.package_time') }}  </div>
+                                <div class="col-md-4 form-group{{$errors->has('length') ? ' has-error' : ''}}">
                                 <input type="number" class="form-control" name="length">
                                     @if ($errors->has('length'))
                                         <span class="help-block">
@@ -67,21 +67,29 @@
                                         </span>
                                     @endif
                                 </div>
-                                <div class="col-md-3 form-group" >{{ __('backend.minutes') }}</div>
+                                <div class="col-md-4 form-group" >{{ __('backend.minutes') }}</div>
                             
                             </div>
 
-                            <div class="col-md-1 form-group"> {{ __('backend.status') }}  </div>
-                            <div class="col-md-11 form-group{{$errors->has('status') ? ' has-error' : ''}}">
-                                <select class="form-control" name="status">
-                                    <option value="1">{{ __('backend.active') }}</option>
-                                    <option value="0">{{ __('backend.disabled') }}</option>
-                                </select>
-                                @if ($errors->has('status'))
-                                    <span class="help-block">
-                                        <strong class="text-danger">{{ $errors->first('status') }}</strong>
-                                    </span>
-								@endif
+                            <div class="col-md-6">
+                            
+                                <div class="row">
+                                
+                                    <div class="col-md-2 form-group"> {{ __('backend.status') }}  </div>
+                                    <div class="col-md-10 form-group{{$errors->has('status') ? ' has-error' : ''}}">
+                                        <select class="form-control" name="status">
+                                            <option value="1">{{ __('backend.active') }}</option>
+                                            <option value="0">{{ __('backend.disabled') }}</option>
+                                        </select>
+                                        @if ($errors->has('status'))
+                                            <span class="help-block">
+                                                <strong class="text-danger">{{ $errors->first('status') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+
+                                </div>
+                            
                             </div>
 
                             <div class="col-md-1 form-group"> {{ __('backend.booking') }} </div>

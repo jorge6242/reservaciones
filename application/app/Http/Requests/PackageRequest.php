@@ -29,7 +29,8 @@ class PackageRequest extends FormRequest
             'category_id' => 'required|not_in:0',
             'price' => 'required',
             'duration' => 'required',
-            'validation_type' => 'required'
+            'validation_type' => 'required',
+            'is_active' => 'required',
         ];
     }
 }

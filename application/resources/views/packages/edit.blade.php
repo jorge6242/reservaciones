@@ -110,6 +110,20 @@
                                 @endif
                             </div>
 
+                            <div class="col-md-6 form-group{{ $errors->has('is_active') ? ' has-error' : ''}}">
+                                <label class="control-label" for="is_active">{{ __('backend.status') }}</label>
+                                <select class="form-control" name="is_active">
+                                    <option value="">{{ __('backend.select_one') }}</option>
+                                    <option value="1" {{ $package->is_active == 1 ? 'selected' : '' }} >{{ __('backend.active') }}</option>
+                                    <option value="0" {{ $package->is_active == 0 ? 'selected' : '' }} >{{ __('backend.disabled') }}</option>
+                                </select>
+                                @if ($errors->has('is_active'))
+                                    <span class="help-block">
+                                        <strong class="text-danger">{{ $errors->first('is_active') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
                             <div class="col-md-12 form-group{{$errors->has('description') ? ' has-error' : ''}}">
                                 <label class="control-label" for="description">{{ __('backend.description') }}</label>
                                 <textarea name="description" class="summernote">{{ $package->description }}</textarea>

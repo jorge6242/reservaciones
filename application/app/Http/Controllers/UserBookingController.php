@@ -26,6 +26,8 @@ use Illuminate\Support\Facades\Session;
 //use Spatie\GoogleCalendar\Event;
 
 use DateTime;
+use DateInterval;
+use DatePeriod;
 
 class UserBookingController extends Controller
 {
@@ -69,7 +71,7 @@ class UserBookingController extends Controller
     public function getPackages()
     {
         $category_id = \request('parent');
-        $packages = Category::find($category_id)->packages()->get();
+        $packages = Package::where('category_id', $category_id)->where('is_active', 1)->get();
         return view('blocks.packages', compact('packages'));
     }
 
@@ -110,7 +112,6 @@ class UserBookingController extends Controller
             $arrayHours = [ $hour1, $hour2, $hour3 ];
         }
         $exist = false;
-
         foreach ($arrayHours as $key => $value) {
             if($value == strtoupper(Carbon::parse($slotHour)->format('g:i A'))) {
                 $exist = true;
@@ -369,7 +370,7 @@ class UserBookingController extends Controller
                 }
 
                 // Logica para que se pinten los slots cuando es Standard.
-                if(strtotime($categoryType == 0 && $booking->booking_date)==strtotime($event_date) && strtotime($booking->booking_time)==strtotime($timeslot))
+                if(strtotime($booking->booking_date)==strtotime($event_date) && strtotime($booking->booking_time)==strtotime($timeslot))
                 {
                     //put multiple booking logic
 
@@ -1649,6 +1650,133 @@ class UserBookingController extends Controller
         $packageType = PackagesType::find($request['id']);
         Session::put('selectedPackageType', $packageType);
         return response()->json([ 'success' => true, 'data' => $packageType ]);
+    }
+
+    // public function buildHours($array, $start, $end) {
+    //     $parseHour = DateTime::createFromFormat('h:ia', $start);
+    //     $parseHour = $parseHour->format('H:i:s');
+    //     if($start ===  $end) {
+    //         return $array;
+    //     }
+    //     $nextHour = Carbon::parse($parseHour)->addMinutes(30)->format('g:i A');
+    //     array_push($array, [ 'hour' => $nextHour]);
+    //     $this->buildHours($array, $nextHour, $end);
+        
+    // }
+
+    public function checkAvailablePackage($package, $hour) {
+
+        $bookings = Booking::all()->where('status', '!=',__('backend.cancelled'));
+
+    }
+
+    public function buildHours($hora_inicio, $hora_fin, $category , $date , $intervalo = 30) {
+        
+        $settings = Settings::query()->first();
+        $hora_inicio = new DateTime( $hora_inicio );
+        $hora_fin    = new DateTime( $hora_fin );
+        $hora_fin->modify('+1 second'); // Añadimos 1 segundo para que muestre $hora_fin
+        
+        // Si la hora de inicio es superior a la hora fin
+        // añadimos un día más a la hora fin
+        if ($hora_inicio > $hora_fin) {
+            $hora_fin->modify('+1 day');
+        }
+        
+        // Establecemos el intervalo en minutos
+        
+        $intervalo = new DateInterval('PT'.$intervalo.'M');
+        
+        // Sacamos los periodos entre las horas
+        $periodo   = new DatePeriod($hora_inicio, $intervalo, $hora_fin);
+        $packages = Package::where('category_id', $category)->get();
+        $categoryType = Category::find($category); 
+        $arrayHours = array();
+        $sessionSlots =  SessionSlot::where('booking_date',$date)->get();
+        $currentTime = $settings->clock_format == 12 ? date('h:i A') : date('H:i');
+        $today = date('d-m-Y');
+        foreach( $periodo as $hora ) {
+            // Guardamos las horas intervalos
+            $currentHour = $hora->format('H:i:s');
+            $arrayAvailablePackages = array();
+            $bookings = Booking::all()->where('status', '!=',__('backend.cancelled'));
+            foreach ($packages as $key => $package) {
+                array_push($arrayAvailablePackages, (object)[ 
+                    'id' => $package->id, 
+                    'title' => $package->title, 
+                    'available' => true,
+                    'blocked' => false,
+                    'expired' => false,
+                    ]);        
+            }
+            array_push($arrayHours, (object)[ 'hour' => $hora->format('H:i:s') , 'packages' => $arrayAvailablePackages ]);
+            //$horas[] =  $hora->format('H:i:s');
+        }
+
+        foreach ($arrayHours as $keyHours => $value) {
+            foreach ($value->packages as $keyPackages => $package) {
+                foreach ($bookings as $keyBookings => $booking) {
+                    if($booking->booking_time2 !== null && $booking->booking_date == $date && $booking->package_id == $package->id ){
+                        $existSlot = $this->getSlotsPerTime($booking->booking_date ,$booking->package_type_id, $booking->booking_time, $value->hour);
+                        if($existSlot) {
+                            $arrayHours[$keyHours]->packages[$keyPackages]->available = false;
+                        }
+
+                    }
+                }
+
+                foreach ($sessionSlots as $keyBookings => $sessionSlot) {
+                    if($sessionSlot->booking_time2 !== null && $sessionSlot->booking_date == $date && $sessionSlot->package_id == $package->id ){
+                        $existSlot = $this->getSlotsPerTime($sessionSlot->booking_date ,$sessionSlot->package_type_id, $sessionSlot->booking_time, $value->hour);
+                        if($existSlot) {
+                            $arrayHours[$keyHours]->packages[$keyPackages]->blocked = true;
+                        }
+
+                    }
+
+                }
+
+                if ((strtotime($value->hour) <= strtotime($currentTime)) && ($date == $today )) {
+                    $arrayHours[$keyHours]->packages[$keyPackages]->available = false;	
+                    $arrayHours[$keyHours]->packages[$keyPackages]->blocked = false;	
+                    $arrayHours[$keyHours]->packages[$keyPackages]->expired = true;	
+                }
+           }
+
+        }
+        
+        return $arrayHours;
+    }
+
+    public function getBookingCategoryCalendar(Request $request) {
+        $packages = Package::where('category_id', $request['category'])->get();
+
+        $hoursCondition = DB::select("  SELECT  min(tp.opening_time) as minimo,max(tp.closing_time) as maximo
+            FROM booking_times_packages tp, packages p, categories c
+            WHERE c.id=p.category_id  
+            AND tp.package_id=p.id
+            AND c.id= ".$request['category']."
+            AND tp.[number]= ".$request['number']."
+        ");
+        $hoursCondition = $hoursCondition[0];
+
+        $minimo = DateTime::createFromFormat('h:ia', $hoursCondition->minimo);
+        $minimo = $minimo->format('H:i:s');
+
+        $maximo = DateTime::createFromFormat('h:ia', $hoursCondition->maximo);
+        $maximo = $maximo->format('H:i:s');
+
+        $interval = DB::select("SELECT top 1  p.duration
+        from  packages p, categories c
+        where c.id=p.category_id  
+        and c.id = ".$request['category']." ");
+        $interval = $interval[0];
+        $hours = $this->buildHours($minimo, $maximo, 4, $request['date'], $interval->duration);
+
+        return response()->json([
+            'packages' => $packages,
+            'schedule' => $hours,
+        ]);
     }
 
 }

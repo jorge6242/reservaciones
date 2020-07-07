@@ -261,7 +261,9 @@ LA -->
                         <li class="{{ Request::is('packages') || Request::is('packages/*/edit') ? 'active' : '' }}"><a href="{{ route('packages.index') }}">{{ __('backend.all_packages') }}</a></li>
                         <li class="{{ Request::is('packages/create') ? 'active' : '' }}"><a href="{{ route('packages.create') }}">{{ __('backend.add_new_package') }}</a></li>
                         <li class="{{ Request::is('addons-parameters_by_addon') ? 'active' : '' }}" ><a href="{{ route('addons-parameters.index') }}">{{ __('backend.parameters_by_addon') }}</a></li>
-                        <li class="{{ Request::is('packages-types') ? 'active' : '' }}"><a href="{{ route('packages-types.index') }}">{{ __('backend.types') }}</a></li>
+                        <li class="{{ Request::is('packages-types') ? 'active' : '' }}"><a href="{{ route('packages-types.index') }}">{{ __('backend.packages_types') }}</a></li>
+                        <li class="{{ Request::is('package-types-exception') ? 'active' : '' }}"><a href="{{ route('package-types-exception.index') }}">{{ __('backend.packages_type_exception') }}</a></li>
+                        <li class="{{ Request::is('booking-times-package') ? 'active' : '' }}"><a href="{{ route('booking-times-package.index') }}">{{ __('backend.booking_times_package') }}</a></li>
                     </ul>
                 </li>
 

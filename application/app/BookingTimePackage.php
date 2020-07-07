@@ -13,6 +13,7 @@ class BookingTimesPackage extends Model
         'closing_time', 
         'is_off_day',
         'package_id',
+        'number'
     ];
 
     public function package()
