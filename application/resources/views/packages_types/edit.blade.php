@@ -104,11 +104,11 @@
 
 
 
-                            <div class="col-md-2 form-group"> {{ __('backend.booking') }} </div>
-                            <div class="col-md-10 form-group">
+                            <div class="col-md-12 form-group">
                                 <div class="row">
+                                    <div class="col-md-2 form-group"> {{ __('backend.booking') }} </div>
                                     <div class="col-md-1 form-group">Min</div>
-                                    <div class="col-md-5 form-group{{$errors->has('booking_min') ? ' has-error' : ''}}">
+                                    <div class="col-md-1 form-group{{$errors->has('booking_min') ? ' has-error' : ''}}">
                                         <input type="number" class="form-control" name="booking_min" value="{{$court->booking_min}}">
                                         @if ($errors->has('booking_min'))
                                             <span class="help-block">
@@ -117,7 +117,7 @@
 								        @endif
                                     </div>
                                     <div class="col-md-1 form-group">Max</div>
-                                    <div class="col-md-5 form-group{{$errors->has('booking_max') ? ' has-error' : ''}}">
+                                    <div class="col-md-1 form-group{{$errors->has('booking_max') ? ' has-error' : ''}}">
                                         <input type="number" class="form-control" name="booking_max" value="{{$court->booking_max}}">
                                         @if ($errors->has('booking_max'))
                                             <span class="help-block">
@@ -128,11 +128,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2 form-group"> {{ __('backend.user') }} </div>
-                            <div class="col-md-10 form-group">
+                            <div class="col-md-12 form-group">
                                 <div class="row">
+                                    <div class="col-md-2 form-group"> {{ __('backend.user') }} </div>
                                     <div class="col-md-1 form-group">Min</div>
-                                    <div class="col-md-5 form-group{{$errors->has('player_min') ? ' has-error' : ''}}">
+                                    <div class="col-md-1 form-group{{$errors->has('player_min') ? ' has-error' : ''}}">
                                         <input type="number" class="form-control" name="player_min" value="{{$court->player_min}}">
                                         @if ($errors->has('player_min'))
                                             <span class="help-block">
@@ -141,7 +141,7 @@
 								        @endif
                                     </div>
                                     <div class="col-md-1 form-group">Max</div>
-                                    <div class="col-md-5 form-group{{$errors->has('player_max') ? ' has-error' : ''}}">
+                                    <div class="col-md-1 form-group{{$errors->has('player_max') ? ' has-error' : ''}}">
                                         <input type="number" class="form-control" name="player_max" value="{{$court->player_max}}">
                                         @if ($errors->has('player_max'))
                                             <span class="help-block">
@@ -153,11 +153,11 @@
                             </div>
 
 
-                            <div class="col-md-2 form-group"> {{ __('backend.guest') }} </div>
-                            <div class="col-md-10 form-group">
+                            <div class="col-md-12 form-group">
                                 <div class="row">
+                                    <div class="col-md-2 form-group"> {{ __('backend.guest') }} </div>
                                     <div class="col-md-1 form-group">Min</div>
-                                    <div class="col-md-5 form-group form-group{{$errors->has('guest_min') ? ' has-error' : ''}}">
+                                    <div class="col-md-1 form-group form-group{{$errors->has('guest_min') ? ' has-error' : ''}}">
                                         <input type="number" class="form-control" name="guest_min" value="{{$court->guest_min}}">
                                         @if ($errors->has('guest_min'))
                                             <span class="help-block">
@@ -166,7 +166,7 @@
 								        @endif
                                     </div>
                                     <div class="col-md-1 form-group">Max</div>
-                                    <div class="col-md-5 form-group form-group{{$errors->has('guest_max') ? ' has-error' : ''}}">
+                                    <div class="col-md-1 form-group form-group{{$errors->has('guest_max') ? ' has-error' : ''}}">
                                         <input type="number" class="form-control" name="guest_max" value="{{$court->guest_max}}">
                                         @if ($errors->has('guest_max'))
                                             <span class="help-block">

@@ -342,6 +342,7 @@ LA -->
 <script type="text/javascript">
     $(document).ready(function() {
         $('#xtreme-table').dataTable( {
+            "aaSorting": [],
             "language": {
                 @if(app()->getLocale() == "en")
                     "url": "{{ asset('plugins/datatables/lang/en.json') }}"

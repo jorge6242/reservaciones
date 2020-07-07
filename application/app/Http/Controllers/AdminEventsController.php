@@ -32,7 +32,7 @@ class AdminEventsController extends Controller
      */
     public function index()
     {
-        $events = Event::query()->with(['category'])->get();
+        $events = Event::orderBy('category_id', 'ASC')->orderBy('event_type', 'ASC')->orderBy('date', 'ASC')->orderBy('time1', 'ASC')->get();
         return view('events.index', compact('events'));
     }
 
