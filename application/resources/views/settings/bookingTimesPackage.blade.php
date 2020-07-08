@@ -98,58 +98,106 @@
                                                                 <label><strong>{{ __('backend.opening_time') }}</strong></label>
                                                                 <select class="form-control" name="opening_time">
                                                                     <option value="12:00 AM"{{ $booking_time->opening_time=='12:00 AM' ? ' selected' : '' }}>12:00 AM</option>
+                                                                    <option value="12:30 AM"{{ $booking_time->opening_time=='12:30 AM' ? ' selected' : '' }}>12:30 AM</option>
                                                                     <option value="01:00 AM"{{ $booking_time->opening_time=='01:00 AM' ? ' selected' : '' }}>01:00 AM</option>
+                                                                    <option value="01:30 AM"{{ $booking_time->opening_time=='01:30 AM' ? ' selected' : '' }}>01:30 AM</option>
                                                                     <option value="02:00 AM"{{ $booking_time->opening_time=='02:00 AM' ? ' selected' : '' }}>02:00 AM</option>
+                                                                    <option value="02:30 AM"{{ $booking_time->opening_time=='02:30 AM' ? ' selected' : '' }}>02:30 AM</option>
                                                                     <option value="03:00 AM"{{ $booking_time->opening_time=='03:00 AM' ? ' selected' : '' }}>03:00 AM</option>
+                                                                    <option value="03:30 AM"{{ $booking_time->opening_time=='03:30 AM' ? ' selected' : '' }}>03:30 AM</option>
                                                                     <option value="04:00 AM"{{ $booking_time->opening_time=='04:00 AM' ? ' selected' : '' }}>04:00 AM</option>
+                                                                    <option value="04:30 AM"{{ $booking_time->opening_time=='04:30 AM' ? ' selected' : '' }}>04:30 AM</option>
                                                                     <option value="05:00 AM"{{ $booking_time->opening_time=='05:00 AM' ? ' selected' : '' }}>05:00 AM</option>
+                                                                    <option value="05:30 AM"{{ $booking_time->opening_time=='05:30 AM' ? ' selected' : '' }}>05:30 AM</option>
                                                                     <option value="06:00 AM"{{ $booking_time->opening_time=='06:00 AM' ? ' selected' : '' }}>06:00 AM</option>
+                                                                    <option value="06:30 AM"{{ $booking_time->opening_time=='06:30 AM' ? ' selected' : '' }}>06:30 AM</option>
                                                                     <option value="07:00 AM"{{ $booking_time->opening_time=='07:00 AM' ? ' selected' : '' }}>07:00 AM</option>
+                                                                    <option value="07:30 AM"{{ $booking_time->opening_time=='07:30 AM' ? ' selected' : '' }}>07:30 AM</option>
                                                                     <option value="08:00 AM"{{ $booking_time->opening_time=='08:00 AM' ? ' selected' : '' }}>08:00 AM</option>
+                                                                    <option value="08:30 AM"{{ $booking_time->opening_time=='08:30 AM' ? ' selected' : '' }}>08:30 AM</option>
                                                                     <option value="09:00 AM"{{ $booking_time->opening_time=='09:00 AM' ? ' selected' : '' }}>09:00 AM</option>
+                                                                    <option value="09:30 AM"{{ $booking_time->opening_time=='09:30 AM' ? ' selected' : '' }}>09:30 AM</option>
                                                                     <option value="10:00 AM"{{ $booking_time->opening_time=='10:00 AM' ? ' selected' : '' }}>10:00 AM</option>
+                                                                    <option value="10:30 AM"{{ $booking_time->opening_time=='10:30 AM' ? ' selected' : '' }}>10:30 AM</option>
                                                                     <option value="11:00 AM"{{ $booking_time->opening_time=='11:00 AM' ? ' selected' : '' }}>11:00 AM</option>
+                                                                    <option value="11:30 AM"{{ $booking_time->opening_time=='11:30 AM' ? ' selected' : '' }}>11:30 AM</option>
                                                                     <option value="12:00 PM"{{ $booking_time->opening_time=='12:00 PM' ? ' selected' : '' }}>12:00 PM</option>
+                                                                    <option value="12:30 PM"{{ $booking_time->opening_time=='12:30 PM' ? ' selected' : '' }}>12:30 PM</option>
                                                                     <option value="01:00 PM"{{ $booking_time->opening_time=='01:00 PM' ? ' selected' : '' }}>01:00 PM</option>
+                                                                    <option value="01:30 PM"{{ $booking_time->opening_time=='01:30 PM' ? ' selected' : '' }}>01:30 PM</option>
                                                                     <option value="02:00 PM"{{ $booking_time->opening_time=='02:00 PM' ? ' selected' : '' }}>02:00 PM</option>
+                                                                    <option value="02:30 PM"{{ $booking_time->opening_time=='02:30 PM' ? ' selected' : '' }}>02:30 PM</option>
                                                                     <option value="03:00 PM"{{ $booking_time->opening_time=='03:00 PM' ? ' selected' : '' }}>03:00 PM</option>
+                                                                    <option value="03:30 PM"{{ $booking_time->opening_time=='03:30 PM' ? ' selected' : '' }}>03:30 PM</option>
                                                                     <option value="04:00 PM"{{ $booking_time->opening_time=='04:00 PM' ? ' selected' : '' }}>04:00 PM</option>
+                                                                    <option value="04:30 PM"{{ $booking_time->opening_time=='04:30 PM' ? ' selected' : '' }}>04:30 PM</option>
                                                                     <option value="05:00 PM"{{ $booking_time->opening_time=='05:00 PM' ? ' selected' : '' }}>05:00 PM</option>
+                                                                    <option value="05:30 PM"{{ $booking_time->opening_time=='05:30 PM' ? ' selected' : '' }}>05:30 PM</option>
                                                                     <option value="06:00 PM"{{ $booking_time->opening_time=='06:00 PM' ? ' selected' : '' }}>06:00 PM</option>
+                                                                    <option value="06:30 PM"{{ $booking_time->opening_time=='06:30 PM' ? ' selected' : '' }}>06:30 PM</option>
                                                                     <option value="07:00 PM"{{ $booking_time->opening_time=='07:00 PM' ? ' selected' : '' }}>07:00 PM</option>
+                                                                    <option value="07:30 PM"{{ $booking_time->opening_time=='07:30 PM' ? ' selected' : '' }}>07:30 PM</option>
                                                                     <option value="08:00 PM"{{ $booking_time->opening_time=='08:00 PM' ? ' selected' : '' }}>08:00 PM</option>
+                                                                    <option value="08:30 PM"{{ $booking_time->opening_time=='08:30 PM' ? ' selected' : '' }}>08:30 PM</option>
                                                                     <option value="09:00 PM"{{ $booking_time->opening_time=='09:00 PM' ? ' selected' : '' }}>09:00 PM</option>
+                                                                    <option value="09:30 PM"{{ $booking_time->opening_time=='09:30 PM' ? ' selected' : '' }}>09:30 PM</option>
                                                                     <option value="10:00 PM"{{ $booking_time->opening_time=='10:00 PM' ? ' selected' : '' }}>10:00 PM</option>
+                                                                    <option value="10:30 PM"{{ $booking_time->opening_time=='10:30 PM' ? ' selected' : '' }}>10:30 PM</option>
                                                                     <option value="11:00 PM"{{ $booking_time->opening_time=='11:00 PM' ? ' selected' : '' }}>11:00 PM</option>
+                                                                    <option value="11:30 PM"{{ $booking_time->opening_time=='11:30 PM' ? ' selected' : '' }}>11:30 PM</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label><strong>{{ __('backend.closing_time') }}</strong></label>
                                                                 <select class="form-control" name="closing_time">
-                                                                    <option value="12:00 AM"{{ $booking_time->opening_time=='12:00 AM' ? ' selected' : '' }}>12:00 AM</option>
-                                                                    <option value="01:00 AM"{{ $booking_time->opening_time=='01:00 AM' ? ' selected' : '' }}>01:00 AM</option>
-                                                                    <option value="02:00 AM"{{ $booking_time->opening_time=='02:00 AM' ? ' selected' : '' }}>02:00 AM</option>
-                                                                    <option value="03:00 AM"{{ $booking_time->opening_time=='03:00 AM' ? ' selected' : '' }}>03:00 AM</option>
-                                                                    <option value="04:00 AM"{{ $booking_time->opening_time=='04:00 AM' ? ' selected' : '' }}>04:00 AM</option>
-                                                                    <option value="05:00 AM"{{ $booking_time->opening_time=='05:00 AM' ? ' selected' : '' }}>05:00 AM</option>
-                                                                    <option value="06:00 AM"{{ $booking_time->opening_time=='06:00 AM' ? ' selected' : '' }}>06:00 AM</option>
-                                                                    <option value="07:00 AM"{{ $booking_time->opening_time=='07:00 AM' ? ' selected' : '' }}>07:00 AM</option>
-                                                                    <option value="08:00 AM"{{ $booking_time->opening_time=='08:00 AM' ? ' selected' : '' }}>08:00 AM</option>
-                                                                    <option value="09:00 AM"{{ $booking_time->opening_time=='09:00 AM' ? ' selected' : '' }}>09:00 AM</option>
-                                                                    <option value="10:00 AM"{{ $booking_time->opening_time=='10:00 AM' ? ' selected' : '' }}>10:00 AM</option>
-                                                                    <option value="11:00 AM"{{ $booking_time->opening_time=='11:00 AM' ? ' selected' : '' }}>11:00 AM</option>
+                                                                    <option value="12:00 AM"{{ $booking_time->closing_time=='12:00 AM' ? ' selected' : '' }}>12:00 AM</option>
+                                                                    <option value="12:30 AM"{{ $booking_time->closing_time=='12:30 AM' ? ' selected' : '' }}>12:30 AM</option>
+                                                                    <option value="01:00 AM"{{ $booking_time->closing_time=='01:00 AM' ? ' selected' : '' }}>01:00 AM</option>
+                                                                    <option value="01:30 AM"{{ $booking_time->closing_time=='01:30 AM' ? ' selected' : '' }}>01:30 AM</option>
+                                                                    <option value="02:00 AM"{{ $booking_time->closing_time=='02:00 AM' ? ' selected' : '' }}>02:00 AM</option>
+                                                                    <option value="02:30 AM"{{ $booking_time->closing_time=='02:30 AM' ? ' selected' : '' }}>02:30 AM</option>
+                                                                    <option value="03:00 AM"{{ $booking_time->closing_time=='03:00 AM' ? ' selected' : '' }}>03:00 AM</option>
+                                                                    <option value="03:30 AM"{{ $booking_time->closing_time=='03:30 AM' ? ' selected' : '' }}>03:30 AM</option>
+                                                                    <option value="04:00 AM"{{ $booking_time->closing_time=='04:00 AM' ? ' selected' : '' }}>04:00 AM</option>
+                                                                    <option value="04:30 AM"{{ $booking_time->closing_time=='04:30 AM' ? ' selected' : '' }}>04:30 AM</option>
+                                                                    <option value="05:00 AM"{{ $booking_time->closing_time=='05:00 AM' ? ' selected' : '' }}>05:00 AM</option>
+                                                                    <option value="05:30 AM"{{ $booking_time->closing_time=='05:30 AM' ? ' selected' : '' }}>05:30 AM</option>
+                                                                    <option value="06:00 AM"{{ $booking_time->closing_time=='06:00 AM' ? ' selected' : '' }}>06:00 AM</option>
+                                                                    <option value="06:30 AM"{{ $booking_time->closing_time=='06:30 AM' ? ' selected' : '' }}>06:30 AM</option>
+                                                                    <option value="07:00 AM"{{ $booking_time->closing_time=='07:00 AM' ? ' selected' : '' }}>07:00 AM</option>
+                                                                    <option value="07:30 AM"{{ $booking_time->closing_time=='07:30 AM' ? ' selected' : '' }}>07:30 AM</option>
+                                                                    <option value="08:00 AM"{{ $booking_time->closing_time=='08:00 AM' ? ' selected' : '' }}>08:00 AM</option>
+                                                                    <option value="08:30 AM"{{ $booking_time->closing_time=='08:30 AM' ? ' selected' : '' }}>08:30 AM</option>
+                                                                    <option value="09:00 AM"{{ $booking_time->closing_time=='09:00 AM' ? ' selected' : '' }}>09:00 AM</option>
+                                                                    <option value="09:30 AM"{{ $booking_time->closing_time=='09:30 AM' ? ' selected' : '' }}>09:30 AM</option>
+                                                                    <option value="10:00 AM"{{ $booking_time->closing_time=='10:00 AM' ? ' selected' : '' }}>10:00 AM</option>
+                                                                    <option value="10:30 AM"{{ $booking_time->closing_time=='10:30 AM' ? ' selected' : '' }}>10:30 AM</option>
+                                                                    <option value="11:00 AM"{{ $booking_time->closing_time=='11:00 AM' ? ' selected' : '' }}>11:00 AM</option>
+                                                                    <option value="11:30 AM"{{ $booking_time->closing_time=='11:30 AM' ? ' selected' : '' }}>11:30 AM</option>
                                                                     <option value="12:00 PM"{{ $booking_time->closing_time=='12:00 PM' ? ' selected' : '' }}>12:00 PM</option>
+                                                                    <option value="12:30 PM"{{ $booking_time->closing_time=='12:30 PM' ? ' selected' : '' }}>12:30 PM</option>
                                                                     <option value="01:00 PM"{{ $booking_time->closing_time=='01:00 PM' ? ' selected' : '' }}>01:00 PM</option>
+                                                                    <option value="01:30 PM"{{ $booking_time->closing_time=='01:30 PM' ? ' selected' : '' }}>01:30 PM</option>
                                                                     <option value="02:00 PM"{{ $booking_time->closing_time=='02:00 PM' ? ' selected' : '' }}>02:00 PM</option>
+                                                                    <option value="02:30 PM"{{ $booking_time->closing_time=='02:30 PM' ? ' selected' : '' }}>02:30 PM</option>
                                                                     <option value="03:00 PM"{{ $booking_time->closing_time=='03:00 PM' ? ' selected' : '' }}>03:00 PM</option>
+                                                                    <option value="03:30 PM"{{ $booking_time->closing_time=='03:30 PM' ? ' selected' : '' }}>03:30 PM</option>
                                                                     <option value="04:00 PM"{{ $booking_time->closing_time=='04:00 PM' ? ' selected' : '' }}>04:00 PM</option>
+                                                                    <option value="04:30 PM"{{ $booking_time->closing_time=='04:30 PM' ? ' selected' : '' }}>04:30 PM</option>
                                                                     <option value="05:00 PM"{{ $booking_time->closing_time=='05:00 PM' ? ' selected' : '' }}>05:00 PM</option>
+                                                                    <option value="05:30 PM"{{ $booking_time->closing_time=='05:30 PM' ? ' selected' : '' }}>05:30 PM</option>
                                                                     <option value="06:00 PM"{{ $booking_time->closing_time=='06:00 PM' ? ' selected' : '' }}>06:00 PM</option>
+                                                                    <option value="06:30 PM"{{ $booking_time->closing_time=='06:30 PM' ? ' selected' : '' }}>06:30 PM</option>
                                                                     <option value="07:00 PM"{{ $booking_time->closing_time=='07:00 PM' ? ' selected' : '' }}>07:00 PM</option>
+                                                                    <option value="07:30 PM"{{ $booking_time->closing_time=='07:30 PM' ? ' selected' : '' }}>07:30 PM</option>
                                                                     <option value="08:00 PM"{{ $booking_time->closing_time=='08:00 PM' ? ' selected' : '' }}>08:00 PM</option>
+                                                                    <option value="08:30 PM"{{ $booking_time->closing_time=='08:30 PM' ? ' selected' : '' }}>08:30 PM</option>
                                                                     <option value="09:00 PM"{{ $booking_time->closing_time=='09:00 PM' ? ' selected' : '' }}>09:00 PM</option>
+                                                                    <option value="09:30 PM"{{ $booking_time->closing_time=='09:30 PM' ? ' selected' : '' }}>09:30 PM</option>
                                                                     <option value="10:00 PM"{{ $booking_time->closing_time=='10:00 PM' ? ' selected' : '' }}>10:00 PM</option>
+                                                                    <option value="10:30 PM"{{ $booking_time->closing_time=='10:30 PM' ? ' selected' : '' }}>10:30 PM</option>
                                                                     <option value="11:00 PM"{{ $booking_time->closing_time=='11:00 PM' ? ' selected' : '' }}>11:00 PM</option>
+                                                                    <option value="11:30 PM"{{ $booking_time->closing_time=='11:30 PM' ? ' selected' : '' }}>11:30 PM</option>
                                                                     
                                                                 </select>
                                                             </div>

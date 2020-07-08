@@ -40,20 +40,40 @@
                                 @endif
                             </div>
 
+                            <div class="col-md-12">
+                            
+                                <div class="row">
+                                
+                                    <div class="col-md-1 form-group"> {{ __('backend.category') }} </div>
+                                    <div class="col-md-5 form-group{{$errors->has('category') ? ' has-error' : ''}}">
+                                        <select class="form-control" name="category" id="category" onchange="handleCategory()">
+                                            <option value="">Seleccione</option>
+                                            @foreach($categories as $element)
+                                                <option value="{{ $element->id }}" >{{ $element->title }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('category'))
+                                            <span class="help-block">
+                                                <strong class="text-danger">{{ $errors->first('category') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
 
-                            <div class="col-md-1 form-group"> {{ __('backend.package') }} </div>
-                            <div class="col-md-5 form-group{{$errors->has('package_id') ? ' has-error' : ''}}">
-                                <select class="form-control" name="package_id">
-                                    <option value="">Seleccione</option>
-                                    @foreach($packages as $element)
-                                        <option value="{{ $element->id }}" >{{ $element->title }}</option>
-                                    @endforeach
-                                </select>
-                                @if ($errors->has('package_id'))
-                                    <span class="help-block">
-                                        <strong class="text-danger">{{ $errors->first('package_id') }}</strong>
-                                    </span>
-                                @endif
+
+                                    <div class="col-md-1 form-group"> {{ __('backend.package') }} </div>
+                                    <div class="col-md-5 form-group{{$errors->has('package_id') ? ' has-error' : ''}}">
+                                        <select class="form-control" name="package_id" id="package_id">
+                                            <option value="">Seleccione</option>
+                                        </select>
+                                        @if ($errors->has('package_id'))
+                                            <span class="help-block">
+                                                <strong class="text-danger">{{ $errors->first('package_id') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                
+                                </div>
+                            
                             </div>
 
                             <div class="col-md-6 form-group">
@@ -164,8 +184,8 @@
                                 </div>
                             </div>
                             
-                            <div class="col-md-12 form-group text-right">
-                                <button type="submit" class="btn btn-primary btn-lg">{{ __('backend.create') }}</button>
+                            <div class="col-md-12 form-group text-right ">
+                                <button type="submit" class="btn btn-primary btn-lg" style="padding-top: 0.4%; padding-bottom: 0.4%;" >{{ __('backend.create') }}</button>
                             </div>         
                             
                             </div>
@@ -176,5 +196,39 @@
             </div>
         </div>
     </div>
+
+<script>
+
+function handleCategory() {
+    const URL_CONCAT = $('meta[name="index"]').attr('content');
+    const id = document.getElementById("category").value;
+            $.ajax({
+                type: 'GET',
+                url: '/packages-types-by-category',
+                data: { category:id },
+                beforeSend: function() {
+                    $('#package_id').empty();
+                },
+                success: function(response) {             
+                    let options = '';
+                        options += ' <option value="">Seleccione</option>'
+                    response.data.forEach(element => {
+                        options += ` <option value="${element.id}" >${element.title}</option>`
+                    })
+                    $('#package_id').html(options);
+                },
+                complete: function () {
+                    $('#slots_loader').addClass('d-none');
+                }
+            }); 
+
+
+
+
+
+
+} 
+
+</script>
 
 @endsection

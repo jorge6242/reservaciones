@@ -128,6 +128,14 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="control-label" for="internal">{{ __('backend.use') }}</label>
+                                <select class="form-control" name="internal" disabled>
+                                    <option value={{$event->internal}} selected>{{$event->internal == "0" ? 'General' : 'Interno'}}</option>
+                                </select>
+                                <input type="hidden" name="internal" value={{$event->internal}}>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="control-label" for="category_id">{{ __('backend.category') }}</label>
                                 <select class="form-control" name="category_id">
                                     <option value="">Seleccione</option>

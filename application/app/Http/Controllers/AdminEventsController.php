@@ -30,10 +30,27 @@ class AdminEventsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::orderBy('category_id', 'ASC')->orderBy('event_type', 'ASC')->orderBy('date', 'ASC')->orderBy('time1', 'ASC')->get();
-        return view('events.index', compact('events'));
+        $searchQuery = $request;
+        $selectedType = $request['type'] !== null ? $request['type'] : null;
+        $selectedCategory = $request['category'] !== null ? $request['category'] : null;;
+        $selectedInternal = $request['internal'] !== null ?  $request['internal'] : null;;
+        $categories = Category::all();
+        $events = Event::query()->where(function($q) use($searchQuery) {
+            if ($searchQuery['type'] !== null) {
+                $q->where('event_type', $searchQuery['type']);
+            }
+            if ($searchQuery['category'] !== null) {
+                $q->where('category_id', $searchQuery['category']);
+            }
+
+            if ($searchQuery['internal'] !== null) {
+                $q->where('internal', $searchQuery['internal']);
+            }
+          })->orderBy('category_id', 'ASC')->orderBy('event_type', 'ASC')->orderBy('date', 'ASC')->orderBy('time1', 'ASC')->get();
+        
+        return view('events.index', compact('events','categories', 'selectedType','selectedCategory','selectedInternal'));
     }
 
     /**
@@ -56,6 +73,7 @@ class AdminEventsController extends Controller
     public function store(EventsRequest $request)
     {
         $input = $request->all();
+        $input['internal'] = 0;
         if($input['event_type'] === "2") {
             $input['drawtime1'] = str_replace("T"," ",$input['drawtime1']);
             $input['drawtime2'] = str_replace("T"," ",$input['drawtime2']);
@@ -69,7 +87,6 @@ class AdminEventsController extends Controller
                 'event_id' => $event->id,
             ]);
         }
-
         //set session message
         Session::flash('event_created', __('backend.event_created'));
 

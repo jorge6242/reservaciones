@@ -24,6 +24,7 @@ class Event extends Model
          'is_active',
          'event_type',
          'category_id',
+         'internal'
     ];
 
     public function category()

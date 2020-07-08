@@ -74,6 +74,7 @@ Route::group(['middleware'=>'admin'], function(){
     Route::resource('/events', 'AdminEventsController');
     Route::resource('/court', 'AdminCourtController');
     Route::resource('/packages-types', 'AdminPackagesTypesController');
+    Route::get('/packages-types-by-category', 'AdminPackagesTypesController@getPackageByCategory');
     Route::resource('/guests', 'AdminGuestsController');
     Route::resource('/blacklist', 'AdminBlacklistController');
     Route::resource('/packages', 'AdminPackagesController');

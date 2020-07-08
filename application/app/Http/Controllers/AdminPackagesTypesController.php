@@ -43,6 +43,11 @@ class AdminPackagesTypesController extends Controller
         return view('packages_types.index', compact('courts', 'categories' ,'selectedCategory','packages','selectedPackage'));
     }
 
+    public function getPackageByCategory(Request $request){
+        $packages = Package::where('category_id', $request['category'])->get();
+        return  response()->json([ 'data' => $packages ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -51,7 +56,8 @@ class AdminPackagesTypesController extends Controller
     public function create()
     {
         $packages = Package::all();
-        return view('packages_types.create', compact('packages'));
+        $categories = Category::all();
+        return view('packages_types.create', compact('packages','categories'));
     }
 
     /**
