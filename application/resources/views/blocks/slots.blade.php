@@ -20,7 +20,10 @@
             <div class="col-md-3" id="slot-container">
                 <a class="btn   btn-lg btn-block  btn-slot btn-secondary disabled"><font color="FFFFFF"> {{ $list_slot[$a]['slot'] }}</font></a>
             </div>	
-			
+        @elseif($list_slot[$a]['is_event'])
+            <div class="col-md-3" id="slot-container">
+                <a class="btn   btn-lg btn-block  btn-slot btn-warning disabled"><font color="FFFFFF"> {{ $list_slot[$a]['slot'] }}</font></a>
+            </div>	
         @else
             <div class="col-md-3" id="slot-container">  <!-- btn-outline-dark  LA -->
                 <a class="btn   btn-lg btn-block  btn-slot btn-success disabled"><font color="FFFFFF"> {{ $list_slot[$a]['slot'] }}</font></a>

@@ -818,7 +818,7 @@ function ajaxFunctionSelect(doc_id){
                                    id="player1Status"  autocomplete="off">
 							<div id="player1Icons" name="player1Icons"></div>
 							
-							<div id="player1ErrorMessage" name="player1ErrorMessage" style="color:red"></div><							  
+							<div id="player1ErrorMessage" name="player1ErrorMessage" style="color:red"></div>							  
                         </div>
 
 				</div>	

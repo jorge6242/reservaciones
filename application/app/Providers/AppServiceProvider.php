@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
 
                 //get all settings
 
-                $settings = Settings::find(1);
+                $settings = Settings::query()->first();
 
                 if($settings)
                 {

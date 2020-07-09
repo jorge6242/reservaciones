@@ -5,16 +5,16 @@
     <link rel="stylesheet" href="{{ asset('plugins/datepicker/css/bootstrap-datepicker.min.css') }}">
     <style>   
         .slot-draw-picked {
-            background-color: #ffc107;
-            border: 1px solid #ffc107 !important;
-            border-color: #ffc107 !important;
-            color: black !important;
+            background-color: #4e5e6a;
+            border: 1px solid #4e5e6a !important;
+            border-color: #4e5e6a !important;
+            color: white !important;
         }
         .btn-outline-yellow {
             border-color: #4e5e6a !important;
         }
         .btn-outline-yellow:hover {
-            background-color: #ffc107;
+            background-color: #4e5e6a;
             border-color: #777 !important;
         }
 
@@ -192,7 +192,7 @@
                 </div>
   @endif
                 <br>
-                <div class="col-md-12">
+                <div class="col-md-12 form-group" style="padding-left: 0">
                     <div id="package-type"></div>
                     <div class="col-md-12" id="tennis-calendar"></div>
                     <input type ="hidden" id="selected-package-type" value="">
@@ -380,7 +380,7 @@
                 success: function(response) {
                     let html = '';
                     html +=` <select name="package-type" id="select-package-type" onchange="handlePackageType()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
-                                <option value="">Seleccionar Tipo de Juego</option>
+                                <option value="">Tipo de Juego</option>
 							    ${renderPackageType(response.data)}	
 						</select> `;
                     $('#package-type').html(html);
@@ -490,8 +490,13 @@
         }
         
     }
-    setBookingType();
-    getDraws();
+
+    function initDraws() {
+        const bookingType = document.getElementById("data-booking-type").value;
+        if(bookingType == 2){
+            getDraws();
+        }
+    }
 
     function getBtnSLotPosition (hour) {
             let count = 0;
@@ -838,6 +843,9 @@
     
     
     //handleSelectReport();
+
+    setBookingType();
+    initDraws();
     
     </script>
 

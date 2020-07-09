@@ -182,6 +182,7 @@ class UserBookingController extends Controller
                 "UID"=> $username, 
                 "PWD"=> $password
                 );
+
             $connection = sqlsrv_connect($servername, $connectionInfo);
             
 			$queryExpiredSlots = "DELETE FROM session_slots WHERE expiration_date<GETDATE()";
@@ -223,6 +224,7 @@ class UserBookingController extends Controller
 			//require 'config.inc';
 			
 			 $servername = $_ENV['DB_HOST'];
+			 $port = $_ENV['DB_PORT'];
 			 $username=  $_ENV['DB_USERNAME'];
 			 $password = $_ENV['DB_PASSWORD'];
              $database = $_ENV['DB_DATABASE'];
@@ -233,7 +235,7 @@ class UserBookingController extends Controller
                 "PWD"=> $password
                 );
               
-			$conn = sqlsrv_connect($servername, $connectionInfo);
+			$conn = sqlsrv_connect("".$servername.",".$port."", $connectionInfo);
 			// Check connection
 			if (!$conn) {
 				die("Connection failed: " . sqlsrv_errors());
@@ -285,7 +287,7 @@ class UserBookingController extends Controller
 		$hour_start ='06:00 AM';
 		$hour_end='08:00 PM';
 		*/
-		echo " @ " .  $hour_start . " - " . 	$hour_end . "<br>";
+		echo " @ ".$event_date.", ".  $hour_start . " - " . 	$hour_end . "<br>";
 		
         //decide what will be the duration of each slot
         if($settings->slots_with_package_duration)
@@ -442,6 +444,8 @@ class UserBookingController extends Controller
                 }
             }
 
+            $list_slot[$i]['is_event'] = false;
+
 			if ($bookingType!=2)
 			{
 				//$list_slot[$i]['is_blocked'] = false;
@@ -453,6 +457,7 @@ class UserBookingController extends Controller
 					{
 							$list_slot[$i]['is_available'] = false;
 							$list_slot[$i]['is_blocked'] = true;
+							$list_slot[$i]['is_event'] = true;
 							$list_slot[$i]['description'] = $event->description;
 					}
 					else
