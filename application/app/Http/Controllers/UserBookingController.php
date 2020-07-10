@@ -80,12 +80,24 @@ class UserBookingController extends Controller
      */
     public function getPackagesByType(Request $request)
     {
+        $settings = Settings::query()->first();
         $category_id = \request('parent');
-        $dates = [
-            [ 'date' => Carbon::now() ],
-            [ 'date' => Carbon::now()->addDay(1) ],
-            [ 'date' => Carbon::now()->addDay(2) ],
-        ];
+        // $dates = [
+        //     [ 'date' => Carbon::now() ],
+        //     [ 'date' => Carbon::now()->addDay(1) ],
+        //     [ 'date' => Carbon::now()->addDay(2) ],
+        // ];
+
+        $dates = array(); 
+        $maxDays = $settings->bookingUser_maxDays + 1;
+        for ($i=0; $i < $maxDays ; $i++) {
+            if($i == 0) {
+                array_push($dates, [ 'date' => Carbon::now() ]);
+            } else {
+                array_push($dates, [ 'date' => Carbon::now()->addDay($i) ]);
+            }      
+        }
+
         $category = Category::where('id', $request['id'])->with(['packages'])->get();
         return response()->json([ 'success' => true, 'data' => $category, 'dates' => $dates ]);
     }

@@ -277,7 +277,7 @@
         var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
         var maxDate = new Date();
         const bookingUserMaxDays = '{{ \App\Settings::query()->first()->bookingUser_maxDays }}';
-		maxDate.setDate(today.getDate() + bookingUserMaxDays  );  //LA set maximum booking days on future
+		maxDate.setDate(today.getDate() + Number(bookingUserMaxDays)  );  //LA set maximum booking days on future
 		$('#custom-event_date').datepicker({
             orientation: "auto right",
             autoclose: true,
@@ -380,7 +380,7 @@
                 success: function(response) {
                     let html = '';
                     html +=` <select name="package-type" id="select-package-type" onchange="handlePackageType()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
-                                <option value="">Tipo de Juego</option>
+                                <option value="">Seleccione el Tipo de Juego</option>
 							    ${renderPackageType(response.data)}	
 						</select> `;
                     $('#package-type').html(html);

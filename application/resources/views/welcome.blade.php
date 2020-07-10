@@ -108,7 +108,6 @@
 
 .custom-table th, .custom-table td {
   padding: 5px;
-  text-align: left;
   width: 168px;
 }
 
@@ -446,6 +445,7 @@
 
 
 ?>
+
 
     <div class="jumbotron promo">
         <div class="container">
@@ -876,7 +876,7 @@
 			let html = '';
             html +=`<option value="" selected >Seleccione Dia</option>`;
 			dates.forEach(element => {
-				html +=`<option value="${moment(element.date.date).format('DD-MM-YYYY')}">${moment(element.date.date).format('MMMM Do YYYY')}</option>`;
+				html +=`<option value="${moment(element.date.date).format('DD-MM-YYYY')}">${moment(element.date.date).format('DD-MM-YYYY')}</option>`;
 			})
 			return html;
 		}

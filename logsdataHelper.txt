@@ -304,3 +304,5 @@
 09/07/2020 09:32:39 pm - include;GRENDYS GARCIA;1;1;;
 09/07/2020 10:12:38 pm - include;GRENDYS GARCIA;1;1;;
 09/07/2020 11:57:48 pm - include;GRENDYS GARCIA;1;1;;
+10/07/2020 03:17:14 pm - Deleted
+10/07/2020 03:18:17 pm - include;N/A;1;0;<br>Invitado No activo;
