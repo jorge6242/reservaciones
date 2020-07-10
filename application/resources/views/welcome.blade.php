@@ -799,9 +799,9 @@
         }
 
         function renderStatus(data) {
-            if(data.event) return 'event';
             if(data.expired) return 'expired';
             if(data.blocked) return 'blocked';
+            if(data.event) return 'event';
             if(!data.available) return 'active';
         }
 
