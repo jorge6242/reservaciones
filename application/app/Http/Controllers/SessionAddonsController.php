@@ -57,7 +57,8 @@ class SessionAddonsController extends Controller
         $min = 0;
         $max = 0;
         $isUser = auth()->user()->doc_id == $input['doc_id'] ? true : false;
-        if($isUser) {
+
+        if($isUser || $sessionPlayer->player_type == 0) {
             $min = $addonParameters->player_min;
             $max = $addonParameters->player_max;
         }
@@ -67,7 +68,7 @@ class SessionAddonsController extends Controller
             $max = $addonParameters->guest_max;
         }
 
-        if((int)$AddonCant > (int)$addonParameters->booking_max) {
+        if($AddonCant >= $addonParameters->booking_max) {
             return response()->json([ 
                 'success' => false,
                 'message' => 'Para el Addon: '.$addonParameters->addon->title.', solo se permite seleccionar maximo '.$addonParameters->booking_max.' para la reserva ',

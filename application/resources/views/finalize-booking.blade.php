@@ -90,7 +90,7 @@
                     <h6><i class="fas fa-calendar fa-lg text-primary"></i>&nbsp;&nbsp;{{ Session::get('event_date') }} {{ Session::get('booking_slot') }}</h6>
                     <br>
                     <h4>{{ __('app.booking_details') }}</h4>
-                    <h5>{{ $category }} - {{ $package->title }} - <span class="text-danger">
+                    <h5>{{ $category }} - {{ $package->title }} - {{ $packageType }}<span class="text-danger">
                           
 <!--
 						   @if(config('settings.currency_symbol_position')==__('backend.right'))

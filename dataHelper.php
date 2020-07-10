@@ -1112,6 +1112,9 @@ else if ($command == "delete")  ///delete player
 	$query = "DELETE FROM session_players WHERE doc_id='" . $doc_id . "' AND session_email='"  . $session_email . "'"; 
 	$qry_result = sqlsrv_query($connection,$query ) or die( print_r( sqlsrv_errors(), true));
 
+	$query = "DELETE FROM session_addons WHERE doc_id = '" . $doc_id . "' AND session_email = '"  . $session_email . "'";
+	$qry_result = sqlsrv_query($connection,$query ) or die( print_r( sqlsrv_errors(), true));
+
 	//$aux = $command  . $field_separator . $playername . $field_separator . $player_type . $field_separator . $status . $field_separator . $err_message . $field_separator; 
 	$aux = "Deleted"; 
 	echo $aux; 

@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="icon" href="{{ asset('favicon.png') }}">
     <script type="text/javascript" src="{{ asset('js/moment.min.js') }}" rel="stylesheet"></script>
+    <script type="text/javascript" src="{{ asset('js/moment-es.min.js') }}" rel="stylesheet"></script>
     @yield('styles')
     @include('settings.customization')
     <style>
@@ -91,6 +92,9 @@
         window.fcWidget.user.setLastName("{{ Auth::user()->last_name }}");
         window.fcWidget.user.setEmail("{{ Auth::user()->email }}");
         @endif
+
+        moment.locale('fr');
+
     </script>
 @endif
 @yield('scripts')

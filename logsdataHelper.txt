@@ -266,3 +266,41 @@
 08/07/2020 11:58:53 pm - include;N/A;1;0;<br>Máximo número de participantes permitidos: 4<br>Invitado No activo;
 09/07/2020 12:00:42 am - include;N/A;1;0;<br>Máximo número de participantes permitidos: 4<br>Invitado No activo;
 09/07/2020 12:02:21 am - include;N/A;1;0;<br>Máximo número de participantes permitidos: 4<br>Invitado No activo;
+09/07/2020 09:58:16 am - Deleted
+09/07/2020 09:58:19 am - Deleted
+09/07/2020 09:59:48 am - include;ANA ARANEO;1;0;<br>Máximo número de participantes permitidos: 2<br>Máximo número de Invitados permitidos: 1;
+09/07/2020 10:31:34 am - Deleted
+09/07/2020 10:33:43 am - include;EDGAR EDMUNDO HERNANDEZ BOSSIO;0;0;<br>Accion 0930-0930 Inactiva ;
+09/07/2020 10:36:18 am - include;ELIZABETH VALENCIA DE IRANZO;0;0;<br>Acción 0176-0176 presenta deuda  - Dirijase al Club para mayor informacion;
+09/07/2020 10:39:41 am - include;FEDERICO ALBERTO MAYORCA LUGO;0;0;<br>Acción 0610-0610 presenta deuda  - Dirijase al Club para mayor informacion;
+09/07/2020 10:41:34 am - include;CARLOS CARLO ALVAREZ FERNANDEZ;0;0;<br>Acción 0724-0724 presenta deuda  - Dirijase al Club para mayor informacion;
+09/07/2020 10:44:24 am - include;FEDERICO ALBERTO MAYORCA LUGO;0;0;<br>Acción 0610-0610 presenta deuda  - Dirijase al Club para mayor informacion;
+09/07/2020 10:49:03 am - include;Guillermo MARIN ISTURIZ;0;1;;
+09/07/2020 12:05:26 pm - Deleted
+09/07/2020 12:07:32 pm - include;IBRAHIM ANTONIO GARCIA CARMONA;0;0;<br>Acción 0084-0084 presenta deuda  - Dirijase al Club para mayor informacion;
+09/07/2020 12:10:20 pm - include;JULIO CESAR VILLARREAL ABREU;0;0;<br>Acción 0693-0693 presenta deuda  - Dirijase al Club para mayor informacion;
+09/07/2020 12:17:49 pm - include;MARIANELA ACEDO DE BOULTON;0;0;<br>Acción 0553-0553 presenta deuda  - Dirijase al Club para mayor informacion;
+09/07/2020 12:20:48 pm - include;CARLOS ENRIQUE ANZOLA DIAZ;0;0;<br>Acción 0008-0008 presenta deuda  - Dirijase al Club para mayor informacion;
+09/07/2020 12:23:17 pm - include;HERNAN COROMOTO ANZOLA GIMENEZ;0;0;<br>Accion 0813-0813 Inactiva ;
+09/07/2020 12:25:38 pm - include;FEDERICO ALBERTO MAYORCA LUGO;0;0;<br>Acción 0610-0610 presenta deuda  - Dirijase al Club para mayor informacion;
+09/07/2020 12:28:43 pm - include;GRENDYS GARCIA;1;1;;
+09/07/2020 12:47:33 pm - Deleted
+09/07/2020 12:48:42 pm - include;GRENDYS GARCIA;1;1;;
+09/07/2020 12:53:13 pm - include;EDUARDO ARIAS;1;1;;
+09/07/2020 12:55:52 pm - include;LEONARDO GOMEZ;1;1;;
+09/07/2020 12:56:37 pm - Deleted
+09/07/2020 12:58:43 pm - include;Guillermo MARIN ISTURIZ;0;1;;
+09/07/2020 06:19:42 pm - Deleted
+09/07/2020 06:19:43 pm - Deleted
+09/07/2020 06:19:57 pm - Deleted
+09/07/2020 06:22:06 pm - include;Guillermo MARIN ISTURIZ;0;1;;
+09/07/2020 06:58:17 pm - include;Guillermo MARIN ISTURIZ;0;1;;
+09/07/2020 07:48:03 pm - include;GRENDYS GARCIA;1;1;;
+09/07/2020 07:49:15 pm - include;ANA ARANEO;1;1;;
+09/07/2020 07:50:41 pm - include;LEONARDO GOMEZ;1;1;;
+09/07/2020 07:51:25 pm - Deleted
+09/07/2020 07:53:49 pm - include;Guillermo MARIN ISTURIZ;0;1;;
+09/07/2020 09:16:41 pm - include;LEONARDO GOMEZ;1;1;;
+09/07/2020 09:32:39 pm - include;GRENDYS GARCIA;1;1;;
+09/07/2020 10:12:38 pm - include;GRENDYS GARCIA;1;1;;
+09/07/2020 11:57:48 pm - include;GRENDYS GARCIA;1;1;;

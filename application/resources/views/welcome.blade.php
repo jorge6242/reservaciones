@@ -61,6 +61,10 @@
 	background-color: #7f8c8d;
 }
 
+#packages-calendar .cell.event {
+	background-color: #f1c40f;
+}
+
 #packages-calendar .header, .time {
 	font-weight: bold;
 }
@@ -77,17 +81,52 @@
 }
 
 .custom-table {
-    border: 5px solid;
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.custom-table tbody{
+  display:block;
+  overflow:auto;
+  height:250px;
+  width:100%;
+}
+
+.custom-table tbody::-webkit-scrollbar {
+  display: none;
+  overflow: hidden;
+}
+
+.custom-table thead {
+    font-weight: bold;
+}
+
+.custom-table thead tr{
+  display:block;
+}
+
+.custom-table th, .custom-table td {
+  padding: 5px;
+  text-align: left;
+  width: 168px;
 }
 
 @media only screen and (max-width: 600px) {
-	#packages-calendar .cell {
+
+    .custom-table th, .custom-table td {
+        padding: 5px;
+        text-align: left;
+        width: 82px;
+    }
+
+	//**#packages-calendar .cell {
 		font-size: 9px;
 		flex: 0 0 16.66666667%;
 		max-width: 16.66666667%;
 		padding-left: 5px;
 		padding-right: 0px;
-	}
+	} **/
 }
 
 </style>
@@ -407,7 +446,6 @@
 
 
 ?>
-
 
     <div class="jumbotron promo">
         <div class="container">
@@ -755,12 +793,13 @@
         function renderCalendarHeader(packages) {
             let html = '';
 			packages.forEach(element => {
-				html +=`<td class="cell header calendar-package-${element.id}" onclick="handlePackageCalendar(${element.id})" style="cursor:pointer" >${element.title}</td>`;
+				html +=`<td class="cell header calendar-package-${element.id}" onclick="handlePackageCalendar(${element.id})" style="cursor:pointer;" >${element.title}</td>`;
 			})
             return html;
         }
 
         function renderStatus(data) {
+            if(data.event) return 'event';
             if(data.expired) return 'expired';
             if(data.blocked) return 'blocked';
             if(!data.available) return 'active';
@@ -795,14 +834,17 @@
                     success: function(response) {
                         const packages = response.packages;
                         const schedule = response.schedule;
+                        const count = packages.length + 1;
+                        const widthColumn =  100 / count;
                         let html = '';
                         const header = `
                             <tr class="header">
-                                <td class="cell"></td>
+                                <td class="cell" ></td>
                                 ${renderCalendarHeader(packages)}
                             </tr>`;
 
                         let content = '';
+                        
                         schedule.forEach(element => {
                             content += `
                                 <tr>
@@ -814,58 +856,16 @@
 
                         html += `
                         <div class="row">
-                            <div class="col-sm-12 col-xs-12 col-md-12" style="overflow-y: scroll; height: 300px;">
-                                <table class="table custom-table" border="1" >
-                                    ${header}
-                                    ${content}  
+                            <div class="col-sm-12 col-xs-12 col-md-12">
+                                <table class="custom-table" >
+                                    <thead>${header}</thead>
+                                    <tbody>${content}  </tbody>
                                 </table>   
                             </div>
                         </div>
                         `;
                         $('#packages-calendar').fadeIn().html(html);
                         $('#packages_loader').addClass('d-none');
-
-                            $.ajax({
-                            type: 'POST',
-                            url: URL_CONCAT + '/get_packages',
-                            data: {parent:category},
-                            beforeSend: function() {
-                                $('#packages_loader').removeClass('d-none');
-                                $('#packages_holder').html('&nbsp;');
-                                 $('#package_id').remove();
-                            },
-                            success: function(response) {
-                                $('#packages_holder').fadeIn().html(response);
-                                $(".owl-carousel").owlCarousel({
-                                    margin:20,
-                                    dots:false,
-                                    nav:true,
-                                    items: 1,
-                                    navText: [
-                                        '<img src="'+ URL_CONCAT + '/images/left.png">',
-                                        '<img src="'+ URL_CONCAT + '/images/right.png">'
-                                    ],
-                                    responsiveClass: true,
-                                    responsive: {
-                                        0: {
-                                            items: 1,
-                                            loop:true,
-                                        },
-                                        480: {
-                                            items: 1,
-                                            loop:true,
-                                        },
-                                        769: {
-                                            items: 3
-                                        }
-                                    }
-                            });
-                            },
-                            complete: function () {
-                                $('#packages_loader').addClass('d-none');
-                            }
-                            });
-
                     },
                 });
             }
@@ -975,7 +975,51 @@
                     </div>
                 </div>
                 `;
-                $('#statusSlots').fadeIn().html(slots);
+                    $('#statusSlots').fadeIn().html(slots);
+
+                        $.ajax({
+                        type: 'POST',
+                        url: URL_CONCAT + '/get_packages',
+                        data: {parent:category_id},
+                        beforeSend: function() {
+                            $('#packages_loader').removeClass('d-none');
+                            $('#packages_holder').html('&nbsp;');
+                                $('#package_id').remove();
+                        },
+                        success: function(response) {
+                            $('#packages_holder').fadeIn().html(response);
+                            $(".owl-carousel").owlCarousel({
+                                margin:20,
+                                dots:false,
+                                nav:true,
+                                items: 1,
+                                navText: [
+                                    '<img src="'+ URL_CONCAT + '/images/left.png">',
+                                    '<img src="'+ URL_CONCAT + '/images/right.png">'
+                                ],
+                                responsiveClass: true,
+                                responsive: {
+                                    0: {
+                                        items: 1,
+                                        loop:true,
+                                    },
+                                    480: {
+                                        items: 1,
+                                        loop:true,
+                                    },
+                                    769: {
+                                        items: 3
+                                    }
+                                }
+                        });
+                        $('#packages_loader').removeClass('d-none');
+                        },
+                        complete: function () {
+                            $('#packages_loader').addClass('d-none');
+                        }
+                        });
+
+
             	},
 				complete: function () {
 					$('#packages_loader').addClass('d-none');

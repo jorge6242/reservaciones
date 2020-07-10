@@ -456,7 +456,7 @@ class UserBookingController extends Controller
 					if(strtotime($event->date)==strtotime($event_date) && strtotime($event->time1)<=strtotime($timeslot) && strtotime($event->time2)>=strtotime($timeslot)   )
 					{
 							$list_slot[$i]['is_available'] = false;
-							$list_slot[$i]['is_blocked'] = true;
+							$list_slot[$i]['is_blocked'] = false;
 							$list_slot[$i]['is_event'] = true;
 							$list_slot[$i]['description'] = $event->description;
 					}
@@ -1227,7 +1227,7 @@ class UserBookingController extends Controller
      */
     public function postStep3(Request $request)
     {
-		$request->session()->put('countdown', $input['countdown']);
+        $request->session()->put('countdown', $input['countdown']);
         return redirect('/finalize-booking');
     }
 
@@ -1307,7 +1307,7 @@ class UserBookingController extends Controller
         }
 
         // Validacion Socios
-        $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->where('player_type', 0)->count();
+        $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->whereIn('player_type', [0,-1])->count();
         if($cant < $params->player_min) {
             $message .= "<br> El mínimo de Socios debe ser " . $params->player_min . "";
         }
@@ -1414,7 +1414,7 @@ class UserBookingController extends Controller
         $category = Package::find(Session::get('package_id'))->category->title;
         $package = Package::find(Session::get('package_id'));
         $session_addons = DB::table('session_addons')->where('session_email','=',Auth::user()->email)->get();
-
+        $packageType = $packageType ? $packageType->title : '';
 
         $sessionAddons = \DB::select("SELECT DISTINCT addon_id FROM session_addons where session_email = '".auth()->user()->email."' and package_id = '".Session::get('package_id')."'  ");
 
@@ -1474,9 +1474,12 @@ class UserBookingController extends Controller
             $total_with_gst = round($total_with_gst,2);
         }
 
+        $packageType = Session::get('selectedPackageType');
+        $packageType = $packageType ? $packageType->title : '';
+
 
         return view('finalize-booking', compact('event_address', 'category',
-            'package', 'session_addons', 'total', 'total_with_gst', 'gst_amount'));
+            'package', 'session_addons', 'total', 'total_with_gst', 'gst_amount','packageType'));
     }
 
     /**
@@ -1695,6 +1698,7 @@ class UserBookingController extends Controller
         // Sacamos los periodos entre las horas
         $periodo   = new DatePeriod($hora_inicio, $intervalo, $hora_fin);
         $packages = Package::where('category_id', $category)->get();
+        $events = Event::all()->where('is_active', '=',1);
         $categoryType = Category::find($category); 
         $arrayHours = array();
         $sessionSlots =  SessionSlot::where('booking_date',$date)->get();
@@ -1712,6 +1716,7 @@ class UserBookingController extends Controller
                     'available' => true,
                     'blocked' => false,
                     'expired' => false,
+                    'event' => false,
                     ]);        
             }
             array_push($arrayHours, (object)[ 'hour' => $hora->format('H:i:s') , 'packages' => $arrayAvailablePackages ]);
@@ -1729,6 +1734,19 @@ class UserBookingController extends Controller
 
                     }
                 }
+
+                foreach ($events as $keyEvents => $event) {
+                    //dd('$event->date '.$event->date.' $date '.$date.' package'.$package->title);
+					if( 
+                        strtotime($event->date) == strtotime($date) && 
+                        strtotime($event->time1) <= strtotime($value->hour) && 
+                        strtotime($event->time2) >= strtotime($value->hour)
+                        ){
+                            $arrayHours[$keyHours]->packages[$keyPackages]->available = false;
+                            $arrayHours[$keyHours]->packages[$keyPackages]->event = true;
+                            $arrayHours[$keyHours]->packages[$keyPackages]->blocked = false;
+					}
+				}
 
                 foreach ($sessionSlots as $keyBookings => $sessionSlot) {
                     if($sessionSlot->booking_time2 !== null && $sessionSlot->booking_date == $date && $sessionSlot->package_id == $package->id ){
@@ -1776,7 +1794,7 @@ class UserBookingController extends Controller
         where c.id=p.category_id  
         and c.id = ".$request['category']." ");
         $interval = $interval[0];
-        $hours = $this->buildHours($minimo, $maximo, 4, $request['date'], $interval->duration);
+        $hours = $this->buildHours($minimo, $maximo, $request['category'], $request['date'], $interval->duration);
 
         return response()->json([
             'packages' => $packages,

@@ -878,28 +878,6 @@ function ajaxFunctionSelect(doc_id){
 
 @endsection
 
-<script>
-//		ProgressCountdown(<?php echo $countdown;?>, 'pageBeginCountdown', 'pageBeginCountdownText').then(value => window.location.href = `logoutBooking`);
-
-
-//			function ProgressCountdown(timeleft, bar, text) {
-//			  return new Promise((resolve, reject) => {
-//				var countdownTimer = setInterval(() => {
-//				  timeleft--;
-
-//				  document.getElementById(bar).value = timeleft;
-//				  document.getElementById(text).textContent = timeleft;
-//				   document.getElementById('countdown').value = timeleft;
-
-//				  if (timeleft <= 0) {
-//					clearInterval(countdownTimer);
-//					resolve(true);
-//				  }
-//				}, 1000);
-//			  });
-//			}
-	</script>
-
 @section('scripts')
     <script>
         $('.addon_buttons').on('click', 'a.btn-addon', function() {
@@ -916,4 +894,26 @@ function ajaxFunctionSelect(doc_id){
 
         });
     </script>
+
+	<script>
+	ProgressCountdown(<?php echo $countdown;?>, 'pageBeginCountdown', 'pageBeginCountdownText').then(value => window.location.href = `logoutBooking`);
+
+
+	function ProgressCountdown(timeleft, bar, text) {
+		return new Promise((resolve, reject) => {
+			var countdownTimer = setInterval(() => {
+			timeleft--;
+
+			document.getElementById(bar).value = timeleft;
+			document.getElementById(text).textContent = timeleft;
+			document.getElementById('countdown').value = timeleft;
+
+			if (timeleft <= 0) {
+				clearInterval(countdownTimer);
+				resolve(true);
+			}
+			}, 1000);
+		});
+	}
+	</script>
 @endsection
