@@ -42,6 +42,10 @@ function wsCalculateToken()
 
 function wsConsultaSaldo($group_id, &$saldo, &$comments)
 {
+	$skipSaldo = true; // Parametro para desactivar validacion saldo
+	if($skipSaldo) {
+		return 0;
+	}
 	try {
 
 		$token = wsCalculateToken();

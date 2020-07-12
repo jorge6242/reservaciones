@@ -306,3 +306,44 @@
 09/07/2020 11:57:48 pm - include;GRENDYS GARCIA;1;1;;
 10/07/2020 03:17:14 pm - Deleted
 10/07/2020 03:18:17 pm - include;N/A;1;0;<br>Invitado No activo;
+10/07/2020 06:40:08 pm - include;Guillermo MARIN ISTURIZ;0;1;;
+11/07/2020 03:27:07 pm - Deleted
+11/07/2020 03:29:13 pm - include;EDGAR EDMUNDO HERNANDEZ BOSSIO;0;0;<br>Accion 0930-0930 Inactiva ;
+11/07/2020 03:32:32 pm - include;ELIZABETH VALENCIA DE IRANZO;0;0;<br>Acción 0176-0176 presenta deuda  - Dirijase al Club para mayor informacion;
+11/07/2020 07:57:02 pm - include;Guillermo MARIN ISTURIZ;0;1;;
+11/07/2020 08:04:03 pm - include;Guillermo MARIN ISTURIZ;0;0;<br>Este participante ya está registrado;
+11/07/2020 08:07:21 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;0;<br>Este participante ya está registrado;
+11/07/2020 08:36:24 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;0;<br>Este participante ya está registrado;
+11/07/2020 08:40:27 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;0;<br>Este participante ya está registrado;
+11/07/2020 08:46:08 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;0;<br>Este participante ya está registrado;
+11/07/2020 08:47:43 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;0;<br>Este participante ya está registrado;
+11/07/2020 08:49:26 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;0;<br>Este participante ya está registrado;
+11/07/2020 08:56:04 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;0;<br>Este participante ya está registrado;
+11/07/2020 08:56:28 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;0;<br>Este participante ya está registrado;
+11/07/2020 09:03:07 pm - include;CARLOS  EDUARDO CATO CONTRERAS;0;0;<br>Este participante ya está registrado;
+11/07/2020 09:08:46 pm - include;ELIZABETH VALENCIA DE IRANZO;0;0;<br>Acción 0176-0176 presenta deuda  - Dirijase al Club para mayor informacion;
+11/07/2020 09:08:50 pm - include;ELIZABETH VALENCIA DE IRANZO;0;1;;
+11/07/2020 09:09:49 pm - include;ELIZABETH VALENCIA DE IRANZO;0;0;<br>Este participante ya está registrado;
+11/07/2020 09:17:36 pm - include;ELIZABETH VALENCIA DE IRANZO;0;0;<br>Este participante ya está registrado;
+11/07/2020 09:21:06 pm - include;ELIZABETH VALENCIA DE IRANZO;0;0;<br>Este participante ya está registrado;
+11/07/2020 09:24:56 pm - include;ELIZABETH VALENCIA DE IRANZO;0;0;<br>Este participante ya está registrado;
+11/07/2020 09:26:12 pm - include;ELIZABETH VALENCIA DE IRANZO;0;0;<br>Este participante ya está registrado;
+11/07/2020 09:28:06 pm - include;ELIZABETH VALENCIA DE IRANZO;0;0;<br>Este participante ya está registrado;
+11/07/2020 09:34:09 pm - include;JULIO CESAR VILLARREAL ABREU;0;1;;
+11/07/2020 09:38:13 pm - include;JULIO CESAR VILLARREAL ABREU;0;0;<br>Máximo número de participantes permitidos: 4<br>Este participante ya está registrado;
+11/07/2020 09:40:50 pm - include;JULIO CESAR VILLARREAL ABREU;0;0;<br>Máximo número de participantes permitidos: 4<br>Este participante ya está registrado;
+11/07/2020 09:42:47 pm - include;JULIO CESAR VILLARREAL ABREU;0;0;<br>Máximo número de participantes permitidos: 4<br>Este participante ya está registrado;
+11/07/2020 09:44:47 pm - include;JULIO CESAR VILLARREAL ABREU;0;0;<br>Máximo número de participantes permitidos: 4<br>Este participante ya está registrado;
+11/07/2020 09:47:45 pm - include;JULIO CESAR VILLARREAL ABREU;0;0;<br>Máximo número de participantes permitidos: 4<br>Este participante ya está registrado;
+11/07/2020 09:51:14 pm - include;JULIO CESAR VILLARREAL ABREU;0;0;<br>Máximo número de participantes permitidos: 4<br>Este participante ya está registrado;
+11/07/2020 09:54:23 pm - Deleted
+11/07/2020 09:56:53 pm - include;CARLOS ENRIQUE ANZOLA DIAZ;0;0;<br>Acción 0008-0008 presenta deuda  - Dirijase al Club para mayor informacion<br>Máximo número de participantes permitidos: 2<br>Máximo número de Socios permitidos: 2;
+11/07/2020 09:59:20 pm - include;JULIO CESAR VILLARREAL ABREU;0;0;<br>Máximo número de participantes permitidos: 2<br>Máximo número de Socios permitidos: 2;
+11/07/2020 10:01:12 pm - Deleted
+11/07/2020 10:01:29 pm - Deleted
+11/07/2020 10:03:19 pm - include;JULIO CESAR VILLARREAL ABREU;0;1;;
+11/07/2020 10:04:09 pm - include;CARLOS ENRIQUE ANZOLA DIAZ;0;0;<br>Acción 0008-0008 presenta deuda  - Dirijase al Club para mayor informacion<br>Máximo número de participantes permitidos: 2;
+11/07/2020 10:04:57 pm - Deleted
+11/07/2020 10:06:29 pm - include;CARLOS ENRIQUE ANZOLA DIAZ;0;0;<br>Acción 0008-0008 presenta deuda  - Dirijase al Club para mayor informacion;
+11/07/2020 10:07:15 pm - include;CARLOS ENRIQUE ANZOLA DIAZ;0;0;<br>Acción 0008-0008 presenta deuda  - Dirijase al Club para mayor informacion;
+11/07/2020 10:08:42 pm - include;CARLOS ENRIQUE ANZOLA DIAZ;0;1;;
