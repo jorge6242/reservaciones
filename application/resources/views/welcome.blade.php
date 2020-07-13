@@ -824,7 +824,7 @@
                 type: 'GET',
                 url: URL_CONCAT + '/booking-category-calendar',
                 data: { 
-                    date : date,
+                    date : moment(date).format('DD-MM-YYYY'),
                     number : number,
                     category : category,
                 },
@@ -876,7 +876,7 @@
 			let html = '';
             html +=`<option value="" selected >Seleccione Dia</option>`;
 			dates.forEach(element => {
-				html +=`<option value="${moment(element.date.date).format('DD-MM-YYYY')}">${moment(element.date.date).format('DD-MM-YYYY')}</option>`;
+				html +=`<option value="${element.date.date}">${moment(element.date.date).format('DD-MM-YYYY')}</option>`;
 			})
 			return html;
 		}
