@@ -60,7 +60,7 @@ class UserBookingController extends Controller
     public function loadBooking()
     {
         $random_pass_string = str_random(10);
-        $categories = Category::all();
+        $categories = Category::where('is_active', 1)->get();
         return view('welcome', compact('random_pass_string', 'categories'));
     }
 
