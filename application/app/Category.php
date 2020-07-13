@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $fillable = [
-        'title', 'photo_id', 'type', 'category_type', 'draw'
+        'title', 
+        'photo_id', 
+        'type', 
+        'category_type', 
+        'draw', 
+        'is_active'
     ];
 
     public function photo()

@@ -55,6 +55,19 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group{{$errors->has('is_active') ? ' has-error' : ''}}">
+                                    <label class="control-label" for="is_active">{{ __('backend.status') }}</label>
+                                    <select class="form-control" name="is_active">
+                                        <option value="1">Activo</option>
+                                        <option value="0">Inactivo</option>
+                                    </select>
+                                    @if ($errors->has('is_active'))
+                                        <span class="help-block">
+                                            <strong class="text-danger">{{ $errors->first('is_active') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+
 
                                 <div class="form-group{{$errors->has('photo_id') ? ' has-error' : ''}}">
                                     <label for="photo_id" class="control-label">{{ __('backend.select_image') }}</label>
@@ -96,6 +109,7 @@
                                         <th>{{ __('backend.draw') }}</th>
                                         <th>{{ __('backend.created') }}</th>
                                         <th>{{ __('backend.updated') }}</th>
+                                        <th>{{ __('backend.is_active') }}</th>
                                         <th>{{ __('backend.actions') }}</th>
                                     </tr>
                                     </thead>
@@ -108,6 +122,7 @@
                                         <th>{{ __('backend.draw') }}</th>
                                         <th>{{ __('backend.created') }}</th>
                                         <th>{{ __('backend.updated') }}</th>
+                                        <th>{{ __('backend.is_active') }}</th>
                                         <th>{{ __('backend.actions') }}</th>
                                     </tr>
                                     </tfoot>
@@ -135,6 +150,14 @@
                                             </td>
                                             <td>{{ $category->created_at->diffForHumans() }}</td>
                                             <td>{{ $category->updated_at->diffForHumans() }}</td>
+                                            <td>
+                                            @if($category->is_active == 0)
+                                                Inactivo
+                                            @endif
+                                             @if($category->is_active == 1)
+                                                Activo
+                                            @endif
+                                            </td>
                                             <td>
                                                 <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                                 <a class="btn btn-danger btn-xs" data-toggle="modal" data-target="#{{ $category->id }}"><i class="fa fa-trash-o"></i></a>

@@ -52,6 +52,14 @@
                                     </select>
                             </div>
 
+                            <div class="form-group{{$errors->has('is_active') ? ' has-error' : ''}}">
+                                    <label class="control-label" for="is_active">{{ __('backend.status') }}</label>
+                                    <select class="form-control" name="is_active">
+                                        <option value="0" {{ $category->is_active == 0 ? 'selected' : '' }}>Inactivo</option>
+                                        <option value="1" {{ $category->is_active == 1 ? 'selected' : '' }}>Activo</option>
+                                    </select>
+                            </div>
+
 
                             <div class="form-group{{$errors->has('photo_id') ? ' has-error' : ''}}">
                                 <label for="photo_id" class="control-label">{{ __('backend.select_image') }}</label>

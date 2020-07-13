@@ -25,7 +25,8 @@ class CategoryRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'photo_id' => 'required|mimes:jpeg,png'
+            'photo_id' => 'required|mimes:jpeg,png',
+            'is_active' => 'required'
         ];
     }
 }
