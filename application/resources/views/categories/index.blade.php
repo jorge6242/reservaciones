@@ -151,10 +151,10 @@
                                             <td>{{ $category->created_at->diffForHumans() }}</td>
                                             <td>{{ $category->updated_at->diffForHumans() }}</td>
                                             <td>
-                                            @if($category->is_active == 0)
+                                            @if($category->is_active !== null && $category->is_active == 0)
                                                 Inactivo
                                             @endif
-                                             @if($category->is_active == 1)
+                                             @if($category->is_active !== null && $category->is_active == 1)
                                                 Activo
                                             @endif
                                             </td>
