@@ -809,7 +809,7 @@ else if ($command == "include") // include player
 	{ //validate number of players (Partners)
 
 		$cant = 0;
-		$partnerQuery = "SELECT count(*) as cant from session_players where session_email='" . $session_email . "' and player_type = 0";
+		$partnerQuery = "SELECT count(*) as cant from session_players where session_email='" . $session_email . "' and player_type in (0,-1)";
    
 		$resultPartner = sqlsrv_query($connection, $partnerQuery); 
 
