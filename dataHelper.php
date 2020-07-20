@@ -511,6 +511,7 @@ else if ($command == "group") // query group
 	
 	//check balance
 	$status = GetSaldo($connection, $group_id, $balance, $comments, $has_errors, $err_message);
+	$status = 0;
 	
 	if ($balance > 0)
 	{
@@ -877,42 +878,45 @@ else if ($command == "include") // include player
 		// 	and b.status!='" . $cancelled_status . "'
 		// ";
 
+		if ($conn === false) {  
+			echo "Could not connect.\n";  
+			die(print_r(sqlsrv_errors(), true));  
+		}  
+			
+		$pt = $is_user == 0 ? 1 : 0; // Player type
 		$unidadmedida= '';
-		$tablePerDayWeekMonth = $is_user == 0 ? 'guests' : 'users';
-		if($categoryType == 0) {
-			$unidadmedida= 'partidas';
-			$queryPerDayWeekMonth = "SELECT u.first_name, u.last_name, u.doc_id, u.id , 
-			         (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
-						FROM ".$tablePerDayWeekMonth." u
-						WHERE u.doc_id = ".$doc_id."
-			";
-		}
 
-		else if($categoryType == 1) {
-			$unidadmedida= 'minutos';
-			$queryPerDayWeekMonth = "SELECT u.first_name, u.last_name, u.doc_id, u.id , 
-					 (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
-						FROM ".$tablePerDayWeekMonth." u
-						WHERE u.doc_id = ".$doc_id."
-			";
-		}
-
+		if($categoryType == 0) $unidadmedida= 'partidas';
+		if($categoryType == 1) $unidadmedida= 'minutos';
 		$messagePerDayWeekMonth = "<br>Este participante no puede exceder el numero de ".$unidadmedida."";
-	   
-		$resultBookingPlayerCount = sqlsrv_query($connection, $queryPerDayWeekMonth); 
-
-		while( $rowPerDayWeekMonth = sqlsrv_fetch_array( $resultBookingPlayerCount, SQLSRV_FETCH_ASSOC) ) {
-			  $calculoDia = $rowPerDayWeekMonth['calculoDia'];
-			  $calculoSemana = $rowPerDayWeekMonth['calculoSemana'];
-			  $calculoMes = $rowPerDayWeekMonth['calculoMes'];
+		
+		$params = array(
+		array($categoryType, SQLSRV_PARAM_IN),
+		array($$pt, SQLSRV_PARAM_IN),
+		array($doc_id, SQLSRV_PARAM_IN)
+		);      
+		
+		$tsql_callSP = "{call CalcularParticipaciones(?,?,?)}";
+		   /* Execute the query. */
+			$stmt3 = sqlsrv_query( $connection, $tsql_callSP, $params);
+			if( $stmt3 === false )
+			{
+				echo "Error in executing statement 3.\n";
+				die( print_r( sqlsrv_errors(), true));
+			}
+		else
+		{
+		while( $rowPerDayWeekMonth = sqlsrv_fetch_array( $stmt3, SQLSRV_FETCH_ASSOC) ) {
+		 $calculoDia = $rowPerDayWeekMonth['dia'];
+		 $calculoSemana = $rowPerDayWeekMonth['semana'];
+		 $calculoMes = $rowPerDayWeekMonth['mes'];
 		}
-
-		//echo "isUser: ".$is_user;
 
 		$conditionPerDay = $is_user == 0 ? $bookingGuest_maxPerDay : $bookingUser_maxPerDay;
 		$conditionPerWeek = $is_user == 0 ? $bookingGuest_maxPerWeek : $bookingUser_maxPerWeek;
 		$conditionPerMonth = $is_user == 0 ? $bookingGuest_maxPerMonth : $bookingUser_maxPerMonth;
 
+		//echo " \n conditionPerDay: $conditionPerMonth -- calculoDia: $calculoMes \n";
 		if ($calculoDia >= $conditionPerDay) { 
 			$has_errors = 1;
 			$err_message = $err_message ." ". $messagePerDayWeekMonth." por día.";
@@ -928,8 +932,67 @@ else if ($command == "include") // include player
 			$err_message = $err_message ." ". $messagePerDayWeekMonth." por Mes.";
 		}
 
+		}
+		
+		sqlsrv_free_stmt($stmt3);  
+		sqlsrv_close($conn); 
 
-		sqlsrv_free_stmt( $resultBookingPlayerCount);
+
+
+
+		// $unidadmedida= '';
+		// $tablePerDayWeekMonth = $is_user == 0 ? 'guests' : 'users';
+		// if($categoryType == 0) {
+		// 	$unidadmedida= 'partidas';
+		// 	$queryPerDayWeekMonth = "SELECT u.first_name, u.last_name, u.doc_id, u.id , 
+		// 	         (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
+		// 				FROM ".$tablePerDayWeekMonth." u
+		// 				WHERE u.doc_id = ".$doc_id."
+		// 	";
+		// }
+
+		// else if($categoryType == 1) {
+		// 	$unidadmedida= 'minutos';
+		// 	$queryPerDayWeekMonth = "SELECT u.first_name, u.last_name, u.doc_id, u.id , 
+		// 			 (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
+		// 				FROM ".$tablePerDayWeekMonth." u
+		// 				WHERE u.doc_id = ".$doc_id."
+		// 	";
+		// }
+
+		// $messagePerDayWeekMonth = "<br>Este participante no puede exceder el numero de ".$unidadmedida."";
+	   
+		// $resultBookingPlayerCount = sqlsrv_query($connection, $queryPerDayWeekMonth); 
+
+		// while( $rowPerDayWeekMonth = sqlsrv_fetch_array( $resultBookingPlayerCount, SQLSRV_FETCH_ASSOC) ) {
+		// 	  $calculoDia = $rowPerDayWeekMonth['calculoDia'];
+		// 	  $calculoSemana = $rowPerDayWeekMonth['calculoSemana'];
+		// 	  $calculoMes = $rowPerDayWeekMonth['calculoMes'];
+		// }
+
+		// //echo "isUser: ".$is_user;
+
+		// $conditionPerDay = $is_user == 0 ? $bookingGuest_maxPerDay : $bookingUser_maxPerDay;
+		// $conditionPerWeek = $is_user == 0 ? $bookingGuest_maxPerWeek : $bookingUser_maxPerWeek;
+		// $conditionPerMonth = $is_user == 0 ? $bookingGuest_maxPerMonth : $bookingUser_maxPerMonth;
+
+		// if ($calculoDia >= $conditionPerDay) { 
+		// 	$has_errors = 1;
+		// 	$err_message = $err_message ." ". $messagePerDayWeekMonth." por día.";
+		// }
+
+		// if ($calculoSemana >= $conditionPerWeek) { 
+		// 	$has_errors = 1;
+		// 	$err_message = $err_message ." ". $messagePerDayWeekMonth." por Semana.";
+		// }
+
+		// if ($calculoMes >= $conditionPerMonth) { 
+		// 	$has_errors = 1;
+		// 	$err_message = $err_message ." ". $messagePerDayWeekMonth." por Mes.";
+		// }
+
+
+		// sqlsrv_free_stmt( $resultBookingPlayerCount);
 
 
 
