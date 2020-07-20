@@ -193,7 +193,10 @@
   @endif
                 <br>
                 <div class="col-md-12 form-group" style="padding-left: 0">
-                    <div id="package-type"></div>
+                    <div class="row" >
+                        <div class="col-md-6" id="package-type"></div>
+                        <div class="col-md-6" id="package-list"></div>
+                    </div>
                     <div class="col-md-12" id="tennis-calendar"></div>
                     <input type ="hidden" id="selected-package-type" value="">
                 </div>
@@ -237,14 +240,13 @@
         {{--FOOTER FOR PHONES--}}
 
         <footer class="footer d-block d-sm-block d-md-none d-lg-none d-xl-none">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
+            <div class="container" style="display:flex; justify-content: center">
+                    <div id="package-list-mobile"></div>
+                    <div class="text-center">
                         <button type="submit" class="navbar-btn btn btn-primary btn-lg ml-auto">
                             {!! __('pagination.next') !!}
                         </button>
                     </div>
-                </div>
             </div>
         </footer>
 
@@ -338,9 +340,6 @@
                 }
                 return false
             });
-
-    
-    
     
     function handlePackageType () {
         const URL_CONCAT = $('meta[name="index"]').attr('content');
@@ -380,7 +379,7 @@
                 success: function(response) {
                     let html = '';
                     html +=` <select name="package-type" id="select-package-type" onchange="handlePackageType()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
-                                <option value="">Seleccione el Tipo de Juego</option>
+                                <option value="">Tipo de Juego</option>
 							    ${renderPackageType(response.data)}	
 						</select> `;
                     $('#package-type').html(html);
@@ -389,6 +388,64 @@
                     $('#slots_loader').addClass('d-none');
                 }
             });
+    }
+
+    function getPackages() {
+        const URL_CONCAT = $('meta[name="index"]').attr('content');
+                $.ajax({
+                type: 'GET',
+                url: `${URL_CONCAT}/get-packages-by-category`,
+                beforeSend: function() {
+                    $('#package-list').empty();
+                    $('#package-list-mobile').empty();
+                },
+                success: function(response) {
+                   let html = '';
+                    html +=` <select name="package-list" id="select-package-list" onchange="onSelectPackage()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
+                                <option value="">Seleccione el paquete preferido</option>
+							    ${renderPackageType(response.data)}	
+						</select> `;
+                    $('#package-list').html(html);
+                    let htmlMobile = '';
+                    htmlMobile +=` <select name="select-package-list-mobile" id="select-package-list-mobile" onchange="onSelectPackage()" style="padding: 10px 0px 10px 0px; border: 0; border-bottom: 1px solid grey; font-size: 13px; background-color: white; margin-right: 10px" >
+                                <option value="">Seleccione el paquete preferido</option>
+							    ${renderPackageType(response.data)}	
+						</select> `;
+                    $('#package-list-mobile').html(htmlMobile);
+                },
+                complete: function () {
+                    $('#slots_loader').addClass('d-none');
+                }
+            });
+    }
+
+    function onSelectPackage() {
+        const URL_CONCAT = $('meta[name="index"]').attr('content');
+        const date = document.getElementById('custom-event_date').value;
+        const package = document.getElementById('select-package-list').value;
+        const categoryType = '{{ Session::get('categoryType') }}';
+        $.ajax({
+            type: 'POST',
+            url: URL_CONCAT + '/get_timing_slots',
+            data: { 
+                event_date:date,
+                package: package
+                },
+            beforeSend: function() {
+                $('#slots_loader').removeClass('d-none');
+                $('#selected-package-type').empty();
+                $('#tennis_slot').val('');
+            },
+            success: function(response) {
+                $('#custom_slots_holder').html(response);
+                if(categoryType == 1) {
+                    getPackageType();
+                }
+            },
+            complete: function () {
+                $('#slots_loader').addClass('d-none');
+            }
+        });
     }
 
     function onSelectDraw() {
@@ -408,6 +465,7 @@
                             url: URL_CONCAT + '/get_timing_slots',
                             data: {
                             event_date:selectedDate,
+                            package:null,
                         },
                             beforeSend: function() {
                                 $('#slots_loader').removeClass('d-none');
@@ -416,6 +474,7 @@
                             },
                             success: function(response) {
                                 $('#custom_slots_holder').html(response);
+                                getPackages();
                                 if(categoryType == 1) {
                                     getPackageType();
                                 }
@@ -439,7 +498,10 @@
         $.ajax({
             type: 'POST',
             url: URL_CONCAT + '/get_timing_slots',
-            data: {event_date:selected_date},
+            data: {
+                event_date:selected_date,
+                package: null
+                },
             beforeSend: function() {
                 $('#slots_loader').removeClass('d-none');
                 $('#selected-package-type').empty();
@@ -447,7 +509,7 @@
             },
             success: function(response) {
                 $('#custom_slots_holder').html(response);
-                
+                getPackages();
                 if(categoryType == 1) {
                     getPackageType();
                 }
@@ -705,6 +767,7 @@
         if(categoryType == 1 && !tennisSlot) {
             $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
             $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+            check = false;
         }
 
         if(!bookinType) {

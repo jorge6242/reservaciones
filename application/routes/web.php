@@ -40,6 +40,7 @@ Route::get('/home-login', 'CustomLoginController@index');
 // ** AJAX REQUESTS ** //
 
 Route::post('/get_packages', 'UserBookingController@getPackages')->name('packages');
+Route::get('/get-packages-by-category', 'UserBookingController@getPackagesByCategory')->name('getPackagesByCategory');
 Route::get('/get-packages-by-type', 'UserBookingController@getPackagesByType')->name('getPackagesByType');
 Route::get('/get-booking-types', 'UserBookingController@getBookingType')->name('getBookingType');
 Route::get('/get-draws', 'UserBookingController@getDraws')->name('getDraws');

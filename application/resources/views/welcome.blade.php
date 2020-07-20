@@ -587,14 +587,13 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group btn-primary"> 
                                         <div class="row" style="padding: 10px;">
-										<div class="col-md-6 " style="text-align: left; font-weigth: bold; line-height: 2; font-size: 1.125rem;"> {{ __('app.personal_details') }} </div>
-										<div class="col-md-6 collapse-href" style="text-align: right;"> 
-											<a class="collapsed" data-toggle="collapse" href="#participantsCollapse" role="button" aria-expanded="false" aria-controls="participantsCollapse">
-                                       			 <i class="fa fa-angle-down" style="margin-left: 5px"></i>
-                                        	</a>
-										 </div>
+                                            <div class="col-md-6 " style="text-align: left; font-weigth: bold; line-height: 2; font-size: 1.125rem;"> {{ __('app.personal_details') }} </div>
+                                            <div class="col-md-6 collapse-href" style="text-align: right;"> 
+                                                <a class="collapsed" data-toggle="collapse" href="#participantsCollapse" role="button" aria-expanded="false" aria-controls="participantsCollapse">
+                                                    <i class="fa fa-angle-down" style="margin-left: 5px"></i>
+                                                </a>
+                                            </div>
 										</div>
-										
                                     </div>
                                     <div class="col-md-12 collapse" id="participantsCollapse"> 
                                         <div class="row" id="extra-service-participants">
@@ -686,8 +685,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12 form-group" id="packages-by-type"></div>
-                    <div class="col-md-12 form-group" id="statusSlots"></div>
+                    <div class="col-md-12" id="packages-by-type"></div>
                     <div class="col-md-12" id="packages-calendar" style="text-align:center"></div>
                 </div>
                 <div id="packages_holder"></div>
@@ -876,7 +874,7 @@
 			let html = '';
             html +=`<option value="" selected >Seleccione Dia</option>`;
 			dates.forEach(element => {
-				html +=`<option value="${element.date.date}">${moment(element.date.date).format('DD-MM-YYYY')}</option>`;
+                html +=`<option value="${element.date.date}">${moment(element.date.date).format('DD-MM-YYYY')}</option>`;
 			})
 			return html;
 		}
@@ -947,35 +945,56 @@
             },
             success: function(response) {
 				let html = '';
-				html +=` <select class="form-control" name="tennis-time" id="tennis-time" onchange="handleSelectDay(${category_id})">
-                            ${renderDates(response.dates)}	
-						</select> `;
-				$('#packages-by-type').fadeIn().html(html);
+                html += `
+                <div class="row" >
+                    <div class="col-md-12 form-group btn-primary"> 
+                        <div class="row" style="padding: 10px;">
+                            <div class="col-md-6 " style="text-align: left; font-weigth: bold; line-height: 2; font-size: 1.125rem;"> Ocupacion General </div>
+                            <div class="col-md-6 collapse-href" style="text-align: right;"> 
+                                <a class="collapsed" data-toggle="collapse" href="#calendarCollapse" role="button" aria-expanded="false" aria-controls="calendarCollapse">
+                                    <i class="fa fa-angle-down" style="margin-left: 5px"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 collapse" id="calendarCollapse">
+                        <div class="row">
+                        
+                            <div class="col-md-12 form-group">
+                                <select class="form-control" name="tennis-time" id="tennis-time" onchange="handleSelectDay(${category_id})">
+                                ${renderDates(response.dates)}	
+                            </select>
+                            </div>
+                        
+                        <div class="col-md-12 form-group">
+                            <div class="row">           
+                                <div class="col-md-2">
+                                <a class="btn btn-outline-dark btn-lg btn-block btn-slot disabled"> DISPONIBLE</a>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                <a class="btn   btn-lg btn-block  btn-slot btn-warning disabled">EVENTO</a>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                <a class="btn   btn-lg btn-block  btn-slot btn-secondary disabled"><font color="FFFFFF"> EXPIRADO</font></a>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                <a class="btn   btn-lg btn-block  btn-slot btn-success disabled"><font color="FFFFFF"> RESERVADO</font></a>
+                                </div>
 
-                let slots = `
-                <div class="row">           
-                    <div class="col-md-2">
-                    <a class="btn btn-outline-dark btn-lg btn-block btn-slot disabled"> DISPONIBLE</a>
-                    </div>
-                    
-                    <div class="col-md-2">
-                    <a class="btn   btn-lg btn-block  btn-slot btn-warning disabled">EVENTO</a>
-                    </div>
-                    
-                    <div class="col-md-2">
-                    <a class="btn   btn-lg btn-block  btn-slot btn-secondary disabled"><font color="FFFFFF"> EXPIRADO</font></a>
-                    </div>
-                    
-                    <div class="col-md-2">
-                    <a class="btn   btn-lg btn-block  btn-slot btn-success disabled"><font color="FFFFFF"> RESERVADO</font></a>
-                    </div>
+                                <div class="col-md-2">
+                                <a class="btn   btn-lg btn-block  btn-slot btn-danger disabled"><font color="FFFFFF"> EN PROCESO </font></a>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="col-md-2">
-                    <a class="btn   btn-lg btn-block  btn-slot btn-danger disabled"><font color="FFFFFF"> EN PROCESO </font></a>
+                        </div>
                     </div>
                 </div>
                 `;
-                    $('#statusSlots').fadeIn().html(slots);
+				$('#packages-by-type').fadeIn().html(html);
 
                         $.ajax({
                         type: 'POST',

@@ -78,6 +78,16 @@ class UserBookingController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
+    public function getPackagesByCategory(Request $request)
+    {
+        $category = Session::get('customCategory');
+        $packages = Package::where('category_id', $category)->where('is_active', 1)->get();
+        return response()->json([ 'success' => true, 'data' => $packages ]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getPackagesByType(Request $request)
     {
         $settings = Settings::query()->first();
@@ -212,9 +222,15 @@ class UserBookingController extends Controller
 		
         //get selected event date
         $event_date = \request('event_date');
+        $requestPackageId = \request('package');
 
         //get selected package_id
         $selected_package_id = Session::get('package_id');
+
+        if($requestPackageId !== null) {
+            Session::put('package_id',$requestPackageId);
+            $selected_package_id = $requestPackageId;
+        }
 
         $drawId = Session::get('draw_id');
 		
@@ -732,9 +748,11 @@ class UserBookingController extends Controller
         $input = $request->all();
         $selectedCategoryDraw = Package::find($input['package_id'])->category->draw;
         $categoryType = Package::find($input['package_id'])->category->category_type;
+        $customCategory = Package::find($input['package_id'])->category->id;
         $request->session()->put('package_id', $input['package_id']);
         $request->session()->put('selectedCategoryDraw', $selectedCategoryDraw);
         $request->session()->put('categoryType', $categoryType);
+        $request->session()->put('customCategory', $customCategory);
         
         $request->session()->put('booking_type_id', '');
         if($selectedCategoryDraw == 0) {
