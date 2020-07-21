@@ -444,28 +444,30 @@
         const categoryType = '{{ Session::get('categoryType') }}';
         $('#select-package-list-mobile').val(package);
         $('#select-package-list').val(package);
-        $.ajax({
-            type: 'POST',
-            url: URL_CONCAT + '/get_timing_slots',
-            data: { 
-                event_date:date,
-                package: package
+        if(package !== '') {
+            $.ajax({
+                type: 'POST',
+                url: URL_CONCAT + '/get_timing_slots',
+                data: { 
+                    event_date:date,
+                    package: package
+                    },
+                beforeSend: function() {
+                    $('#slots_loader').removeClass('d-none');
+                    $('#selected-package-type').empty();
+                    $('#tennis_slot').val('');
                 },
-            beforeSend: function() {
-                $('#slots_loader').removeClass('d-none');
-                $('#selected-package-type').empty();
-                $('#tennis_slot').val('');
-            },
-            success: function(response) {
-                $('#custom_slots_holder').html(response);
-                if(categoryType == 1) {
-                    getPackageType();
+                success: function(response) {
+                    $('#custom_slots_holder').html(response);
+                    if(categoryType == 1) {
+                        getPackageType();
+                    }
+                },
+                complete: function () {
+                    $('#slots_loader').addClass('d-none');
                 }
-            },
-            complete: function () {
-                $('#slots_loader').addClass('d-none');
-            }
-        });
+            });
+        }
     }
 
     function onSelectDraw() {
