@@ -53,6 +53,14 @@
                 flex: 0 0 16.66666667%;
                 max-width: 16.66666667%;
             }
+
+            .select-type-mobile {
+                width: 100%;
+                padding-right: 0;
+            }
+            .select-type-mobile select {
+                width: 100%;
+            }
         }
 
     </style>
@@ -194,8 +202,8 @@
                 <br>
                 <div class="col-md-12 form-group" style="padding-left: 0">
                     <div class="row" >
-                        <div class="col-md-6" id="package-type"></div>
-                        <div class="col-md-6" id="package-list"></div>
+                        <div class="col-xs-12 col-md-6 select-type-mobile" id="package-type"></div>
+                        <div class="col-xs-12 col-md-6 select-type-mobile" id="package-list"></div>
                     </div>
                     <div class="col-md-12" id="tennis-calendar"></div>
                     <input type ="hidden" id="selected-package-type" value="">
@@ -368,7 +376,7 @@
 			return html;
 		}
 
-    function getPackageType() {
+    function getPackageType(mobile = false) {
         const URL_CONCAT = $('meta[name="index"]').attr('content');
                 $.ajax({
                 type: 'GET',
@@ -378,7 +386,8 @@
                 },
                 success: function(response) {
                     let html = '';
-                    html +=` <select name="package-type" id="select-package-type" onchange="handlePackageType()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
+                    html +=` <div style="font-weight: bold; margin-bottom: 5px" >Seleccione Tipo de Juego<div> 
+                    <select name="package-type" id="select-package-type" onchange="handlePackageType()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
                                 <option value="">Tipo de Juego</option>
 							    ${renderPackageType(response.data)}	
 						</select> `;
@@ -392,6 +401,8 @@
 
     function getPackages() {
         const URL_CONCAT = $('meta[name="index"]').attr('content');
+        const packageId = '{{ Session::get('package_id') }}';
+    
                 $.ajax({
                 type: 'GET',
                 url: `${URL_CONCAT}/get-packages-by-category`,
@@ -401,17 +412,24 @@
                 },
                 success: function(response) {
                    let html = '';
-                    html +=` <select name="package-list" id="select-package-list" onchange="onSelectPackage()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
-                                <option value="">Seleccione el paquete preferido</option>
+                    html +=` <div style="font-weight: bold; margin-bottom: 5px" >Seleccione el paquete preferido<div>  
+                    <select name="package-list" id="select-package-list" onchange="onSelectPackage()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
+                                <option value="">Paquete</option>
 							    ${renderPackageType(response.data)}	
 						</select> `;
                     $('#package-list').html(html);
                     let htmlMobile = '';
-                    htmlMobile +=` <select name="select-package-list-mobile" id="select-package-list-mobile" onchange="onSelectPackage()" style="padding: 10px 0px 10px 0px; border: 0; border-bottom: 1px solid grey; font-size: 13px; background-color: white; margin-right: 10px" >
-                                <option value="">Seleccione el paquete preferido</option>
+                    htmlMobile +=` <select name="select-package-list-mobile" id="select-package-list-mobile" onchange="onSelectPackage(true)" style="padding: 10px 0px 10px 0px; border: 0; border-bottom: 1px solid grey; font-size: 13px; background-color: white; margin-right: 50px" >
+                                <option value="">Paquete</option>
 							    ${renderPackageType(response.data)}	
 						</select> `;
                     $('#package-list-mobile').html(htmlMobile);
+
+                    if(packageId !== null) {
+                        $('#select-package-list-mobile').val(packageId);
+                        $('#select-package-list').val(packageId);
+                    }
+
                 },
                 complete: function () {
                     $('#slots_loader').addClass('d-none');
@@ -419,11 +437,13 @@
             });
     }
 
-    function onSelectPackage() {
+    function onSelectPackage(mobile = false) {
         const URL_CONCAT = $('meta[name="index"]').attr('content');
         const date = document.getElementById('custom-event_date').value;
-        const package = document.getElementById('select-package-list').value;
+        const package = document.getElementById(`${mobile ? 'select-package-list-mobile' : 'select-package-list'}`).value;
         const categoryType = '{{ Session::get('categoryType') }}';
+        $('#select-package-list-mobile').val(package);
+        $('#select-package-list').val(package);
         $.ajax({
             type: 'POST',
             url: URL_CONCAT + '/get_timing_slots',

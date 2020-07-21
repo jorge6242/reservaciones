@@ -686,7 +686,6 @@
 
                 <div class="row">
                     <div class="col-md-12" id="packages-by-type"></div>
-                    <div class="col-md-12" id="packages-calendar" style="text-align:center"></div>
                 </div>
                 <div id="packages_holder"></div>
 
@@ -989,6 +988,8 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <div class="col-md-12" id="packages-calendar" style="text-align:center"></div>
 
                         </div>
                     </div>
