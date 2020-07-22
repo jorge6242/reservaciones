@@ -47,6 +47,33 @@
             font-weight: bold;
         }
 
+        .custom-slot-list {
+            position: relative;
+        }
+        .custom-slot-list #slot-container {
+            position: relative;
+        }
+
+        .loader-container {
+            display: none;
+        }
+
+        .loader-container img {
+            margin-top: 100px;
+        }
+
+        .slots-loader {
+            display: block;
+            background: white;
+            opacity: 0.8;
+            position: absolute;
+            z-index: 200;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+
+
         @media only screen and (max-width: 600px) {
             #tennis-calendar .cell {
                 font-size: 9px;
@@ -228,6 +255,7 @@
         <input type="hidden" id="data-booking-type" value='{{ Session::get('booking_type_id') }}'>
         <input type="hidden" name="draw_booking_slot" id="draw_booking_slot" value=''>
         <input type="hidden" name="tennis_slot" id="tennis_slot" value=''>
+        <input type="hidden" name="package-duration" id="package-duration" value=''>
         <footer class="footer d-none d-sm-none d-md-block d-lg-block d-xl-block">
             <div class="container">
                 <div class="row">
@@ -352,7 +380,8 @@
     function handlePackageType () {
         const URL_CONCAT = $('meta[name="index"]').attr('content');
         const id = document.getElementById("select-package-type").value;
-                $.ajax({
+        if(id !== '') {
+            $.ajax({
                 type: 'GET',
                 url: `${URL_CONCAT}/set-package-type`,
                 data: { id : id  },
@@ -360,11 +389,19 @@
                     $('#selected-package-type').empty();
                     $('#tennis_slot').val('');
                     $('.btn-slot').removeClass('slot-draw-picked');
+                    $('.loader-container').addClass('slots-loader');
+                    $('#time-package-type').empty();
+                    $('#package-duration').val('');
                 },
                 success: function(response) {
                     $('#selected-package-type').val(JSON.stringify(response.data));
+                    $('.loader-container').removeClass('slots-loader');
+                    const html = `${response.data.length} minutos`;
+                    $('#time-package-type').html(html);
+                    $('#package-duration').val(response.package.duration);
                 },
             });
+        }
         
     }
 
@@ -383,6 +420,7 @@
                 url: `${URL_CONCAT}/get-package-type`,
                 beforeSend: function() {
                     $('#package-type').empty();
+                    $('.loader-container').addClass('slots-loader');
                 },
                 success: function(response) {
                     let html = '';
@@ -390,8 +428,9 @@
                     <select name="package-type" id="select-package-type" onchange="handlePackageType()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
                                 <option value="">Tipo de Juego</option>
 							    ${renderPackageType(response.data)}	
-						</select> `;
+						</select> <div id="time-package-type"></div> `;
                     $('#package-type').html(html);
+                    $('.loader-container').removeClass('slots-loader');
                 },
                 complete: function () {
                     $('#slots_loader').addClass('d-none');
@@ -416,13 +455,14 @@
                     <select name="package-list" id="select-package-list" onchange="onSelectPackage()" style="padding: 10px 0px 10px 0px; background-color: transparent; border: 0; border-bottom: 1px solid grey; font-size: 16px; margin-bottom:10px" >
                                 <option value="">Paquete</option>
 							    ${renderPackageType(response.data)}	
-						</select> `;
+						</select>`;
                     $('#package-list').html(html);
                     let htmlMobile = '';
                     htmlMobile +=` <select name="select-package-list-mobile" id="select-package-list-mobile" onchange="onSelectPackage(true)" style="padding: 10px 0px 10px 0px; border: 0; border-bottom: 1px solid grey; font-size: 13px; background-color: white; margin-right: 50px" >
                                 <option value="">Paquete</option>
 							    ${renderPackageType(response.data)}	
-						</select> `;
+						</select>
+                         `;
                     $('#package-list-mobile').html(htmlMobile);
 
                     if(packageId !== null) {
@@ -453,7 +493,9 @@
                     package: package
                     },
                 beforeSend: function() {
+                    $('#time-package-type').empty();
                     $('#slots_loader').removeClass('d-none');
+                    $('#package-type').empty();
                     $('#selected-package-type').empty();
                     $('#tennis_slot').val('');
                 },
@@ -491,6 +533,7 @@
                         },
                             beforeSend: function() {
                                 $('#slots_loader').removeClass('d-none');
+                                $('#package-type').empty();
                                 $('#selected-package-type').empty();
                                 $('#tennis_slot').val('');
                             },
@@ -526,6 +569,7 @@
                 },
             beforeSend: function() {
                 $('#slots_loader').removeClass('d-none');
+                $('#package-type').empty();
                 $('#selected-package-type').empty();
                 $('#tennis_slot').val('');
             },
@@ -582,7 +626,7 @@
         }
     }
 
-    function getBtnSLotPosition (hour) {
+    function getBtnSlotPosition (hour) {
             let count = 0;
             let position = 0;
             $('.btn-slot.available').each(function() {
@@ -595,15 +639,32 @@
         return position;
     }
 
-    function checkAvailableButtonSLot(hour) {
-        let exist = false;
-            $('.btn-slot.available').each(function() {
-                 const currentHour = $(this).attr('data-slot-time');
-                if(currentHour == hour) {
-                    exist = true;
-                }
+    // Revisar disponibilidad de slots para seleccion automatica de casillas
+    function checkAvailableButtonSlot(hours) {
+        let exist = true;
+            $('.btn-slot.disabled').each(function() {
+                 const currentHour = $(this).attr('data-slot-disable-time');
+                 const find = hours.find(e => e == currentHour);
+                if(find) exist = false;  
             });
         return exist;
+    }
+
+    // Construccion de horas seleccionadas dependiendo del intervalo
+    function buildSelectedHours(hour, cant, interval) {
+        const array = [];
+        if(cant === 0) {
+           array.push(hour);
+        } else {
+            array.push(hour);
+            for(i=0; i < cant; i++) {
+                const position = i + 1;
+                const newInterval = position * interval;
+                const time = moment(hour, 'hh:mm A').add(newInterval, 'minutes').format('hh:mm A');
+                array.push(time);
+            }
+        }
+        return array;
     }
 
     const array = [];
@@ -612,6 +673,9 @@
         var bookingType = document.getElementById("data-booking-type").value;
         let selectedPackageType = $("#selected-package-type").val();
         const categoryType = '{{ Session::get('categoryType') }}';
+        const packageDuration = $('#package-duration').val();
+
+
         $('#tennis_slot_error').addClass('d-none').html('');
         $('.btn-slot').removeClass('slot-draw-picked');
         $('#tennis_slot').val('');
@@ -624,66 +688,49 @@
 
          if(bookingType === "1" && categoryType == 1 && selectedPackageType) {
             selectedPackageType = JSON.parse(selectedPackageType);
-            const tennisCondition = selectedPackageType.length / 30;
+            const tennisCondition = selectedPackageType.length / packageDuration;
             let slots = [];
             const btnsLength = $('.btn-slot.available').length;
-            const slotPosition = getBtnSLotPosition(slot_time);
-            const ButtonCondition = btnsLength - slotPosition;
+            const slotPosition = getBtnSlotPosition(slot_time);
+            const ButtonCondition = btnsLength - slotPosition; // 
 
-            if(tennisCondition == 2 && ButtonCondition < 1) {
-                $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
-                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
-            }
+            // console.log('tennisCondition ', tennisCondition);
+            // console.log('btnsLength ', btnsLength);
+            // console.log('slotPosition ', slotPosition);
+            // console.log('ButtonCondition ', ButtonCondition);
 
-            if(tennisCondition == 2 && ButtonCondition < 2) {
-                $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
-                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
-            }
-
-
-            if(tennisCondition == 2 && ButtonCondition >= 1) {
-                const slot2 = moment(slot_time, 'hh:mm A').add('30', 'minutes').format('hh:mm A');
-                slots = [ slot_time, slot2 ];
-                const availableSlots = checkAvailableButtonSLot(slot2);
-                if(availableSlots) {
-                    $('.btn-slot.available').each(function() {
-                    const currentHour = $(this).attr('data-slot-time');
-                    const exist = slots.find(e => e === currentHour );
-                        if (exist) {
-                            $(this).addClass('slot-draw-picked');
-                        }
-                    });
-                } else {
-                    $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
-                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
-                }
-
-
-                $('#tennis_slot').val(JSON.stringify(slots));
-            }
-
-            if(tennisCondition == 3 && ButtonCondition >= 2) {
-                const slot2 = moment(slot_time, 'hh:mm A').add('30', 'minutes').format('hh:mm A');
-                const slot3 = moment(slot_time, 'hh:mm A').add('60', 'minutes').format('hh:mm A');
-                slots = [ slot_time, slot2, slot3 ];
-                const availableSlots = checkAvailableButtonSLot(slot2);
-                if(availableSlots) {
-                    $('.btn-slot.available').each(function() {
-                    const currentHour = $(this).attr('data-slot-time');
-                    const exist = slots.find(e => e === currentHour );
-                        if (exist) {
-                            $(this).addClass('slot-draw-picked');
-                        }
-                    });
-                } else {
-                    $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
-                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
-                }
-
-
-                $('#tennis_slot').val(JSON.stringify(slots));
-            } 
+            const availableSlotsCondition = tennisCondition === 1 ? 0 : tennisCondition - 1; // Calcular siempre la cantidad de slots disponibles una vez presionado el slot inicial
             
+            if(ButtonCondition < availableSlotsCondition) {
+                $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
+                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+                $('#tennis_slot').val('');
+            } else {
+                const slotsToBuild = tennisCondition === 1 ? 0 : tennisCondition - 1;
+                const newSlotSelectedHours =  buildSelectedHours(slot_time, slotsToBuild, packageDuration);
+                //console.log('newSlotSelectedHours ', newSlotSelectedHours);
+                if(newSlotSelectedHours.length === 1) {
+                    $('.btn-slot.available').each(function() {
+                    const currentHour = $(this).attr('data-slot-time');
+                    const exist = newSlotSelectedHours.find(e => e === currentHour );
+                        if (exist) $(this).addClass('slot-draw-picked');
+                    });
+                    $('#tennis_slot').val(JSON.stringify(newSlotSelectedHours));
+                } else if (newSlotSelectedHours.length > 1 && checkAvailableButtonSlot(newSlotSelectedHours)) {
+                    $('.btn-slot.available').each(function() {
+                    const currentHour = $(this).attr('data-slot-time');
+                    const exist = newSlotSelectedHours.find(e => e === currentHour );
+                        if (exist) $(this).addClass('slot-draw-picked');
+                    });
+                    $('#tennis_slot').val(JSON.stringify(newSlotSelectedHours));
+                } else {
+                    $('#tennis_slot_error').removeClass('d-none').html('{{ __('app.tennis_slot_error') }}');
+                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+                    $('#tennis_slot').val('');
+                }
+                
+            }
+          
          }
         
         if(bookingType === "1" && categoryType == 0) {

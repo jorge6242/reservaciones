@@ -173,7 +173,8 @@ class StripeController extends Controller
 
             //send booking received email
             $user = User::find($request['user_id']);
-            $admin = Role::find(1)->users()->get();
+            $admin = Role::where('name','Administrador')->with('users')->first();
+            $admin = $admin->users()->get();;
 
             try {
 

@@ -435,17 +435,9 @@
 
 		}
 		
-
-		
-		
 	}
-	
-
-
-
 
 ?>
-
 
     <div class="jumbotron promo">
         <div class="container">

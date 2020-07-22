@@ -59,6 +59,7 @@
 	$groupSuspended = 0;
 	$balance = 0;
 	$balanceDate = "";
+	$sDebugSP = '';
 		
 	// $max_days = 2;
 	// $max_guests = 2;
@@ -400,14 +401,17 @@ if ($command == "favorites") // query favorites
 	{
 
 		$queryFavorites = "SELECT f.doc_id,   
-					CONCAT(
-					(SELECT CONCAT( p1.first_name,' ', p1.last_name) FROM users p1 WHERE p1.doc_id=f.doc_id  ), 
-					(SELECT CONCAT( p2.first_name,' ', p2.last_name) FROM guests p2 WHERE p2.doc_id=f.doc_id  ))
-					 AS PlayerName	
-			FROM users_favorites f, users u 
-			WHERE u.id=f.user_id
-			AND u.email = '" . $session_email . "'
-			ORDER BY f.created_at asc";
+		IIF ((SELECT CONCAT( p1.first_name,' ', p1.last_name) FROM users p1 WHERE p1.doc_id=f.doc_id  )<>'',
+		
+
+		(SELECT CONCAT( p1.first_name,' ', p1.last_name) FROM users p1 WHERE p1.doc_id=f.doc_id  ) ,
+		(SELECT CONCAT( p2.first_name,' ', p2.last_name) FROM guests p2 WHERE p2.doc_id=f.doc_id  )
+		)
+			AS PlayerName	
+FROM users_favorites f, users u 
+WHERE u.id=f.user_id
+AND u.email =  '" . $session_email . "'
+ORDER BY f.created_at asc";
 			
 		$resultFavorites = sqlsrv_query($connection, $queryFavorites); 
 
@@ -447,6 +451,7 @@ else if ($command == "partners") // query frequent participants
 	$comments = "";
 	
 	{
+		
 		$queryPartners =  "SELECT p.doc_id, COUNT(p.doc_id), 
 		CONCAT('Jugador',p.doc_id) AS PlayerName
 		FROM bookings b, booking_players p, users u 
@@ -457,16 +462,16 @@ else if ($command == "partners") // query frequent participants
 		ORDER BY COUNT(p.doc_id) DESC";
 
 		$queryPartners =  "SELECT p.doc_id, COUNT(p.doc_id) as cant,    p.player_type, 
-					CASE 
-						WHEN p.player_type=0 THEN (SELECT CONCAT( p1.first_name,' ', p1.last_name) FROM users p1 WHERE p1.doc_id=p.doc_id  )
-						WHEN p.player_type=1 THEN (SELECT CONCAT( p2.first_name,' ', p2.last_name) FROM guests p2 WHERE p2.doc_id=p.doc_id  )
-					END AS PlayerName	
-					FROM bookings b, booking_players p, users u 
-					WHERE u.id = b.user_id
-					AND b.id = p.booking_id
-					AND u.email = '" . $session_email . "' 
-					GROUP BY (p.doc_id)
-					ORDER BY COUNT(p.doc_id) DESC";
+		CASE 
+			WHEN p.player_type=0 THEN (SELECT CONCAT( p1.first_name,' ', p1.last_name) FROM users p1 WHERE p1.doc_id=p.doc_id  )
+			WHEN p.player_type=1 THEN (SELECT CONCAT( p2.first_name,' ', p2.last_name) FROM guests p2 WHERE p2.doc_id=p.doc_id  )
+		END AS PlayerName	
+		FROM bookings b, booking_players p, users u 
+		WHERE u.id = b.user_id
+		AND b.id = p.booking_id
+		AND u.email = '" . $session_email . "' and p.doc_id<>u.doc_id
+		GROUP BY (p.doc_id), p.player_type
+		ORDER BY COUNT(p.doc_id) DESC";
 		
 		
 		$resultPartners = sqlsrv_query($connection, $queryPartners); 
@@ -892,24 +897,21 @@ else if ($command == "include") // include player
 		
 		$params = array(
 		array($categoryType, SQLSRV_PARAM_IN),
-		array($$pt, SQLSRV_PARAM_IN),
+		array($pt, SQLSRV_PARAM_IN),
 		array($doc_id, SQLSRV_PARAM_IN)
 		);      
 		
-		$tsql_callSP = "{call CalcularParticipaciones(?,?,?)}";
+		$calcularParticipacionesSP = "{call CalcularParticipaciones(?,?,?)}";
 		   /* Execute the query. */
-			$stmt3 = sqlsrv_query( $connection, $tsql_callSP, $params);
-			if( $stmt3 === false )
-			{
-				echo "Error in executing statement 3.\n";
-				die( print_r( sqlsrv_errors(), true));
-			}
-		else
-		{
-		while( $rowPerDayWeekMonth = sqlsrv_fetch_array( $stmt3, SQLSRV_FETCH_ASSOC) ) {
-		 $calculoDia = $rowPerDayWeekMonth['dia'];
-		 $calculoSemana = $rowPerDayWeekMonth['semana'];
-		 $calculoMes = $rowPerDayWeekMonth['mes'];
+			$stmt3 = sqlsrv_query( $connection, $calcularParticipacionesSP, $params);
+		if( $stmt3 === false ) {
+			echo "Error in executing statement 3.\n";
+			die( print_r( sqlsrv_errors(), true));
+		} else {
+			while( $rowPerDayWeekMonth = sqlsrv_fetch_array( $stmt3, SQLSRV_FETCH_ASSOC) ) {
+			$calculoDia = $rowPerDayWeekMonth['dia'];
+			$calculoSemana = $rowPerDayWeekMonth['semana'];
+			$calculoMes = $rowPerDayWeekMonth['mes'];
 		}
 
 		$conditionPerDay = $is_user == 0 ? $bookingGuest_maxPerDay : $bookingUser_maxPerDay;
@@ -933,6 +935,12 @@ else if ($command == "include") // include player
 		}
 
 		}
+
+
+		$sDebugSP  = $calcularParticipacionesSP . "--> Dia=%s, Semana=%s, Mes=%s";
+		$sDebugSP = str_replace("?","%s", $sDebugSP );
+		$sDebugSP = sprintf($sDebugSP,$categoryType, $pt, $doc_id, $calculoDia, $calculoSemana, $calculoMes);
+		//echo $sDebugSP;
 		
 		@sqlsrv_free_stmt($stmt3);  
 		@sqlsrv_close($conn); 
@@ -1204,7 +1212,8 @@ else if ($command == "delete")  ///delete player
 	date_default_timezone_set('America/Caracas');
 	$date = date('d/m/Y h:i:s a', time());
 	$myfile = fopen("logsdataHelper.txt", "a") or die("Unable to open file!");
-	$txt = $date . " - " . $aux;
+	//$txt = $date . " - " . $aux;
+	$txt = $date . " - " . $aux  . " - SPValidacion: " . $sDebugSP;
 	fwrite($myfile, "\n". $txt);
 	fclose($myfile);
 

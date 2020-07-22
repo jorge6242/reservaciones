@@ -444,7 +444,8 @@ class OfflinePaymentController extends Controller
 
         //send booking received email
         $user = User::find(Auth::user()->id);
-        $admin = Role::find(1)->users()->get();
+        $admin = Role::where('name','Administrador')->with('users')->first();
+        $admin = $admin->users()->get();
 		
 		
 		//send email to other participants LA

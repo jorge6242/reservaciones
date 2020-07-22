@@ -112,28 +112,40 @@ class UserBookingController extends Controller
         return response()->json([ 'success' => true, 'data' => $category, 'dates' => $dates ]);
     }
 
+    public function buildSelectedHours($hour, $cant, $interval) {
+        $array = array();
+        if($cant == 0) {
+            $time = strtoupper(Carbon::parse($hour)->format('g:i A'));
+            array_push($array, $time);
+        } else {
+            $time = strtoupper(Carbon::parse($hour)->format('g:i A'));
+            array_push($array, $time);
+            for ($i=0; $i < $cant ; $i++) { 
+               $position = $i + 1;
+               $newInterval = $position * $interval;
+               $time = strtoupper(Carbon::parse($hour)->addMinutes($newInterval)->format('g:i A'));
+               array_push($array, $time);
+            }
+        }
+        return $array;
+    }
+
     public function getSlotsPerTime($date ,$packageTypeId, $hour, $slotHour) {
+ 
         $parseHour = DateTime::createFromFormat('h:ia', $hour);
         $parseHour = $parseHour->format('H:i:s');
         $currentDate = $date.' '.$parseHour;
         $startHour = Carbon::parse($currentDate);
-    
-        $arrayHours = array();
+
+        
+       
         $packageType = PackagesType::find($packageTypeId);
-        if($packageType->length == 60) {
-            //$parseHour->format('H:i a');
-            $hour1 = strtoupper(Carbon::parse($hour)->format('g:i A'));
-            $hour2 = strtoupper(Carbon::parse($hour)->addMinutes(30)->format('g:i A'));
-            $arrayHours = [ $hour1, $hour2 ];
-        }
-        if($packageType->length == 90) {
-            //$parseHour->format('H:i a');
-            $hour1 = strtoupper(Carbon::parse($hour)->format('g:i A'));
-            $hour2 = strtoupper(Carbon::parse($hour)->addMinutes(30)->format('g:i A'));
-            $hour3 = strtoupper(Carbon::parse($hour)->addMinutes(60)->format('g:i A'));
-            $arrayHours = [ $hour1, $hour2, $hour3 ];
-        }
+        $package = Package::find($packageType->package_id);
+        $tennisCondition = (int)$packageType->length / (int)$package->duration;
+        $tennisCondition = $tennisCondition == 1 ? 0 : $tennisCondition -1;
+        $arrayHours = $this->buildSelectedHours($hour, $tennisCondition, $package->duration);
         $exist = false;
+
         foreach ($arrayHours as $key => $value) {
             if($value == strtoupper(Carbon::parse($slotHour)->format('g:i A'))) {
                 $exist = true;
@@ -392,7 +404,6 @@ class UserBookingController extends Controller
                
                 // Logica para que se pinten los slots cuando es por tiempo.
                 if(strtotime($booking->booking_date)==strtotime($event_date) && $categoryType == 1 && $booking->booking_time2 !== null ) {
-                   
                     $existSlot = $this->getSlotsPerTime($booking->booking_date ,$booking->package_type_id, $booking->booking_time, $timeslot);
                     if($existSlot) {
                         $list_slot[$i]['is_available'] = false;
@@ -1303,8 +1314,8 @@ class UserBookingController extends Controller
                 //Per Time
 
                 // Consultar parametros para el Tipo de Paquete
-                $packageType = Session::get('selectedPackageType');
-
+                $sessionPackageType = Session::get('selectedPackageType');
+                $packageType = PackagesType::find($sessionPackageType->id);
                 $params->booking_min = $packageType->booking_min;
                 $params->booking_max = $packageType->booking_max;
                 $params->player_min = $packageType->player_min;
@@ -1335,19 +1346,19 @@ class UserBookingController extends Controller
         $message = "";
         // Validacion Reserva
         $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->count();
-        if($cant < $params->booking_min) {
+        if($cant !== null && $cant < $params->booking_min) {
             $message .= "<br> El mínimo de participantes debe ser " . $params->booking_min . "";
         }
 
         // Validacion Socios
         $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->whereIn('player_type', [0,-1])->count();
-        if($cant < $params->player_min) {
+        if($cant !== null && $cant < $params->player_min) {
             $message .= "<br> El mínimo de Socios debe ser " . $params->player_min . "";
         }
 
         // Validacion Invitadoss
         $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->where('player_type', 1)->count();
-        if($cant < $params->guest_min) {
+        if($cant !== null && $cant < $params->guest_min) {
             $message .= "<br> El mínimo de Invitados debe ser " . $params->guest_min . "";
         }
 
@@ -1689,8 +1700,9 @@ class UserBookingController extends Controller
 
     public function setPackageType(Request $request) {
         $packageType = PackagesType::find($request['id']);
+        $selectedPackage = Package::find($packageType->package_id);
         Session::put('selectedPackageType', $packageType);
-        return response()->json([ 'success' => true, 'data' => $packageType ]);
+        return response()->json([ 'success' => true, 'data' => $packageType, 'package' => $selectedPackage ]);
     }
 
     // public function buildHours($array, $start, $end) {
