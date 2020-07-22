@@ -919,6 +919,9 @@ class UserBookingController extends Controller
                 'phone_number' => $user->phone_number,
                 'package_id' => Session::get('package_id'),
             ]);
+        } else {
+            SessionPlayer::where('session_email', $user->email)->update(['package_id' => Session::get('package_id')]);
+            SessionAddon::where('session_email', $user->email)->update(['package_id' => Session::get('package_id')]);
         }
         $session_players = DB::table('session_players')->where('session_email','=',Auth::user()->email)->where('player_type','!=',-1)->get();
          //load step Player
