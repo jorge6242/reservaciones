@@ -934,8 +934,8 @@ else if ($command == "include") // include player
 
 		}
 		
-		sqlsrv_free_stmt($stmt3);  
-		sqlsrv_close($conn); 
+		@sqlsrv_free_stmt($stmt3);  
+		@sqlsrv_close($conn); 
 
 
 
