@@ -403,7 +403,12 @@ class UserBookingController extends Controller
             {
                
                 // Logica para que se pinten los slots cuando es por tiempo.
-                if(strtotime($booking->booking_date)==strtotime($event_date) && $categoryType == 1 && $booking->booking_time2 !== null ) {
+                if(
+                    strtotime($booking->booking_date)==strtotime($event_date) && 
+                    $categoryType == 1 && 
+                    $booking->booking_time2 !== null &&
+                    $booking->package_id == $selected_package_id
+                    ) {
                     $existSlot = $this->getSlotsPerTime($booking->booking_date ,$booking->package_type_id, $booking->booking_time, $timeslot);
                     if($existSlot) {
                         $list_slot[$i]['is_available'] = false;

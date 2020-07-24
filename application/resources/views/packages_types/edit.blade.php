@@ -55,6 +55,16 @@
                                     @endif
                                 </div>
 
+                                <div class="col-md-1 form-group"> {{ __('backend.alias') }}  </div>
+                                <div class="col-md-5 form-group{{$errors->has('alias') ? ' has-error' : ''}}">
+                                    <input type="text" class="form-control" name="alias" value="{{$court->alias}}">
+                                    @if ($errors->has('alias'))
+                                        <span class="help-block">
+                                            <strong class="text-danger">{{ $errors->first('alias') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+
                                 <div class="col-md-1 form-group"> {{ __('backend.package') }} </div>
                             <div class="col-md-5 form-group{{$errors->has('package_id') ? ' has-error' : ''}}">
                                 <select class="form-control" name="package_id">

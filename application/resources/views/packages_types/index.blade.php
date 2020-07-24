@@ -62,6 +62,7 @@
 									<th>{{ __('backend.package') }}</th>
 									<th>{{ __('backend.is_active') }}</th>
 									<th>{{ __('backend.package_time') }} ({{ __('backend.minutes') }})</th>
+									<th>{{ __('backend.alias') }}</th>
 									<th>{{ __('backend.actions') }}</th>
                                 </tr>
                                 </thead>
@@ -72,6 +73,7 @@
                                     <th>{{ __('backend.package') }}</th>
 									<th>{{ __('backend.is_active') }}</th>
                                     <th>{{ __('backend.package_time') }} ({{ __('backend.minutes') }})</th>
+                                    <th>{{ __('backend.alias') }}</th>
 									<th>{{ __('backend.actions') }}</th>
                                 </tr>
                                 </tfoot>
@@ -89,6 +91,7 @@
                                                 @endif
                                             </td>
                                             <td>{{ $element->length }}</td>
+                                            <td>{{ $element->alias }}</td>
                                             <td>
                                                 <a href="{{ route('packages-types.edit', $element->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                                 <a class="btn btn-danger btn-xs" data-toggle="modal" data-target="#{{ $element->id }}"><i class="fa fa-trash-o"></i></a>

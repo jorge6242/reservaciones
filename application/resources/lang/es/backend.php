@@ -87,6 +87,7 @@ return [
     'length' => 'Longitud',
     'package_time' => 'Tiempo',
     'minutes' => 'Minutos',
+    'alias' => 'Alias',
     
     'packages_types' => 'Tipos de Paquetes',
     'packages_type_exception' => 'Excepciones Por tIpos de Paquetes',

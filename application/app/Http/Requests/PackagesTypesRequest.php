@@ -34,6 +34,7 @@ class PackagesTypesRequest extends FormRequest
             'guest_max' => 'required',
             'package_id' => 'required',
             'status' => 'required',
+            'alias' => 'required',
         ];
     }
 }

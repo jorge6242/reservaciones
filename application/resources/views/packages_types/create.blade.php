@@ -40,6 +40,16 @@
                                 @endif
                             </div>
 
+                        <div class="col-md-1 form-group"> {{ __('backend.alias') }}  </div>
+                            <div class="col-md-5 form-group{{$errors->has('alias') ? ' has-error' : ''}}">
+                                <input type="text" class="form-control" name="alias">
+                                @if ($errors->has('alias'))
+                                    <span class="help-block">
+                                        <strong class="text-danger">{{ $errors->first('alias') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
                             <div class="col-md-12">
                             
                                 <div class="row">

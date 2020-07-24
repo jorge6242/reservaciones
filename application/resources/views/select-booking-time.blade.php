@@ -448,6 +448,12 @@
                 beforeSend: function() {
                     $('#package-list').empty();
                     $('#package-list-mobile').empty();
+                    $('#selected-package-type').empty();
+                    $('#tennis_slot').val('');
+                    $('.btn-slot').removeClass('slot-draw-picked');
+                    $('.loader-container').addClass('slots-loader');
+                    $('#time-package-type').empty();
+                    $('#package-duration').val('');
                 },
                 success: function(response) {
                    let html = '';
@@ -468,6 +474,7 @@
                     if(packageId !== null) {
                         $('#select-package-list-mobile').val(packageId);
                         $('#select-package-list').val(packageId);
+                        $('.loader-container').addClass('slots-loader');
                     }
 
                 },
@@ -498,6 +505,8 @@
                     $('#package-type').empty();
                     $('#selected-package-type').empty();
                     $('#tennis_slot').val('');
+                    $('#time-package-type').empty();
+                    $('#package-duration').val('');
                 },
                 success: function(response) {
                     $('#custom_slots_holder').html(response);
@@ -535,6 +544,8 @@
                                 $('#slots_loader').removeClass('d-none');
                                 $('#package-type').empty();
                                 $('#selected-package-type').empty();
+                                $('#time-package-type').empty();
+                                $('#package-duration').val('');
                                 $('#tennis_slot').val('');
                             },
                             success: function(response) {
@@ -571,6 +582,8 @@
                 $('#slots_loader').removeClass('d-none');
                 $('#package-type').empty();
                 $('#selected-package-type').empty();
+                $('#time-package-type').empty();
+                $('#package-duration').val('');
                 $('#tennis_slot').val('');
             },
             success: function(response) {
