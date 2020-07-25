@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 //use Spatie\GoogleCalendar\Event;
 
 use DateTime;
@@ -70,7 +71,54 @@ class UserBookingController extends Controller
      */
     public function getPackages()
     {
-        $category_id = \request('parent');
+
+        $settings = Settings::query()->first();;
+        $player = auth()->user();
+        $category_id = \request('parent');  
+        $categoryType = Category::find($category_id);
+        $categoryType = $categoryType->category_type;
+
+        $params = array( $categoryType, 1, $player->doc_id);
+            
+        $query = 'exec CalcularParticipacionesDummy ?,?,?';
+        $data = \DB::select($query,$params);
+        $errMessage = '';
+        $unidadmedida = '';
+        if($categoryType == 0) $unidadmedida= 'partidas';
+		if($categoryType == 1) $unidadmedida= 'minutos';
+        $messagePerDayWeekMonth = "No puede exceder el numero de ".$unidadmedida."";
+
+        $conditionPerDay = $categoryType == 0 ? $settings->bookingUserPlayPerDay : $settings->bookingUser_maxTimePerDay;
+		$conditionPerWeek = $categoryType == 0 ? $settings->bookingUserPlayPerWeek : $settings->bookingUser_maxTimePerWeek;
+		$conditionPerMonth = $categoryType == 0 ? $settings->bookingUserPlayPerMonth : $settings->bookingUser_maxTimePerMonth;
+        
+        if($data) {
+            $calculoDia = (int)$data[0]->dia;
+			$calculoSemana = (int)$data[0]->semana;
+            $calculoMes = (int)$data[0]->mes;
+            if ($calculoDia >= $conditionPerDay) {
+                $errMessage = $errMessage ." ". $messagePerDayWeekMonth." por día. <br>";
+            }
+    
+            if ($calculoSemana >= $conditionPerWeek) { 
+                $errMessage = $errMessage ." ". $messagePerDayWeekMonth." por Semana. <br>";
+            }
+    
+            if ($calculoMes >= $conditionPerMonth) { 
+                $errMessage = $errMessage ." ". $messagePerDayWeekMonth." por Mes.";
+            }
+            $sDebugSP  = $query . "--> Dia=%s, Semana=%s, Mes=%s";
+            $sDebugSP = str_replace("?","%s", $sDebugSP );
+            $sDebugSP = sprintf($sDebugSP,$selectedCategory->category_type, 1, $player->doc_id, $calculoDia, $calculoSemana, $calculoMes);
+            Log::info($sDebugSP);
+        }
+        if($errMessage !== '') {
+            return response()->json([ 
+                'success' => $errMessage !== '' ? true : false,
+                'message' => $errMessage,
+            ]);
+        } 
+         
         $packages = Package::where('category_id', $category_id)->where('is_active', 1)->get();
         return view('blocks.packages', compact('packages'));
     }
@@ -90,13 +138,51 @@ class UserBookingController extends Controller
      */
     public function getPackagesByType(Request $request)
     {
-        $settings = Settings::query()->first();
-        $category_id = \request('parent');
-        // $dates = [
-        //     [ 'date' => Carbon::now() ],
-        //     [ 'date' => Carbon::now()->addDay(1) ],
-        //     [ 'date' => Carbon::now()->addDay(2) ],
-        // ];
+
+        $settings = Settings::query()->first();;
+        $player = auth()->user();
+        $categoryType = Category::find($request['id']);
+        $categoryType = $categoryType->category_type;
+        $params = array( $categoryType, 1, $player->doc_id);
+            
+        $query = 'exec CalcularParticipacionesDummy ?,?,?';
+        $data = \DB::select($query,$params);
+        $errMessage = '';
+        $unidadmedida = '';
+        if($categoryType == 0) $unidadmedida= 'partidas';
+		if($categoryType == 1) $unidadmedida= 'minutos';
+        $messagePerDayWeekMonth = "No puede exceder el numero de ".$unidadmedida."";
+
+        $conditionPerDay = $categoryType == 0 ? $settings->bookingUserPlayPerDay : $settings->bookingUser_maxTimePerDay;
+		$conditionPerWeek = $categoryType == 0 ? $settings->bookingUserPlayPerWeek : $settings->bookingUser_maxTimePerWeek;
+		$conditionPerMonth = $categoryType == 0 ? $settings->bookingUserPlayPerMonth : $settings->bookingUser_maxTimePerMonth;
+
+        if($data) {
+            $calculoDia = (int)$data[0]->dia;
+			$calculoSemana = (int)$data[0]->semana;
+            $calculoMes = (int)$data[0]->mes;
+            if ($calculoDia >= $conditionPerDay) {
+                $errMessage = $errMessage ." ". $messagePerDayWeekMonth." por día. <br>";
+            }
+    
+            if ($calculoSemana >= $conditionPerWeek) { 
+                $errMessage = $errMessage ." ". $messagePerDayWeekMonth." por Semana. <br>";
+            }
+    
+            if ($calculoMes >= $conditionPerMonth) { 
+                $errMessage = $errMessage ." ". $messagePerDayWeekMonth." por Mes.";
+            }
+            $sDebugSP  = $query . "--> Dia=%s, Semana=%s, Mes=%s";
+            $sDebugSP = str_replace("?","%s", $sDebugSP );
+            $sDebugSP = sprintf($sDebugSP,$selectedCategory->category_type, 1, $player->doc_id, $calculoDia, $calculoSemana, $calculoMes);
+            Log::info($sDebugSP);
+        }
+        if($errMessage !== '') {
+            return response()->json([ 
+                'success' => false,
+                'message' => $errMessage,
+            ]);
+        } 
 
         $dates = array(); 
         $maxDays = $settings->bookingUser_maxDays + 1;
@@ -108,7 +194,9 @@ class UserBookingController extends Controller
             }      
         }
 
-        $category = Category::where('id', $request['id'])->with(['packages'])->get();
+        $category = Category::where('id', $request['id'])->whereHas('packages', function($q) {
+            $q->where('is_active', 1);
+        })->get();
         return response()->json([ 'success' => true, 'data' => $category, 'dates' => $dates ]);
     }
 
@@ -197,8 +285,6 @@ class UserBookingController extends Controller
             }
 
 			echo '</div>';
-
-        Session::put('selectedPackageType',null);
 	
 		date_default_timezone_set(env('LOCAL_TIMEZONE','America/Caracas'));
 				
@@ -416,7 +502,7 @@ class UserBookingController extends Controller
                 }
 
                 // Logica para que se pinten los slots cuando es Standard.
-                if(strtotime($booking->booking_date)==strtotime($event_date) && strtotime($booking->booking_time)==strtotime($timeslot))
+                if($categoryType == 0 && strtotime($booking->booking_date)==strtotime($event_date) && strtotime($booking->booking_time)==strtotime($timeslot))
                 {
                     //put multiple booking logic
 
@@ -1211,7 +1297,6 @@ class UserBookingController extends Controller
 
 		// date_default_timezone_set('America/Caracas');
 		// $packageEndDate = date('Y-m-d H:i:s', strtotime('+' . config('settings.bookingTimeout') . ' minute'));
-
         //create session_slot
         $tennisSlot = json_decode($input['tennis_slot']);
         $package_id = Session::get('package_id');
@@ -1219,6 +1304,7 @@ class UserBookingController extends Controller
         $bookingTime2 = null; 
 
         if($tennisSlot !== null) {
+
             $input['booking_slot'] = $tennisSlot[0];
             $bookingTime2 = end($tennisSlot);
             Session::put('tennisSlots',$tennisSlot);
@@ -1281,7 +1367,7 @@ class UserBookingController extends Controller
     }
 
     public function getParams() {
-        $categoryType = Session::get('categoryType'); 
+        $categoryType = Session::get('categoryType');
         $settings = Settings::query()->first();
 
         $params = (object) [
@@ -1299,7 +1385,7 @@ class UserBookingController extends Controller
             'bookingGuest_maxPerMonth' => null,
         ];
 
-        switch ($categoryType) {
+        switch ($$categoryType) {
             case "0":
                 //Standard
                 $params->booking_min = $settings->bookingUser_minPlayers;
@@ -1319,8 +1405,9 @@ class UserBookingController extends Controller
                 //Per Time
 
                 // Consultar parametros para el Tipo de Paquete
-                $sessionPackageType = Session::get('selectedPackageType');
-                $packageType = PackagesType::find($sessionPackageType->id);
+                $selectedPackageTypeId = Session::get('selectedPackageType');
+                $selectedPackageTypeId = $selectedPackageTypeId->id;
+                $packageType = PackagesType::find($selectedPackageTypeId);
                 $params->booking_min = $packageType->booking_min;
                 $params->booking_max = $packageType->booking_max;
                 $params->player_min = $packageType->player_min;
@@ -1404,54 +1491,52 @@ class UserBookingController extends Controller
      * @param Request $request
      */
     public function checkUserPackageParameters(Request $request) {
-        $params = $this->getParams();
-        $authUser = Auth::user();
+
+        $settings = Settings::query()->first();;
+        $player = auth()->user();
         $package = $request['package_id'];
         $categoryType = Package::find($package)->category->category_type;
+
+        $params = array( $categoryType, 1, $player->doc_id);
+            
+        $query = 'exec CalcularParticipacionesDummy ?,?,?';
+        $data = \DB::select($query,$params);
+        $errMessage = '';
         $unidadmedida = '';
+        if($categoryType == 0) $unidadmedida= 'partidas';
+		if($categoryType == 1) $unidadmedida= 'minutos';
+        $messagePerDayWeekMonth = "No puede exceder el numero de ".$unidadmedida."";
 
-        
-        // Validar el Tipo de Categoria en la tabla category
-        if($categoryType == 0) {
-			$unidadmedida= 'partidas';
-			$dataUser = DB::select("SELECT u.first_name, u.last_name, u.doc_id, u.id , 
-            (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
-               FROM users u
-               WHERE u.doc_id = '".$authUser->doc_id."' ");
-		}
+        $conditionPerDay = $categoryType == 0 ? $settings->bookingUserPlayPerDay : $settings->bookingUser_maxTimePerDay;
+		$conditionPerWeek = $categoryType == 0 ? $settings->bookingUserPlayPerWeek : $settings->bookingUser_maxTimePerWeek;
+		$conditionPerMonth = $categoryType == 0 ? $settings->bookingUserPlayPerMonth : $settings->bookingUser_maxTimePerMonth;
 
-		else if($categoryType == 1) {
-			$unidadmedida= 'minutos';
-			$dataUser = DB::select("SELECT u.first_name, u.last_name, u.doc_id, u.id , 
-            (SELECT 1 ) as calculoDia, (SELECT 3 ) as calculoSemana, (SELECT 15 ) as calculoMes
-               FROM users u
-               WHERE u.doc_id = '".$authUser->doc_id."' ");
-		}
-
-        $calculoDia = $$dataUser->calculoDia;
-        $calculoSemana = $$dataUser->calculoSemana;
-        $calculoMes = $$dataUser->calculoMes;
-        $string = '';
-
-        $messagePerDayWeekMonth = "<br>Participante no puede exceder el numero de ".$unidadmedida."";
-		if ($calculoDia >= $conditionPerDay) { 
-			$string .= $messagePerDayWeekMonth." por día.";
-		}
-
-		if ($calculoSemana >= $conditionPerWeek) { 
-			$string .= $messagePerDayWeekMonth." por Semana.";
-		}
-
-		if ($calculoMes >= $conditionPerMonth) { 
-			$string .= $messagePerDayWeekMonth." por Mes.";
+        if($data) {
+            $calculoDia = (int)$data[0]->dia;
+			$calculoSemana = (int)$data[0]->semana;
+            $calculoMes = (int)$data[0]->mes;
+            if ($calculoDia >= $conditionPerDay) {
+                $errMessage = $errMessage ." ". $messagePerDayWeekMonth." por día. <br>";
+            }
+    
+            if ($calculoSemana >= $conditionPerWeek) { 
+                $errMessage = $errMessage ." ". $messagePerDayWeekMonth." por Semana. <br>";
+            }
+    
+            if ($calculoMes >= $conditionPerMonth) { 
+                $errMessage = $errMessage ." ". $messagePerDayWeekMonth." por Mes.";
+            }
+            $sDebugSP  = $query . "--> Dia=%s, Semana=%s, Mes=%s";
+            $sDebugSP = str_replace("?","%s", $sDebugSP );
+            $sDebugSP = sprintf($sDebugSP,$selectedCategory->category_type, 1, $player->doc_id, $calculoDia, $calculoSemana, $calculoMes);
+            Log::info($sDebugSP);
         }
-        
-        return response()->json([ 
-            //'success' => $string !== '' ? true : false,
-            'success' => false,
-            'message' => $string,
-        ]);
-
+        if($errMessage !== '') {
+            return response()->json([ 
+                'success' => $errMessage !== '' ? true : false,
+                'message' => $errMessage,
+            ]);
+        } 
     }
 
     /**
@@ -1695,12 +1780,13 @@ class UserBookingController extends Controller
 
     public function getPackageType() {
         $packageId = Session::get('package_id');
+        $selectedPackageType = Session::get('selectedPackageType');
         $packageTypes = [];
         $category = Package::where('id',$packageId)->with(['category'])->first();
         if($category && $category->category()->first()->category_type == 1) {
             $packageTypes = PackagesType::where('package_id', $packageId)->get();
         }
-        return response()->json([ 'success' => true, 'data' => $packageTypes ]);
+        return response()->json([ 'success' => true, 'data' => $packageTypes, 'selectedPackageType' => $selectedPackageType ]);
     }
 
     public function setPackageType(Request $request) {

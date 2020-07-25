@@ -685,6 +685,7 @@
                     <div class="col-md-12">
                         <div class="alert alert-danger d-none" id="package_error">{{ __('app.no_package_selected_error') }}</div>
                         <div class="alert alert-danger d-none" id="welcome-message-error"></div>
+                        <div class="alert alert-danger d-none" id="welcome-custom-message-error"></div>
                         <br>
                     </div>
                 </div>
@@ -882,39 +883,47 @@
             url: URL_CONCAT + '/get_packages',
             data: {parent:category_id},
             beforeSend: function() {
+                $('#package_id').val('');
                 $('#packages_loader').removeClass('d-none');
 				$('#packages-by-type').empty();
 				$('#packages-calendar').empty();
                 $('#statusSlots').empty();
-                $('#packages_holder').html('&nbsp;');
+                $('#packages_holder').empty();
+                $('#welcome-custom-message-error').addClass('d-none').empty();;
+                $('#welcome-message-error').addClass('d-none').empty();
             },
             success: function(response) {
-                $('#packages_holder').fadeIn().html(response);
-				$(".owl-carousel").owlCarousel({
-                    margin:20,
-                    dots:false,
-                    nav:true,
-					items: 1,
-                    navText: [
-                        '<img src="'+ URL_CONCAT + '/images/left.png">',
-                        '<img src="'+ URL_CONCAT + '/images/right.png">'
-                    ],
-                    responsiveClass: true,
-                    responsive: {
-                        0: {
-                            items: 1,
-							loop:true,
-                        },
-                        480: {
-                            items: 1,
-							loop:true,
-                        },
-                        769: {
-                            items: 3,
+                if(typeof response === 'object') {
+                    $('#welcome-custom-message-error').removeClass('d-none').html(response.message);
+                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+                    $('#package_id').val('');
+                } else {
+                    $('#packages_holder').fadeIn().html(response);
+                    $(".owl-carousel").owlCarousel({
+                        margin:20,
+                        dots:false,
+                        nav:true,
+                        items: 1,
+                        navText: [
+                            '<img src="'+ URL_CONCAT + '/images/left.png">',
+                            '<img src="'+ URL_CONCAT + '/images/right.png">'
+                        ],
+                        responsiveClass: true,
+                        responsive: {
+                            0: {
+                                items: 1,
+                                loop:true,
+                            },
+                            480: {
+                                items: 1,
+                                loop:true,
+                            },
+                            769: {
+                                items: 3,
+                            }
                         }
-                    }
-                });
-                
+                    });
+                }
             },
             complete: function () {
                 $('#packages_loader').addClass('d-none');
@@ -928,109 +937,120 @@
             url: URL_CONCAT + '/get-packages-by-type',
             data: {id:category_id},
             beforeSend: function() {
+                $('#package_id').val('');
                 $('#packages_loader').removeClass('d-none');
 				$('#packages_holder').empty();
                 $('#packages-by-type').empty();
                 $('#statusSlots').empty();
                 $('#packages-calendar').empty();
+                $('#welcome-custom-message-error').addClass('d-none').empty();;
+                $('#welcome-message-error').addClass('d-none').empty();
             },
             success: function(response) {
-				let html = '';
-                html += `
-                <div class="row" >
-                    <div class="col-md-12 form-group btn-primary"> 
-                        <div class="row" style="padding: 10px;">
-                            <div class="col-md-6 " style="text-align: left; font-weigth: bold; line-height: 2; font-size: 1.125rem;"> Ocupacion General </div>
-                            <div class="col-md-6 collapse-href" style="text-align: right;"> 
-                                <a class="collapsed" data-toggle="collapse" href="#calendarCollapse" role="button" aria-expanded="false" aria-controls="calendarCollapse">
-                                    <i class="fa fa-angle-down" style="margin-left: 5px"></i>
-                                </a>
+
+                if(response.success) {
+
+                    let html = '';
+                    html += `
+                    <div class="row" >
+                        <div class="col-md-12 form-group btn-primary"> 
+                            <div class="row" style="padding: 10px;">
+                                <div class="col-md-6 " style="text-align: left; font-weigth: bold; line-height: 2; font-size: 1.125rem;"> Ocupacion General </div>
+                                <div class="col-md-6 collapse-href" style="text-align: right;"> 
+                                    <a class="collapsed" data-toggle="collapse" href="#calendarCollapse" role="button" aria-expanded="false" aria-controls="calendarCollapse">
+                                        <i class="fa fa-angle-down" style="margin-left: 5px"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-12 collapse" id="calendarCollapse">
-                        <div class="row">
-                        
+                        <div class="col-md-12 collapse" id="calendarCollapse">
+                            <div class="row">
+                            
+                                <div class="col-md-12 form-group">
+                                    <select class="form-control" name="tennis-time" id="tennis-time" onchange="handleSelectDay(${category_id})">
+                                    ${renderDates(response.dates)}	
+                                </select>
+                                </div>
+                            
                             <div class="col-md-12 form-group">
-                                <select class="form-control" name="tennis-time" id="tennis-time" onchange="handleSelectDay(${category_id})">
-                                ${renderDates(response.dates)}	
-                            </select>
-                            </div>
-                        
-                        <div class="col-md-12 form-group">
-                            <div class="row">           
-                                <div class="col-md-2">
-                                <a class="btn btn-outline-dark btn-lg btn-block btn-slot disabled"> DISPONIBLE</a>
-                                </div>
-                                
-                                <div class="col-md-2">
-                                <a class="btn   btn-lg btn-block  btn-slot btn-warning disabled">EVENTO</a>
-                                </div>
-                                
-                                <div class="col-md-2">
-                                <a class="btn   btn-lg btn-block  btn-slot btn-secondary disabled"><font color="FFFFFF"> EXPIRADO</font></a>
-                                </div>
-                                
-                                <div class="col-md-2">
-                                <a class="btn   btn-lg btn-block  btn-slot btn-success disabled"><font color="FFFFFF"> RESERVADO</font></a>
-                                </div>
+                                <div class="row">           
+                                    <div class="col-md-2">
+                                    <a class="btn btn-outline-dark btn-lg btn-block btn-slot disabled"> DISPONIBLE</a>
+                                    </div>
+                                    
+                                    <div class="col-md-2">
+                                    <a class="btn   btn-lg btn-block  btn-slot btn-warning disabled">EVENTO</a>
+                                    </div>
+                                    
+                                    <div class="col-md-2">
+                                    <a class="btn   btn-lg btn-block  btn-slot btn-secondary disabled"><font color="FFFFFF"> EXPIRADO</font></a>
+                                    </div>
+                                    
+                                    <div class="col-md-2">
+                                    <a class="btn   btn-lg btn-block  btn-slot btn-success disabled"><font color="FFFFFF"> RESERVADO</font></a>
+                                    </div>
 
-                                <div class="col-md-2">
-                                <a class="btn   btn-lg btn-block  btn-slot btn-danger disabled"><font color="FFFFFF"> EN PROCESO </font></a>
+                                    <div class="col-md-2">
+                                    <a class="btn   btn-lg btn-block  btn-slot btn-danger disabled"><font color="FFFFFF"> EN PROCESO </font></a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="col-md-12" id="packages-calendar" style="text-align:center"></div>
+                            
+                            <div class="col-md-12" id="packages-calendar" style="text-align:center"></div>
 
+                            </div>
                         </div>
                     </div>
-                </div>
-                `;
-				$('#packages-by-type').fadeIn().html(html);
+                    `;
+                    $('#packages-by-type').fadeIn().html(html);
 
-                        $.ajax({
-                        type: 'POST',
-                        url: URL_CONCAT + '/get_packages',
-                        data: {parent:category_id},
-                        beforeSend: function() {
-                            $('#packages_loader').removeClass('d-none');
-                            $('#packages_holder').html('&nbsp;');
-                                $('#package_id').remove();
-                        },
-                        success: function(response) {
-                            $('#packages_holder').fadeIn().html(response);
-                            $(".owl-carousel").owlCarousel({
-                                margin:20,
-                                dots:false,
-                                nav:true,
-                                items: 1,
-                                navText: [
-                                    '<img src="'+ URL_CONCAT + '/images/left.png">',
-                                    '<img src="'+ URL_CONCAT + '/images/right.png">'
-                                ],
-                                responsiveClass: true,
-                                responsive: {
-                                    0: {
-                                        items: 1,
-                                        loop:true,
-                                    },
-                                    480: {
-                                        items: 1,
-                                        loop:true,
-                                    },
-                                    769: {
-                                        items: 3
-                                    }
-                                }
-                        });
+                    $.ajax({
+                    type: 'POST',
+                    url: URL_CONCAT + '/get_packages',
+                    data: {parent:category_id},
+                    beforeSend: function() {
                         $('#packages_loader').removeClass('d-none');
-                        },
-                        complete: function () {
-                            $('#packages_loader').addClass('d-none');
-                        }
-                        });
+                        $('#packages_holder').empty();
+                            $('#package_id').remove();
+                    },
+                    success: function(response) {
+                        $('#packages_holder').fadeIn().html(response);
+                        $(".owl-carousel").owlCarousel({
+                            margin:20,
+                            dots:false,
+                            nav:true,
+                            items: 1,
+                            navText: [
+                                '<img src="'+ URL_CONCAT + '/images/left.png">',
+                                '<img src="'+ URL_CONCAT + '/images/right.png">'
+                            ],
+                            responsiveClass: true,
+                            responsive: {
+                                0: {
+                                    items: 1,
+                                    loop:true,
+                                },
+                                480: {
+                                    items: 1,
+                                    loop:true,
+                                },
+                                769: {
+                                    items: 3
+                                }
+                            }
+                    });
+                    $('#packages_loader').removeClass('d-none');
+                    },
+                    complete: function () {
+                        $('#packages_loader').addClass('d-none');
+                    }
+                    });
 
+                } else {
+                    $('#welcome-custom-message-error').removeClass('d-none').html(response.message);
+                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+                    $('#package_id').val('');
+                }
 
             	},
 				complete: function () {

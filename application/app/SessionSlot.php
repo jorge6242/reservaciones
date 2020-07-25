@@ -18,6 +18,7 @@ class SessionSlot extends Model
         'package_id',
         'package_type_id',
         'booking_time2',
+        'package_type_alias'
     ];
 
 

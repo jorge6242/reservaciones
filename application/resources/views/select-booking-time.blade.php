@@ -421,6 +421,7 @@
                 beforeSend: function() {
                     $('#package-type').empty();
                     $('.loader-container').addClass('slots-loader');
+                    $('#time-package-type').empty();
                 },
                 success: function(response) {
                     let html = '';
@@ -430,6 +431,16 @@
 							    ${renderPackageType(response.data)}	
 						</select> <div id="time-package-type"></div> `;
                     $('#package-type').html(html);
+                    const selectedPackageType = response.selectedPackageType;
+                    if(selectedPackageType) {
+                        const find = response.data.find(e => e.alias == selectedPackageType.alias);
+                        if(find) {
+                            $('#select-package-type').val(find.id);
+                            $('#selected-package-type').val(JSON.stringify(find));
+                            const html = `${find.length} minutos`;
+                            $('#time-package-type').html(html);
+                        }
+                    }
                     $('.loader-container').removeClass('slots-loader');
                 },
                 complete: function () {
@@ -474,8 +485,12 @@
                     if(packageId !== null) {
                         $('#select-package-list-mobile').val(packageId);
                         $('#select-package-list').val(packageId);
-                        $('.loader-container').addClass('slots-loader');
+                        const find = response.data.find(e => e.id == packageId);
+                        if(find) {
+                            $('#package-duration').val(find.duration);
+                        }
                     }
+                    $('.loader-container').removeClass('slots-loader');
 
                 },
                 complete: function () {
