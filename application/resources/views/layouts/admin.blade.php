@@ -28,7 +28,8 @@
     <link href="{{ asset('plugins/datatables/css/jquery.datatables_themeroller.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('plugins/bootstrap-datepicker/css/datepicker3.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('plugins/summernote-master/summernote.css') }}" rel="stylesheet" type="text/css"/>
-
+    <script type="text/javascript" src="{{ asset('js/moment.min.js') }}" rel="stylesheet"></script>
+    <script type="text/javascript" src="{{ asset('js/moment-es.min.js') }}" rel="stylesheet"></script>
 
     <!-- Theme Styles -->
     <link href="{{ asset('css/backend.min.css') }}" rel="stylesheet" type="text/css"/>
@@ -201,6 +202,13 @@ LA -->
                     <a href="{{ route('events.index') }}" class="waves-effect waves-button">
                         <span class="menu-icon icon-calendar"></span>
                         <p>{{ __('backend.events') }}</p>
+                    </a>
+                </li>
+
+                <li class="{{ Request::is('general-occupation') ? 'active' : '' }}">
+                    <a href="{{ route('general-occupation.index') }}" class="waves-effect waves-button">
+                        <span class="menu-icon icon-calendar"></span>
+                        <p>{{ __('backend.general_occupation') }}</p>
                     </a>
                 </li>
 

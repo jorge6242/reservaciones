@@ -1002,7 +1002,7 @@
                         </div>
                     </div>
                     `;
-                    $('#packages-by-type').fadeIn().html(html);
+                    //$('#packages-by-type').fadeIn().html(html);
 
                     $.ajax({
                     type: 'POST',

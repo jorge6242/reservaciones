@@ -54,6 +54,9 @@ Route::post('/remove-hour-list', 'UserBookingController@removeHoursByDate')->nam
 Route::post('/get_timing_slots', 'UserBookingController@getTimingSlots')->name('slots');
 Route::post('/get_update_slots', 'UserBookingController@getUpdateSlots')->name('updateSlots');
 Route::post('/remove_session_addon', 'UserBookingController@removeFromList');
+Route::get('/admin-get-packages-by-type', 'UserBookingController@getPackagesByType')->name('AdminGetPackagesByType');
+Route::get('/admin-get-select-days', 'AdminGeneralOccupationController@getSelectDays')->name('AdminGetSelectDays');
+
 
 
 // Verb		URI						 Paráme	Action	Route Name		Override				public function
@@ -91,6 +94,10 @@ Route::group(['middleware'=>'admin'], function(){
     Route::resource('/cancel-requests', 'CancelRequestController');
     Route::post('/cancel-booking/{id}', 'AdminBookingsController@cancel')->name('cancelBooking');
     Route::patch('/updateBooking/{id}', 'AdminBookingsController@update_booking_time')->name('updateBookingTime');
+    Route::resource('/general-occupation','AdminGeneralOccupationController');
+    Route::get('/booking-category-calendar', 'UserBookingController@getBookingCategoryCalendar')->name('getBookingCategoryCalendar');
+
+   
 
     //database update controller
 
@@ -116,8 +123,6 @@ Route::group(['middleware'=>'customer'], function(){
     Route::post('/cancel-request', 'CancelRequestController@store')->name('cancelRequest');
     Route::get('/update-booking/{id}', 'UserBookingController@update')->name('updateBooking');
     Route::patch('/booking/{id}', 'UserBookingController@update_booking')->name('postUpdateBooking');
-    Route::get('/booking-category-calendar', 'UserBookingController@getBookingCategoryCalendar')->name('getBookingCategoryCalendar');
-
 });
 
 // ** COMMON ROUTES FOR AUTHENTICATED USERS ** //
