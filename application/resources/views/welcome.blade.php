@@ -114,9 +114,14 @@
 @media only screen and (max-width: 600px) {
 
     .custom-table th, .custom-table td {
-        padding: 5px;
-        text-align: left;
+        padding: 1px;
         width: 82px;
+        font-size: 75%;
+        text-align: center;
+    }
+
+    #packages-calendar .header .init-default {
+        width: 108px;
     }
 
 	//**#packages-calendar .cell {

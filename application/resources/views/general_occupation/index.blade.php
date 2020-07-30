@@ -50,7 +50,6 @@
 
 .custom-table tbody{
   display:block;
-  height:250px;
   width:100%;
 }
 
@@ -70,6 +69,28 @@
 .custom-table th, .custom-table td {
   padding: 5px;
   width: 168px;
+}
+
+@media only screen and (max-width: 600px) {
+
+    .custom-table th, .custom-table td {
+        padding: 1px;
+        width: 82px;
+        font-size: 75%;
+        text-align: center;
+    }
+
+    #packages-calendar .header .init-default {
+        width: 108px;
+    }
+
+	//**#packages-calendar .cell {
+		font-size: 9px;
+		flex: 0 0 16.66666667%;
+		max-width: 16.66666667%;
+		padding-left: 5px;
+		padding-right: 0px;
+	} **/
 }
 
 
@@ -167,7 +188,7 @@
                         let html = '';
                         const header = `
                             <tr class="header">
-                                <td class="cell" ></td>
+                                <td class="cell init-default" ></td>
                                 ${renderCalendarHeader(packages)}
                             </tr>`;
 
