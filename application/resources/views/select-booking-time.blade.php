@@ -377,6 +377,28 @@
                 return false
             });
     
+
+    function setPackageType (id) {
+        const URL_CONCAT = $('meta[name="index"]').attr('content');
+            $.ajax({
+                type: 'GET',
+                url: `${URL_CONCAT}/set-package-type`,
+                data: { id : id  },
+                beforeSend: function() {
+                    $('#selected-package-type').val('');
+                    $('#package-duration').val('');
+                    $('#time-package-type').empty();
+                },
+                success: function(response) {
+                    console.log('response', response);
+                    $('#selected-package-type').val(JSON.stringify(response.data));
+                    //$('#package-duration').val(response.package.duration);
+                     //const html = `${response.data.length} minutos`;
+                    //$('#time-package-type').html(html);
+                },
+            }); 
+    }
+    
     function handlePackageType () {
         const URL_CONCAT = $('meta[name="index"]').attr('content');
         const id = document.getElementById("select-package-type").value;
@@ -415,6 +437,7 @@
 
     function getPackageType(mobile = false) {
         const URL_CONCAT = $('meta[name="index"]').attr('content');
+        
                 $.ajax({
                 type: 'GET',
                 url: `${URL_CONCAT}/get-package-type`,
@@ -439,6 +462,18 @@
                             $('#selected-package-type').val(JSON.stringify(find));
                             const html = `${find.length} minutos`;
                             $('#time-package-type').html(html);
+                            $.ajax({
+                            type: 'GET',
+                            url: `${URL_CONCAT}/set-package-type`,
+                            data: { id : find.id  },
+                                beforeSend: function() {
+                                    $('#package-duration').val('');
+                                },
+                                success: function(response) {
+                                    console.log('response', response);
+                                    $('#package-duration').val(response.package.duration);
+                                }
+                            });
                         }
                     }
                     $('.loader-container').removeClass('slots-loader');
@@ -702,7 +737,6 @@
         let selectedPackageType = $("#selected-package-type").val();
         const categoryType = '{{ Session::get('categoryType') }}';
         const packageDuration = $('#package-duration').val();
-
 
         $('#tennis_slot_error').addClass('d-none').html('');
         $('.btn-slot').removeClass('slot-draw-picked');
