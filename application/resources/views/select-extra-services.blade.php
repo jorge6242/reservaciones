@@ -323,7 +323,7 @@
                                 $('#extra-service-participants').empty();
                                 getParticipants();
                             } else {
-                                $('#addon_error').removeClass('d-none').text(response.message);
+                                $('#addon_error').removeClass('d-none').html(response.message);
                             }
 
                         }

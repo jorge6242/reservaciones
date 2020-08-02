@@ -57,7 +57,8 @@ class SessionAddonsController extends Controller
         $min = 0;
         $max = 0;
         $isUser = auth()->user()->doc_id == $input['doc_id'] ? true : false;
-
+        $playerTypeName = $isUser || $sessionPlayer->player_type == 0 ? 'Socio' : 'Invitado';
+        $playerName = $playerTypeName.' '.$sessionPlayer->first_name.' '.$sessionPlayer->last_name;
         if($isUser || $sessionPlayer->player_type == 0) {
             $min = $addonParameters->player_min;
             $max = $addonParameters->player_max;
@@ -66,6 +67,13 @@ class SessionAddonsController extends Controller
         if(!$isUser && $sessionPlayer && $sessionPlayer->player_type == 1) {
             $min = $addonParameters->guest_min;
             $max = $addonParameters->guest_max;
+        }
+
+        if($max == 0) {
+            return response()->json([ 
+                'success' => false,
+                'message' => '<strong>'.$playerName.'</strong>, no tiene permitido seleccionar el Addon: <strong>'.$addonParameters->addon->title.'</strong>',
+            ]);
         }
 
         if($AddonCant >= $addonParameters->booking_max) {
