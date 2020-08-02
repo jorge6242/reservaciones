@@ -909,14 +909,16 @@ else if ($command == "include") // include player
 			die( print_r( sqlsrv_errors(), true));
 		} else {
 			while( $rowPerDayWeekMonth = sqlsrv_fetch_array( $stmt3, SQLSRV_FETCH_ASSOC) ) {
-			$calculoDia = $rowPerDayWeekMonth['dia'];
-			$calculoSemana = $rowPerDayWeekMonth['semana'];
-			$calculoMes = $rowPerDayWeekMonth['mes'];
+			$calculoDia = $rowPerDayWeekMonth['dia'] ? $rowPerDayWeekMonth['dia'] : 0;
+			$calculoSemana = $rowPerDayWeekMonth['semana'] ? $rowPerDayWeekMonth['semana'] : 0;
+			$calculoMes = $rowPerDayWeekMonth['mes'] ? $rowPerDayWeekMonth['mes'] : 0;
 		}
 
 		$conditionPerDay = $is_user == 0 ? $bookingGuest_maxPerDay : $bookingUser_maxPerDay;
 		$conditionPerWeek = $is_user == 0 ? $bookingGuest_maxPerWeek : $bookingUser_maxPerWeek;
 		$conditionPerMonth = $is_user == 0 ? $bookingGuest_maxPerMonth : $bookingUser_maxPerMonth;
+
+		
 
 		//echo " \n conditionPerDay: $conditionPerMonth -- calculoDia: $calculoMes \n";
 		if ($calculoDia >= $conditionPerDay) { 
