@@ -93,6 +93,36 @@ class SessionAddonsController extends Controller
         }     
     }
 
+    public function checkAddonParameterByPlayer($player) {
+        $addonParametersByPackage = AddonsParameter::where('package_id', Session::get('package_id'))->get();
+        $message = '';
+        $type = $player->player_type == -1 || $player->player_type == 0 ? 'Socio' : 'Invitado';
+        $name = $type.' '. $player->first_name.' '.$player->last_name;
+        foreach ($addonParametersByPackage as $key => $addon) {
+            $min = null;
+            if($player->player_type == -1 || $player->player_type == 0) $min = $addon->player_min;
+            if($player->player_type == 1) $min = $addon->guest_min;
+            $playerErrorMessage = '* Para el Addon: <strong>'.$addon->addon->title.'</strong>, debe seleccionar minimo '.$min.'<br>';
+            if($min > 0) {
+                $addonByPlayer = SessionAddon::where('session_email', auth()->user()->email)->where('addon_id', $addon->addon_id )->where('doc_id',$player->doc_id)->first();
+                if($addonByPlayer) {
+                    if($addonByPlayer->cant < $min ) $message .= $playerErrorMessage;
+                } else {
+                    $message .= $playerErrorMessage;
+                }
+            }
+
+        }
+        $body = '
+        <div>
+        <div style="font-weight: bold">'.$name.'</div>
+        <div>'.$message.'</div>
+        </div>
+        ';
+        $message = $message !== '' ? $body : '';
+        return $message;
+    }
+
         /**
      * Store a newly created resource in storage.
      *
@@ -100,20 +130,35 @@ class SessionAddonsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function checkBookingAddons(Request $request) {
+        
 
         $sessionAddons = \DB::select("SELECT DISTINCT addon_id FROM session_addons where session_email = '".auth()->user()->email."' and package_id = '".Session::get('package_id')."'  ");
 
        
         $string = '';
-        foreach ($sessionAddons as $key => $element) {
 
-            $addonParameters = AddonsParameter::where('addon_id', $element->addon_id)->where('package_id', Session::get('package_id'))->first();
-            $AddonCant = SessionAddon::where('session_email', auth()->user()->email)->where('addon_id',$element->addon_id)->sum('cant');
+        $addonParametersByPackage = AddonsParameter::where('package_id', Session::get('package_id'))->get();
 
-            if((int)$AddonCant < (int)$addonParameters->booking_min) {
-                $string .= '<br> Para el Addon: '.$addonParameters->addon->title.', solo se permite seleccionar minimo '.$addonParameters->booking_min.' para la reserva ';
+        foreach ($addonParametersByPackage as $key => $addon) {
+            $min = $addon->booking_min;
+            $bookinMessage = 'Para el Addon: <strong>'.$addon->addon->title.'</strong>, seleccionar minimo '.$min.' para la reserva <br> ';
+            if($min > 0) {
+                $addonCant = SessionAddon::where('session_email', auth()->user()->email)->where('addon_id',$addon->addon_id)->sum('cant');
+                if($addonCant) {
+                    if((int)$addonCant < (int)$min) $string .= $bookinMessage;  
+                } else {
+                    $string .= $bookinMessage;
+                }
             }
+
         }
+
+        $players = SessionPlayer::where('session_email', auth()->user()->email)->get();
+        foreach ($players as $key => $player) {
+            $string .= $this->checkAddonParameterByPlayer($player);
+        }
+
+
 
         return response()->json([ 
             'success' => $string !== '' ? true : false,

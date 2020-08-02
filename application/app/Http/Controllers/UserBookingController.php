@@ -1385,7 +1385,7 @@ class UserBookingController extends Controller
             'bookingGuest_maxPerMonth' => null,
         ];
 
-        switch ($$categoryType) {
+        switch ($categoryType) {
             case "0":
                 //Standard
                 $params->booking_min = $settings->bookingUser_minPlayers;
@@ -1434,10 +1434,10 @@ class UserBookingController extends Controller
         
         $params = $this->getParams();
         $userEmail = Auth::user()->email;
-		
         $message = "";
         // Validacion Reserva
         $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->count();
+     
         if($cant !== null && $cant < $params->booking_min) {
             $message .= "<br> El mínimo de participantes debe ser " . $params->booking_min . "";
         }
@@ -1676,12 +1676,13 @@ class UserBookingController extends Controller
      *
      * Remove addon from list of booking services
      */
-    public function removeFromList()
+    public function removeFromList(Request $request)
     {
-        $addon_id = \request('addon_id');
-        $session_email = \request('session_email');
+        $addon_id = $request['addon_id'];
+        $doc_id = $request['doc_id'];
+        $session_email = $request['session_email'];
 
-        DB::table('session_addons')->where('addon_id', '=', $addon_id)->where('session_email','=',$session_email)->delete();
+        DB::table('session_addons')->where('addon_id', '=', $addon_id)->where('session_email','=', $session_email)->where('doc_id','=' ,$doc_id)->delete();
 
     }
 
@@ -1786,7 +1787,7 @@ class UserBookingController extends Controller
         if($category && $category->category()->first()->category_type == 1) {
             $packageTypes = PackagesType::where('package_id', $packageId)->get();
         }
-        return response()->json([ 'success' => true, 'data' => $packageTypes, 'selectedPackageTypess' => $selectedPackageType, 'package' => $selectedPackage ]);
+        return response()->json([ 'success' => true, 'data' => $packageTypes, 'selectedPackageType' => $selectedPackageType, 'package' => $selectedPackage ]);
     }
 
     public function setPackageType(Request $request) {
