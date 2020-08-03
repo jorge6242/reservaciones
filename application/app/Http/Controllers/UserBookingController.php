@@ -1027,7 +1027,9 @@ class UserBookingController extends Controller
         }
         $session_players = DB::table('session_players')->where('session_email','=',Auth::user()->email)->where('player_type','!=',-1)->get();
          //load step Player
-		return view('select-booking-players', compact('session_players'));
+        $packageNameSelected = Package::find(Session::get('package_id'))->title;
+        $packageNameSelected = $packageNameSelected ? 'Paquete: '.$packageNameSelected : '';
+		return view('select-booking-players', compact('session_players','packageNameSelected'));
     }
 
     /**
@@ -1350,9 +1352,8 @@ class UserBookingController extends Controller
 		
 		
 		
-		$result = sqlsrv_query($connection, $sql2);
-
-
+        $result = sqlsrv_query($connection, $sql2);
+        
         return redirect('/select-booking-players');
     }
 
@@ -1484,7 +1485,9 @@ class UserBookingController extends Controller
                 $addons[$key]->showDelete = 'hidde';
             }
         }
-        return view('select-extra-services', compact('addons', 'session_addons','selectedPlayer'));
+        $packageNameSelected = Package::find(Session::get('package_id'))->title;
+        $packageNameSelected = $packageNameSelected ? 'Paquete: '.$packageNameSelected : '';
+        return view('select-extra-services', compact('addons', 'session_addons','selectedPlayer', 'packageNameSelected'));
     }
 
     /**

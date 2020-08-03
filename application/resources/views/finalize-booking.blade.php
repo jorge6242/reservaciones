@@ -65,7 +65,7 @@
                 @if(Session::has('paypal_error'))
                     <div class="alert alert-danger col-md-12">{{session('paypal_error')}}</div>
                 @endif
-
+                
                 <div class="col-md-6">
                     <br><br>
                     <h3>{{ __('app.booking_summary') }}</h3>
@@ -80,6 +80,7 @@
                         @endif
                     </h5>
                     <br>
+                    
                     <h5>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</h5>
                     <h6><i class="fas fa-envelope fa-lg text-primary"></i>&nbsp;&nbsp;{{ Auth::user()->email }}</h6>
                     <h6><i class="fas fa-phone fa-lg text-primary"></i>&nbsp;&nbsp;{{ Auth::user()->phone_number }}</h6>
@@ -205,6 +206,7 @@
 					
 
                 </div>
+                <div class="alert alert-danger col-md-12 d-none" id="tennis_slot_error" style="margin-top: 20px"></div>
                 <div class="col-md-12 form-group" style="margin-top: 20px">
                          
                          <div class="row">
@@ -445,8 +447,17 @@
             type: 'GET',
             url: `${URL_CONCAT}/remove-adddon-by-participant`,
             data: { id: id },
+                beforeSend: function() {
+                    $('#tennis_slot_error').addClass('d-none');
+                },
                 success: function(response) {
-                    getParticipants(); 
+                    if(response.success) {
+                        getParticipants();
+                        getTotalAddons();
+                    } else {
+                        $('#tennis_slot_error').removeClass('d-none').html(response.message);
+                    }
+                   
                 },
             });
     }

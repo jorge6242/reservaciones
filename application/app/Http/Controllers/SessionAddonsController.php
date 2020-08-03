@@ -217,8 +217,31 @@ class SessionAddonsController extends Controller
      */
     public function removeAddonByParticipant(Request $request)
     {
+        $user = auth()->user();
+        $currentSessionAddon = SessionAddon::find($request['id']);
+        $addonParameter = AddonsParameter::where('addon_id', $currentSessionAddon->addon_id)->where('package_id', $currentSessionAddon->package_id)->first();
+        $sessionPlayer = SessionPlayer::where('session_email', $user->email)->where('package_id', $currentSessionAddon->package_id)->where('doc_id', $currentSessionAddon->doc_id)->first();
+        $playerTypeName = $sessionPlayer->player_type == -1 || $sessionPlayer->player_type == 0 ? 'Socio' : 'Invitado';
+        $playerName = $playerTypeName.' '.$sessionPlayer->first_name.' '.$sessionPlayer->last_name;
+        $min = null;
+        if($sessionPlayer->player_type == -1 || $sessionPlayer->player_type == 0) $min = $addonParameter->player_min;
+        if($sessionPlayer->player_type == 1) $min = $addonParameter->guest_min;
+       
+        $addonCant = SessionAddon::where('session_email', auth()->user()->email)->where('addon_id',$currentSessionAddon->addon_id)->where('package_id', $currentSessionAddon->package_id)->sum('cant');
+        if($addonParameter->booking_min > 0 && $addonCant <= $addonParameter->booking_min) {
+            $message = '<strong>'.$playerName.'</strong>, no se puede eliminar el Addon: <strong>'.$addonParameter->addon->title.'</strong>, debe tener minimo '.$addonParameter->booking_min.' para toda la reserva';
+            return response()->json([ 'success' => false, 'message' => $message ]);
+        }
+
+        if($min > 0 && $currentSessionAddon->cant <= $min ) {
+            $message = '<strong>'.$playerName.'</strong>, no se puede eliminar el Addon: <strong>'.$addonParameter->addon->title.'</strong>, debe tener minimo '.$min;
+            return response()->json([ 'success' => false, 'message' => $message ]);
+        }
+
         SessionAddon::destroy($request['id']);
         return response()->json([ 'success' => true ]);
+
+
     }
 
         /**

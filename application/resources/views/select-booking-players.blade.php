@@ -656,7 +656,7 @@ function ajaxFunctionSelect(doc_id){
 			</div>			
 			
 	
-			<h6><i class="fas fa-calendar fa-lg text-primary"></i>&nbsp;&nbsp;{{ Session::get('event_date') }} {{ Session::get('booking_slot') }}</h6>
+			<h6> <i class="fas fa-calendar fa-lg text-primary"></i>&nbsp;&nbsp;{{ Session::get('event_date') }} {{ Session::get('booking_slot') }} - <strong><span style="margin-left: 5px" >{{ $packageNameSelected }}</span></strong></h6>
 
                 <div class="row">
                     <div class="col-md-12">
