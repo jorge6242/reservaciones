@@ -78,9 +78,9 @@ class UserBookingController extends Controller
         $categoryType = Category::find($category_id);
         $categoryType = $categoryType->category_type;
 
-        $params = array( $categoryType, 1, $player->doc_id);
-            
-        $query = 'exec CalcularParticipaciones ?,?,?';
+        $fecha = Carbon::now()->format('d-m-Y');
+        $params = array( $categoryType, 1, $player->doc_id, $fecha);
+        $query = 'exec CalcularParticipacionesPorFecha ?,?,?,?';
         $data = \DB::select($query,$params);
         $errMessage = '';
         $unidadmedida = '';
@@ -109,7 +109,7 @@ class UserBookingController extends Controller
             }
             $sDebugSP  = $query . "--> Dia=%s, Semana=%s, Mes=%s";
             $sDebugSP = str_replace("?","%s", $sDebugSP );
-            $sDebugSP = sprintf($sDebugSP,$selectedCategory->category_type, 1, $player->doc_id, $calculoDia, $calculoSemana, $calculoMes);
+            $sDebugSP = sprintf($sDebugSP,$categoryType, 1, $player->doc_id, $fecha, $calculoDia, $calculoSemana, $calculoMes);
             Log::info($sDebugSP);
         }
         if($errMessage !== '') {
@@ -143,9 +143,11 @@ class UserBookingController extends Controller
         $player = auth()->user();
         $categoryType = Category::find($request['id']);
         $categoryType = $categoryType->category_type;
-        $params = array( $categoryType, 1, $player->doc_id);
+
+        $fecha = Carbon::now()->format('d-m-Y');
+        $params = array( $categoryType, 1, $player->doc_id, $fecha);
             
-        $query = 'exec CalcularParticipaciones ?,?,?';
+        $query = 'exec CalcularParticipacionesPorFecha ?,?,?,?';
         $data = \DB::select($query,$params);
         $errMessage = '';
         $unidadmedida = '';
@@ -174,7 +176,7 @@ class UserBookingController extends Controller
             }
             $sDebugSP  = $query . "--> Dia=%s, Semana=%s, Mes=%s";
             $sDebugSP = str_replace("?","%s", $sDebugSP );
-            $sDebugSP = sprintf($sDebugSP,$selectedCategory->category_type, 1, $player->doc_id, $calculoDia, $calculoSemana, $calculoMes);
+            $sDebugSP = sprintf($sDebugSP,$categoryType, 1, $player->doc_id, $fecha, $calculoDia, $calculoSemana, $calculoMes);
             Log::info($sDebugSP);
         }
         if($errMessage !== '') {
@@ -583,7 +585,7 @@ class UserBookingController extends Controller
 				//check slot availability against Events -- LA
 				foreach ($events as $event)
 				{
-					if(strtotime($event->date)==strtotime($event_date) && strtotime($event->time1)<=strtotime($timeslot) && strtotime($event->time2)>=strtotime($timeslot)   )
+					if(strtotime($event->date)==strtotime($event_date) && strtotime($event->time1)<=strtotime($timeslot) && strtotime($event->time2)>=strtotime($timeslot) && $event->category_id == $selected_category_id   )
 					{
 							$list_slot[$i]['is_available'] = false;
 							$list_slot[$i]['is_blocked'] = false;
@@ -1500,9 +1502,10 @@ class UserBookingController extends Controller
         $package = $request['package_id'];
         $categoryType = Package::find($package)->category->category_type;
 
-        $params = array( $categoryType, 1, $player->doc_id);
+        $fecha = Carbon::now()->format('d-m-Y');
+        $params = array( $categoryType, 1, $player->doc_id, $fecha);
             
-        $query = 'exec CalcularParticipaciones ?,?,?';
+        $query = 'exec CalcularParticipacionesPorFecha ?,?,?,?';
         $data = \DB::select($query,$params);
         $errMessage = '';
         $unidadmedida = '';
@@ -1531,7 +1534,7 @@ class UserBookingController extends Controller
             }
             $sDebugSP  = $query . "--> Dia=%s, Semana=%s, Mes=%s";
             $sDebugSP = str_replace("?","%s", $sDebugSP );
-            $sDebugSP = sprintf($sDebugSP,$selectedCategory->category_type, 1, $player->doc_id, $calculoDia, $calculoSemana, $calculoMes);
+            $sDebugSP = sprintf($sDebugSP,$categoryType, 1, $player->doc_id, $fecha , $calculoDia, $calculoSemana, $calculoMes);
             Log::info($sDebugSP);
         }
         if($errMessage !== '') {

@@ -894,14 +894,16 @@ else if ($command == "include") // include player
 		if($categoryType == 0) $unidadmedida= 'partidas';
 		if($categoryType == 1) $unidadmedida= 'minutos';
 		$messagePerDayWeekMonth = "<br>Este participante no puede exceder el numero de ".$unidadmedida."";
-		
+		$fecha = date('d-m-Y');
+
 		$params = array(
 		array($categoryType, SQLSRV_PARAM_IN),
 		array($pt, SQLSRV_PARAM_IN),
-		array($doc_id, SQLSRV_PARAM_IN)
+		array($doc_id, SQLSRV_PARAM_IN),
+		array($fecha, SQLSRV_PARAM_IN)
 		);      
 		
-		$calcularParticipacionesSP = "{call CalcularParticipaciones(?,?,?)}";
+		$calcularParticipacionesSP = "{call CalcularParticipacionesPorFecha(?,?,?,?)}";
 		   /* Execute the query. */
 			$stmt3 = sqlsrv_query( $connection, $calcularParticipacionesSP, $params);
 		if( $stmt3 === false ) {
@@ -941,7 +943,7 @@ else if ($command == "include") // include player
 
 		$sDebugSP  = $calcularParticipacionesSP . "--> Dia=%s, Semana=%s, Mes=%s";
 		$sDebugSP = str_replace("?","%s", $sDebugSP );
-		$sDebugSP = sprintf($sDebugSP,$categoryType, $pt, $doc_id, $calculoDia, $calculoSemana, $calculoMes);
+		$sDebugSP = sprintf($sDebugSP,$categoryType, $pt, $doc_id, $fecha, $calculoDia, $calculoSemana, $calculoMes);
 		//echo $sDebugSP;
 		
 		@sqlsrv_free_stmt($stmt3);  
