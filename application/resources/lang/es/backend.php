@@ -485,5 +485,7 @@ return [
     'by_category' => 'Por Categoria',
     'by_category_type' => 'Por Tipo de Categoria',
 
-    'general_occupation' => 'Ocupacion General'
+    'general_occupation' => 'Ocupacion General',
+    'label_reglamento' => 'Label Reglamento',
+    'link_reglamento' => 'Link Reglamento',
 ];

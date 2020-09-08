@@ -77,7 +77,9 @@ class Settings extends Model
         'bookingGuestPlayPerDay',
         'bookingGuestPlayPerWeek',
         'bookingGuestPlayPerMonth',
-        'bookingUser_MinGuests'
+        'bookingUser_MinGuests',
+        'REGLAMENTO_LINK',
+        'REGLAMENTO_LABEL'
     ];
 
 }
