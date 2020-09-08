@@ -450,7 +450,7 @@ return [
     'booking_time_package_updated' => 'El tiempo de reserva por paquete se ha actualizado con éxito.',
     'settings_saved' => 'La configuración se guarda con éxito.',
     'package_duration_as_slot_length' => 'Duración del paquete como longitud de horario',
-    'booking_slot_duration' => 'Duración de la Reservación sin confirmar',
+    'booking_slot_duration' => 'Duración de la Reservación sin confirmar o Bloque',
     'opening_time' => 'Hora de Apertura',
     'closing_time' => 'Hora de Cierre',
 	'bookingUser_startTime' => 'Hora Inicio para usar App de Reservaciones',

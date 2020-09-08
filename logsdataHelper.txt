@@ -347,3 +347,12 @@
 11/07/2020 10:06:29 pm - include;CARLOS ENRIQUE ANZOLA DIAZ;0;0;<br>Acción 0008-0008 presenta deuda  - Dirijase al Club para mayor informacion;
 11/07/2020 10:07:15 pm - include;CARLOS ENRIQUE ANZOLA DIAZ;0;0;<br>Acción 0008-0008 presenta deuda  - Dirijase al Club para mayor informacion;
 11/07/2020 10:08:42 pm - include;CARLOS ENRIQUE ANZOLA DIAZ;0;1;;
+05/08/2020 04:54:25 pm - include;GRENDYS GARCIA;1;1;; - SPValidacion: {call CalcularParticipacionesPorFecha(1,1,13168383,05-08-2020)}--> Dia=0, Semana=0, Mes=0
+05/08/2020 05:01:11 pm - include;MARIANELA ACEDO DE BOULTON;0;1;; - SPValidacion: {call CalcularParticipacionesPorFecha(1,0,11566763,05-08-2020)}--> Dia=0, Semana=0, Mes=0
+05/08/2020 05:16:16 pm - include;JULIO CESAR VILLARREAL ABREU;0;1;; - SPValidacion: {call CalcularParticipacionesPorFecha(1,0,10797013,05-08-2020)}--> Dia=0, Semana=0, Mes=0
+08/09/2020 11:49:10 am - Deleted - SPValidacion: 
+08/09/2020 11:49:13 am - Deleted - SPValidacion: 
+08/09/2020 11:49:23 am - Deleted - SPValidacion: 
+08/09/2020 11:50:31 am - Deleted - SPValidacion: 
+08/09/2020 11:50:34 am - Deleted - SPValidacion: 
+08/09/2020 11:50:39 am - Deleted - SPValidacion: 

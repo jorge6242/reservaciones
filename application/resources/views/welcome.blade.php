@@ -476,7 +476,8 @@
         <div class="container">
             <div class="content">
 			<div class="col-md-12 text-center">
-				<h6><a href="http://www.clublagunita.com/" target="_blank"> <i class="fas fa-briefcase fa-lg text-primary"></i>&nbsp;Ver Reglamento del Golf<br><br></a> </h6>
+                
+				<h6><a href="{{ $reglamento_link }}" target="_blank"> <i class="fas fa-briefcase fa-lg text-primary"></i>&nbsp;{{ $reglamento_label }}<br><br></a> </h6>
 			</div>
 			
 			<?php

@@ -60,9 +60,12 @@ class UserBookingController extends Controller
      */
     public function loadBooking()
     {
+        $settings = Settings::first();
+        $reglamento_link = $settings->REGLAMENTO_LINK;
+        $reglamento_label = $settings->REGLAMENTO_LABEL;
         $random_pass_string = str_random(10);
         $categories = Category::where('is_active', 1)->get();
-        return view('welcome', compact('random_pass_string', 'categories'));
+        return view('welcome', compact('random_pass_string', 'categories','reglamento_link', 'reglamento_label'));
     }
 
 
@@ -1395,7 +1398,7 @@ class UserBookingController extends Controller
                 $params->booking_max = $settings->bookingUser_maxPlayers;
                 $params->player_min = 1;
                 $params->player_max = $settings->bookingUser_maxPlayers;
-                $params->guest_min = 1;
+                $params->guest_min = $setting->bookingUser_MinGuests;
                 $params->guest_max = $settings->bookingUser_maxGuests;
                 $params->bookingUser_maxPerDay = $settings->bookingUserPlayPerDay;
                 $params->bookingUser_maxPerWeek = $settings->bookingUserPlayPerWeek;
@@ -1440,7 +1443,7 @@ class UserBookingController extends Controller
         $message = "";
         // Validacion Reserva
         $cant = SessionPlayer::where('session_email', $userEmail)->where('package_id', Session::get('package_id'))->count();
-     
+        
         if($cant !== null && $cant < $params->booking_min) {
             $message .= "<br> El mínimo de participantes debe ser " . $params->booking_min . "";
         }
