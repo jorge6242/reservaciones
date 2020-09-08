@@ -133,6 +133,17 @@
                                             <span class="input-group-addon"><i></i></span>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label><strong>{{ __('backend.link_reglamento') }}</strong></label>
+                                        <input type="text" class="form-control" name="REGLAMENTO_LINK" value="{{ $settings->REGLAMENTO_LINK }}">
+                                    </div>
+
+                                    <div class="col-md-6 form-group">
+                                        <label><strong>{{ __('backend.label_reglamento') }}</strong></label>
+                                        <input type="text" class="form-control" name="REGLAMENTO_LABEL" value="{{ $settings->REGLAMENTO_LABEL }}">
+                                    </div>
+
                                 </div>
                             </div>
                             <div role="tabpanel" class="tab-pane fade in" id="currency">
@@ -338,24 +349,14 @@
 
                                     <div class="col-md-12 form-group" style="font-weigth: bold; font-size: 16px"><strong>Globales</strong></div>
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-4 form-group">
                                         <label><strong>{{ __('backend.bookingUser_maxDays') }}</strong></label>
                                         <input type="number" class="form-control" name="bookingUser_maxDays" value="{{ $settings->bookingUser_maxDays }}">
                                     </div>
 
-                                    <div class="col-md-3 form-group">
+                                    <div class="col-md-4 form-group">
                                         <label><strong>{{ __('backend.bookingUserPerDay') }}</strong></label>
                                         <input type="number" class="form-control" name="bookingUserPerDay" value="{{ $settings->bookingUserPerDay }}">
-                                    </div>
-
-                                    <div class="col-md-3 form-group">
-                                        <label><strong>{{ __('backend.link_reglamento') }}</strong></label>
-                                        <input type="text" class="form-control" name="REGLAMENTO_LINK" value="{{ $settings->REGLAMENTO_LINK }}">
-                                    </div>
-
-                                    <div class="col-md-3 form-group">
-                                        <label><strong>{{ __('backend.label_reglamento') }}</strong></label>
-                                        <input type="text" class="form-control" name="REGLAMENTO_LABEL" value="{{ $settings->REGLAMENTO_LABEL }}">
                                     </div>
 
                                      <div class="col-md-12 form-group" style="font-weigth: bold; margin-top: 20px; font-size: 16px"><strong>Reservacion Por Tiempo</strong></div>
