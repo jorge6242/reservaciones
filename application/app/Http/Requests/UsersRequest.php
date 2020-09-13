@@ -29,7 +29,6 @@ class UsersRequest extends FormRequest
             'is_active' => 'required',
             'role_id' => 'required|not_in:0',
 			'doc_id' => 'required|string|max:20|unique:users', 
-			'group_id' => 'required|string|max:20', 
             'photo_id' => 'mimes:jpeg,png'
         ];
     }

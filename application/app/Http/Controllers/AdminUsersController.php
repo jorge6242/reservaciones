@@ -68,7 +68,9 @@ class AdminUsersController extends Controller
             //save photo_id to user $input
             $input['photo_id'] = $photo->id;
         }
-
+        if($input['group_id'] == null) {
+            $input['group_id'] = '';
+        }
         //encrypt password and persist data into users table
         $input['password'] = bcrypt($request->password);
         User::create($input);
@@ -114,6 +116,10 @@ class AdminUsersController extends Controller
     public function update(UsersUpdateRequest $request, $id)
     {
         $input = $request->all();
+
+        if($input['group_id'] == null) {
+            $input['group_id'] = '';
+        }
 
         //check if image is selected
         if($image = $request->file('photo_id'))
